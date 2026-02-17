@@ -3,7 +3,8 @@ from jose import jwt
 from passlib.context import CryptContext
 from app.core.config import JWT_SECRET, JWT_ALG, JWT_EXPIRES_MIN
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Evitamos bcrypt (72 bytes issue) usando PBKDF2
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
