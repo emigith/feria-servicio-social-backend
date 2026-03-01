@@ -1,33 +1,36 @@
-import uuid
-from fastapi import HTTPException, status
+﻿from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
+
 from app.core.security import hash_password, verify_password, create_access_token
-from app.repositories.student_repo import Student, get_by_matricula, create
+from app.repositories.student_repo import StudentRepo
 
-def register_student(matricula: str, correo: str, password: str, nombre: str, apellido: str):
-    if get_by_matricula(matricula):
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="STUDENT_ALREADY_EXISTS")
 
-    student = Student(
-        studentId=str(uuid.uuid4()),
+def register_student(matricula: str, correo: str, password: str, nombre: str, apellido: str, db: Session):
+    repo = StudentRepo()
+
+    if repo.get_by_email(db, correo):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Student already exists (email)")
+    if repo.get_by_matricula(db, matricula):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Student already exists (matricula)")
+
+    student = repo.create(
+        db=db,
         matricula=matricula,
-        correo=correo,
         nombre=nombre,
         apellido=apellido,
-        password_hash=hash_password(password),
+        email=correo,
+        hashed_password=hash_password(password),
     )
-    create(student)
 
-    return {"studentId": student.studentId, "matricula": student.matricula, "status": "REGISTERED"}
+    return {"studentId": str(student.id), "matricula": student.matricula, "status": "REGISTERED"}
 
-def login_student(matricula: str, password: str):
-    student = get_by_matricula(matricula)
-    if not student or not verify_password(password, student.password_hash):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="INVALID_CREDENTIALS")
 
-    token_data = create_access_token(subject=student.studentId)
+def login_student(matricula: str, password: str, db: Session):
+    repo = StudentRepo()
+    student = repo.get_by_matricula(db, matricula)
 
-    return {
-        "token": token_data["token"],
-        "expiresIn": token_data["expiresIn"],
-        "student": {"studentId": student.studentId, "matricula": student.matricula, "status": "REGISTERED"},
-    }
+    if (not student) or (not verify_password(password, student.hashed_password)):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+    token_payload = create_access_token(subject=str(student.id))
+    return {"token": token_payload["token"], "expiresIn": token_payload["expiresIn"]}

@@ -1,20 +1,23 @@
-from datetime import datetime, timedelta, timezone
+﻿from datetime import datetime, timedelta, timezone
 from jose import jwt
-from passlib.context import CryptContext
-from app.core.config import JWT_SECRET, JWT_ALG, JWT_EXPIRES_MIN
+import bcrypt
 
-# Evitamos bcrypt (72 bytes issue) usando PBKDF2
-pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
+from app.core.config import settings
+
+# bcrypt usa max 72 bytes del password.
+def _pw(password: str) -> bytes:
+    return password.encode("utf-8")[:72]
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    hashed = bcrypt.hashpw(_pw(password), bcrypt.gensalt())
+    return hashed.decode("utf-8")
 
 def verify_password(password: str, password_hash: str) -> bool:
-    return pwd_context.verify(password, password_hash)
+    return bcrypt.checkpw(_pw(password), password_hash.encode("utf-8"))
 
 def create_access_token(subject: str) -> dict:
     now = datetime.now(timezone.utc)
-    exp = now + timedelta(minutes=JWT_EXPIRES_MIN)
+    exp = now + timedelta(minutes=settings.JWT_EXPIRES_MIN)
     payload = {"sub": subject, "iat": int(now.timestamp()), "exp": exp}
-    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
-    return {"token": token, "expiresIn": JWT_EXPIRES_MIN * 60}
+    token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALG)
+    return {"token": token, "expiresIn": settings.JWT_EXPIRES_MIN * 60}

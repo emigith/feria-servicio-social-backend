@@ -1,20 +1,30 @@
-from dataclasses import dataclass
-from typing import Optional
+﻿from sqlalchemy.orm import Session
+from app.models.student import Student
 
-@dataclass
-class Student:
-    studentId: str
-    matricula: str
-    correo: str
-    nombre: str
-    apellido: str
-    password_hash: str
+class StudentRepo:
+    def get_by_email(self, db: Session, email: str) -> Student | None:
+        return db.query(Student).filter(Student.email == email).first()
 
-_students_by_matricula: dict[str, Student] = {}
+    def get_by_matricula(self, db: Session, matricula: str) -> Student | None:
+        return db.query(Student).filter(Student.matricula == matricula).first()
 
-def get_by_matricula(matricula: str) -> Optional[Student]:
-    return _students_by_matricula.get(matricula)
-
-def create(student: Student) -> Student:
-    _students_by_matricula[student.matricula] = student
-    return student
+    def create(
+        self,
+        db: Session,
+        matricula: str,
+        nombre: str,
+        apellido: str,
+        email: str,
+        hashed_password: str,
+    ) -> Student:
+        student = Student(
+            matricula=matricula,
+            nombre=nombre,
+            apellido=apellido,
+            email=email,
+            hashed_password=hashed_password,
+        )
+        db.add(student)
+        db.commit()
+        db.refresh(student)
+        return student

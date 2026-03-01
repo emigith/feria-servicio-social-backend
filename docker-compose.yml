@@ -1,0 +1,15 @@
+﻿version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: feria_db
+    environment:
+      POSTGRES_USER: feria
+      POSTGRES_PASSWORD: feria
+      POSTGRES_DB: feria
+    ports:
+      - "5432:5432"
+    volumes:
+      - feria_pgdata:/var/lib/postgresql/data
+volumes:
+  feria_pgdata:
