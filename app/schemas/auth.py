@@ -10,3 +10,7 @@ class StudentRegisterRequest(BaseModel):
 class StudentLoginRequest(BaseModel):
     matricula: str = Field(min_length=1)
     password: str = Field(min_length=1)
+
+class UserLoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=1)

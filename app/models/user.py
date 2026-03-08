@@ -1,4 +1,4 @@
-﻿import enum
+import enum
 import uuid
 from sqlalchemy import String, Enum
 from sqlalchemy.dialects.postgresql import UUID
