@@ -28,6 +28,9 @@ if DATABASE_URL:
 from app.models.base import Base
 from app.models.student import Student
 from app.models.user import User
+from app.models.period import Period
+from app.models.opportunity import Opportunity
+from app.models.enrollment import Enrollment
 
 target_metadata = Base.metadata
 
