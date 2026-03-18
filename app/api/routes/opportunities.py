@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_student
 from app.core.db import get_db
+from app.schemas.enrollment import EnrollmentResponse
 from app.schemas.opportunity import OpportunityDetailResponse, OpportunityResponse
+from app.services.enrollment_service import enroll_student_in_opportunity
 from app.services.opportunity_service import (
     get_opportunities_for_active_period,
     get_opportunity_by_id,
@@ -36,3 +38,16 @@ def get_opportunity_endpoint(
     current_student=Depends(get_current_student),
 ):
     return get_opportunity_by_id(opportunity_id, db)
+
+
+@router.post("/{opportunity_id}/enroll", response_model=EnrollmentResponse, status_code=201)
+def enroll_in_opportunity(
+    opportunity_id: UUID,
+    db: Session = Depends(get_db),
+    current_student=Depends(get_current_student),
+):
+    return enroll_student_in_opportunity(
+        opportunity_id=opportunity_id,
+        student_id=current_student.id,
+        db=db,
+    )
