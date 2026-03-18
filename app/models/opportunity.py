@@ -1,8 +1,10 @@
 import uuid
+from datetime import datetime
 
-from sqlalchemy import String, Text, Integer, Boolean, ForeignKey, Index
+from sqlalchemy import String, Text, Integer, Boolean, ForeignKey, Index, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
 
 from .base import Base
 
@@ -27,5 +29,7 @@ class Opportunity(Base):
     location: Mapped[str | None] = mapped_column(String(150), nullable=True)
     capacity: Mapped[int] = mapped_column(Integer, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     period = relationship("Period", back_populates="opportunities")

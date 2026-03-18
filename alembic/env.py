@@ -31,6 +31,8 @@ from app.models.user import User
 from app.models.period import Period
 from app.models.opportunity import Opportunity
 from app.models.enrollment import Enrollment
+from app.models.otp_code import OtpCode
+from app.models.checkin import Checkin
 
 target_metadata = Base.metadata
 
