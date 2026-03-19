@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.security import create_access_token
 from app.repositories.checkin_repo import CheckinRepo
 from app.repositories.otp_repo import OtpRepo
 
@@ -53,7 +54,7 @@ def request_otp_for_current_student(student_id: UUID, db: Session):
         "expires_at": expires_at,
         "otp_code": raw_code,
         "message": "OTP_GENERATED",
-}
+    }
 
 
 def checkin_current_student(
@@ -119,10 +120,18 @@ def checkin_current_student(
             detail="ALREADY_CHECKED_IN",
         )
 
+    access_token = create_access_token(
+        subject=str(student_id),
+        role="student",
+        token_type="student",
+    )
+
     return {
         "student_id": student_id,
         "checked_in_at": checkin.checked_in_at,
         "method": checkin.method,
         "device": checkin.device,
         "message": "CHECKIN_SUCCESSFUL",
-}
+        "access_token": access_token,
+        "token_type": "bearer",
+    }

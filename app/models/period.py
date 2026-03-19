@@ -18,3 +18,4 @@ class Period(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     opportunities = relationship("Opportunity", back_populates="period")
+    enrollments = relationship("Enrollment", back_populates="period")

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 
+
 class StudentRegisterRequest(BaseModel):
     matricula: str = Field(min_length=1)
     correo: EmailStr
@@ -7,10 +8,17 @@ class StudentRegisterRequest(BaseModel):
     nombre: str = Field(min_length=1)
     apellido: str = Field(min_length=1)
 
+
 class StudentLoginRequest(BaseModel):
     matricula: str = Field(min_length=1)
     password: str = Field(min_length=1)
 
+
 class UserLoginRequest(BaseModel):
     email: EmailStr
     password: str = Field(min_length=1)
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

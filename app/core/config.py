@@ -1,8 +1,9 @@
 ﻿from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_DIR = Path(__file__).resolve().parents[2]  # repo root (..../app/core -> ..../repo)
+BASE_DIR = Path(__file__).resolve().parents[2]
 ENV_FILE = BASE_DIR / ".env"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -12,8 +13,12 @@ class Settings(BaseSettings):
     )
 
     DATABASE_URL: str
+
     JWT_SECRET: str = "change_me_super_secret"
     JWT_ALG: str = "HS256"
     JWT_EXPIRES_MIN: int = 60
+
+    APP_NAME: str = "Feria de Servicio Social Backend"
+
 
 settings = Settings()

@@ -4,10 +4,10 @@ from datetime import datetime
 from sqlalchemy import String, DateTime, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.sql import func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-
+from sqlalchemy.sql import func
 
 class Student(Base):
     __tablename__ = "students"
@@ -22,3 +22,4 @@ class Student(Base):
     email: Mapped[str] = mapped_column(String(320), unique=True, index=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    enrollments = relationship("Enrollment", back_populates="student")

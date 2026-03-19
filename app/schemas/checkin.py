@@ -20,12 +20,21 @@ class CheckinRequest(BaseModel):
     device: str | None = None
 
 
+class CheckinPublicRequest(BaseModel):
+    matricula: str
+    otp_code: str
+    method: str | None = None
+    device: str | None = None
+
+
 class CheckinResponse(BaseModel):
     student_id: UUID
     checked_in_at: datetime
     method: str | None = None
     device: str | None = None
     message: str
+    access_token: str
+    token_type: str = "bearer"
 
     class Config:
         from_attributes = True

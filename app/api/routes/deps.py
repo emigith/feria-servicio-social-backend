@@ -58,8 +58,8 @@ def get_current_user(
     if not user_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
 
-    repo = UserRepo()
-    user = repo.get_by_id(db, UUID(user_id))
+    repo = UserRepo(db)
+    user = repo.get_by_id(UUID(user_id))
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
@@ -67,7 +67,7 @@ def get_current_user(
 
 def require_roles(allowed_roles: list[str]):
     def checker(current_user = Depends(get_current_user)):
-        if current_user.role.value.upper() not in allowed_roles:
+        if current_user.role.value not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Insufficient permissions",

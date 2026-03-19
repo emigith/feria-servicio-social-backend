@@ -11,6 +11,7 @@ from app.repositories.user_repo import UserRepo
 
 bearer_scheme = HTTPBearer()
 
+
 def get_token_payload(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ):
@@ -22,6 +23,7 @@ def get_token_payload(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token",
         )
+
 
 def get_current_student(
     payload: dict = Depends(get_token_payload),
@@ -35,14 +37,21 @@ def get_current_student(
 
     student_id = payload.get("sub")
     if not student_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token payload",
+        )
 
     repo = StudentRepo()
     student = repo.get_by_id(db, UUID(student_id))
     if not student:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student not found",
+        )
 
     return student
+
 
 def get_current_user(
     payload: dict = Depends(get_token_payload),
@@ -56,18 +65,25 @@ def get_current_user(
 
     user_id = payload.get("sub")
     if not user_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token payload",
+        )
 
-    repo = UserRepo()
-    user = repo.get_by_id(db, UUID(user_id))
+    repo = UserRepo(db)
+    user = repo.get_by_id(UUID(user_id))
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
 
     return user
 
+
 def require_roles(allowed_roles: list[str]):
-    def checker(current_user = Depends(get_current_user)):
-        if current_user.role.value.upper() not in allowed_roles:
+    def checker(current_user=Depends(get_current_user)):
+        if current_user.role.value not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Insufficient permissions",
