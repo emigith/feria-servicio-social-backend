@@ -32,4 +32,28 @@ class Opportunity(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
+    # --- Relationships ---
     period = relationship("Period", back_populates="opportunities")
+
+    # AGREGADO: permite navegar opportunity.enrollments y calcular cupos
+    # lazy="dynamic" evita cargar todos los enrollments en memoria si no se necesitan
+    enrollments = relationship(
+        "Enrollment",
+        back_populates="opportunity",
+        lazy="dynamic",
+    )
+
+    # --- Computed property ---
+    @property
+    def enrolled_count(self) -> int:
+        """Cupos ocupados. Solo cuenta inscripciones activas (no canceladas)."""
+        return self.enrollments.filter_by(status="ENROLLED").count()
+
+    @property
+    def available_slots(self) -> int:
+        """Cupos disponibles. Retorna 0 si ya está lleno (nunca negativo)."""
+        return max(0, self.capacity - self.enrolled_count)
+
+    @property
+    def is_full(self) -> bool:
+        return self.available_slots == 0

@@ -42,5 +42,13 @@ class Enrollment(Base):
         nullable=False,
     )
 
-    opportunity = relationship("Opportunity")
-    period = relationship("Period")
+    # --- Relationships (back_populates completos) ---
+
+    # ACTUALIZADO: agrega back_populates para cerrar el ciclo con Opportunity
+    opportunity = relationship("Opportunity", back_populates="enrollments")
+
+    # ACTUALIZADO: agrega back_populates para cerrar el ciclo con Period
+    period = relationship("Period", back_populates="enrollments")
+
+    # AGREGADO: navegación hacia Student (útil para queries admin)
+    student = relationship("Student", back_populates="enrollments")
