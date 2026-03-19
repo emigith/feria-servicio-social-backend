@@ -4,73 +4,60 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  <script id="tailwind-config">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <script>
     tailwind.config = {
-      darkMode: "class",
       theme: {
         extend: {
-          colors: {
-            "primary": "#2d2079",
-            "primary-dark": "#1a1347",
-            "background-light": "#f6f7f8",
-            "background-dark": "#111821",
-            "navy-button": "#0b1f3a"
-          },
           fontFamily: {
-            "display": ["Inter", "sans-serif"]
-          },
-          borderRadius: {
-            "DEFAULT": "0.25rem",
-            "lg": "0.5rem",
-            "xl": "0.75rem",
-            "2xl": "1rem",
-            "full": "9999px"
-          },
-        },
-      },
+            display: ["Lexend", "sans-serif"]
+          }
+        }
+      }
     }
   </script>
-  <title>TEC CCM Social Service Fair</title>
+
+  <title>Portal del Estudiante | Feria de Servicio Social</title>
 
   <style>
     body {
       margin: 0;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Lexend', sans-serif;
       overflow-x: hidden;
     }
 
     .animated-blue-bg {
-      background: linear-gradient(-45deg, #061a40, #0b2545, #134074, #1d4e89, #3e92cc, #89c2d9);
+      background: linear-gradient(-45deg, #0a1633, #10214d, #18356f, #2450a6, #3b82f6, #7db7ff);
       background-size: 400% 400%;
       animation: blueLava 14s ease infinite;
     }
 
     @keyframes blueLava {
-      0% {
-        background-position: 0% 50%;
-      }
-      25% {
-        background-position: 50% 100%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      75% {
-        background-position: 50% 0%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      25% { background-position: 50% 100%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 50% 0%; }
+      100% { background-position: 0% 50%; }
     }
 
-    .navy-button {
-      background-color: #0b1f3a;
+    .primary-button {
+      background-color: #0f173d;
       transition: all 0.25s ease;
     }
 
-    .navy-button:hover {
-      background-color: #10294d;
+    .primary-button:hover {
+      background-color: #18245c;
+      transform: translateY(-2px);
+    }
+
+    .secondary-button {
+      background-color: #1e3a8a;
+      transition: all 0.25s ease;
+    }
+
+    .secondary-button:hover {
+      background-color: #1d4ed8;
       transform: translateY(-2px);
     }
 
@@ -80,51 +67,61 @@
 
     .back-link:hover {
       transform: translateX(-4px);
-      color: #0b1f3a;
+      color: #0f173d;
     }
   </style>
 </head>
 
-<body class="font-display text-[#111827] min-h-screen flex flex-col items-center justify-center animated-blue-bg">
+<body class="font-display text-slate-900 min-h-screen flex flex-col items-center justify-center animated-blue-bg">
   <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
     <div class="layout-container flex h-full grow flex-col">
 
       <main class="flex-1 flex flex-col justify-center items-center px-4 w-full">
-        <div class="layout-content-container flex flex-col w-full items-center justify-center max-w-[1000px] min-h-[80vh] px-6">
-          
-          <div class="bg-[#fef9f5]/95 backdrop-blur-md p-12 md:p-20 rounded-[2.5rem] shadow-2xl flex flex-col items-center w-full h-full justify-center border border-white/20">
-            
-            <h1 class="text-[#111827] leading-tight mb-2 text-5xl md:text-6xl font-extrabold tracking-tight">
-              Estudiante
+        <div class="flex flex-col w-full items-center justify-center max-w-[1000px] min-h-[80vh] px-4 md:px-6">
+
+          <div class="bg-white/95 backdrop-blur-md p-10 md:p-16 rounded-[2.5rem] shadow-2xl flex flex-col items-center w-full border border-white/30">
+
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-12 h-12 rounded-2xl bg-[#0f173d] text-white flex items-center justify-center font-bold text-lg">
+                FS
+              </div>
+              <div class="text-left">
+                <p class="text-xs md:text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
+                  Plataforma
+                </p>
+                <p class="text-slate-800 font-semibold text-base md:text-lg">
+                  Feria de Servicio Social
+                </p>
+              </div>
+            </div>
+
+            <h1 class="text-slate-900 leading-tight mb-3 text-4xl md:text-6xl font-extrabold tracking-tight text-center">
+              Acceso para Estudiante
             </h1>
 
-            <p class="text-slate-500 mb-12 text-lg font-medium">
-              FERIA DE SERVICIO SOCIAL 2026
+            <p class="text-slate-500 mb-10 text-base md:text-lg font-medium text-center max-w-2xl">
+              Selecciona una opción para continuar dentro de la plataforma de la Feria de Servicio Social 2026.
             </p>
 
             <div class="flex flex-col w-full max-w-md gap-4">
-              <div class="flex flex-col gap-1 mb-4">
-                <button
-                  onclick="window.location.href='preregistro.html'"
-                  class="navy-button flex cursor-pointer items-center justify-center overflow-hidden rounded-xl px-8 text-white font-bold h-16 md:h-20 text-lg md:text-xl uppercase shadow-md transition-colors">
-                  Pre-registro
-                </button>
-              </div>
+              <button
+                onclick="window.location.href='preregistro.html'"
+                class="primary-button flex cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl px-8 text-white font-bold h-16 md:h-20 text-lg md:text-xl shadow-md transition-colors">
+                <span>Pre-registro</span>
+              </button>
 
-              <div class="flex flex-col gap-1">
-                <button
-                  onclick="window.location.href='acceso_estudiante.html'"
-                  class="navy-button flex cursor-pointer items-center justify-center overflow-hidden rounded-xl px-8 text-white font-bold h-16 md:h-20 text-lg md:text-xl uppercase shadow-md transition-colors">
-                  Acceso a feria
-                </button>
-              </div>
+              <button
+                onclick="window.location.href='acceso_estudiante.html'"
+                class="secondary-button flex cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl px-8 text-white font-bold h-16 md:h-20 text-lg md:text-xl shadow-md transition-colors">
+                <span>Acceso a feria</span>
+              </button>
             </div>
 
             <div class="w-full flex justify-end mt-10">
               <button
                 type="button"
                 onclick="window.location.href='../index.html'"
-                class="back-link flex items-center gap-2 text-slate-600 font-semibold text-lg"
+                class="back-link flex items-center gap-2 text-slate-600 font-semibold text-base md:text-lg"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -137,8 +134,8 @@
         </div>
       </main>
 
-      <footer class="pb-12 pt-4 text-center mt-auto">
-        <p class="text-xs font-bold leading-normal tracking-[0.1em] text-white/60">
+      <footer class="pb-10 pt-2 text-center mt-auto px-4">
+        <p class="text-xs font-bold leading-normal tracking-[0.12em] text-white/70">
           TECNOLÓGICO DE MONTERREY — SERVICIO SOCIAL 2026
         </p>
       </footer>
