@@ -5,6 +5,7 @@ from app.api.routes.auth_users import router as auth_users_router
 from app.api.routes.debug_auth import router as debug_auth_router
 from app.api.routes.opportunities import router as opportunities_router
 from app.api.routes.periods import router as periods_router
+from app.api.routes.students import router as students_router
 
 api_router = APIRouter()
 
@@ -14,3 +15,4 @@ api_router.include_router(auth_users_router, tags=["users-auth"])
 api_router.include_router(debug_auth_router, tags=["debug-auth"])
 api_router.include_router(opportunities_router, tags=["opportunities"])
 api_router.include_router(periods_router, tags=["periods"])
+api_router.include_router(students_router, tags=["students"])

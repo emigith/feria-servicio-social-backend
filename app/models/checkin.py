@@ -7,19 +7,17 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
 from .base import Base
-
-
 class Checkin(Base):
     __tablename__ = "checkins"
     __table_args__ = (
-        UniqueConstraint("enrollment_id", name="uq_checkins_enrollment_id"),
-        Index("idx_checkins_enrollment_id", "enrollment_id"),
+        UniqueConstraint("student_id", name="uq_checkins_student_id"),
+        Index("idx_checkins_student_id", "student_id"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    enrollment_id: Mapped[uuid.UUID] = mapped_column(
+    student_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("enrollments.id", ondelete="CASCADE"),
+        ForeignKey("students.id", ondelete="CASCADE"),
         nullable=False,
     )
     checked_in_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)

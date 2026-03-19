@@ -12,14 +12,14 @@ from .base import Base
 class OtpCode(Base):
     __tablename__ = "otp_codes"
     __table_args__ = (
-        Index("idx_otp_codes_enrollment_id", "enrollment_id"),
+        Index("idx_otp_codes_student_id", "student_id"),
         Index("idx_otp_codes_expires_at", "expires_at"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    enrollment_id: Mapped[uuid.UUID] = mapped_column(
+    student_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("enrollments.id", ondelete="CASCADE"),
+        ForeignKey("students.id", ondelete="CASCADE"),
         nullable=False,
     )
     code_hash: Mapped[str] = mapped_column(String(255), nullable=False)

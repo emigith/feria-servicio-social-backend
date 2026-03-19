@@ -44,3 +44,12 @@ class EnrollmentRepo:
         db.commit()
         db.refresh(enrollment)
         return enrollment
+    
+    def update_status(self, db: Session, enrollment: Enrollment, status: str) -> Enrollment:
+        enrollment.status = status
+        db.add(enrollment)
+        db.commit()
+        db.refresh(enrollment)
+        return enrollment
+    
+
