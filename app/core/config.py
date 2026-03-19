@@ -18,6 +18,14 @@ class Settings(BaseSettings):
     JWT_ALG: str = "HS256"
     JWT_EXPIRES_MIN: int = 60
 
+    MAIL_ENABLED: bool = False
+    MAIL_FROM: str | None = None
+    MAIL_HOST: str | None = None
+    MAIL_PORT: int = 587
+    MAIL_USERNAME: str | None = None
+    MAIL_PASSWORD: str | None = None
+    MAIL_STARTTLS: bool = True
+    MAIL_SSL_TLS: bool = False
     APP_NAME: str = "Feria de Servicio Social Backend"
 
 

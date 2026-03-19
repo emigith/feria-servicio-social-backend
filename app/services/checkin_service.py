@@ -10,6 +10,8 @@ from sqlalchemy.orm import Session
 from app.core.security import create_access_token
 from app.repositories.checkin_repo import CheckinRepo
 from app.repositories.otp_repo import OtpRepo
+from app.repositories.student_repo import StudentRepo
+from app.services.email_service import send_otp_email
 
 
 OTP_EXPIRATION_MINUTES = 10
@@ -30,6 +32,14 @@ def _verify_otp_code(raw_code: str, code_hash: str) -> bool:
 def request_otp_for_current_student(student_id: UUID, db: Session):
     otp_repo = OtpRepo()
     checkin_repo = CheckinRepo()
+    student_repo = StudentRepo()
+
+    student = student_repo.get_by_id(db, student_id)
+    if not student:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="STUDENT_NOT_FOUND",
+        )
 
     existing_checkin = checkin_repo.get_by_student(db, student_id)
     if existing_checkin:
@@ -49,11 +59,16 @@ def request_otp_for_current_student(student_id: UUID, db: Session):
         expires_at=expires_at,
     )
 
+    send_otp_email(
+        to_email=student.email,
+        otp_code=raw_code,
+        student_name=getattr(student, "nombre", None),
+    )
+
     return {
         "student_id": student_id,
         "expires_at": expires_at,
-        "otp_code": raw_code,
-        "message": "OTP_GENERATED",
+        "message": "OTP_SENT",
     }
 
 

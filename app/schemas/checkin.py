@@ -7,7 +7,6 @@ from pydantic import BaseModel
 class OtpRequestResponse(BaseModel):
     student_id: UUID
     expires_at: datetime
-    otp_code: str
     message: str
 
     class Config:
