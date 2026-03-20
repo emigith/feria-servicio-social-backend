@@ -51,5 +51,11 @@ class EnrollmentRepo:
         db.commit()
         db.refresh(enrollment)
         return enrollment
-    
+    def get_by_opportunity(self, db: Session, opportunity_id: UUID) -> list[Enrollment]:
+     """Lista todos los inscritos en una oportunidad."""
+     return (
+        db.query(Enrollment)
+        .filter(Enrollment.opportunity_id == opportunity_id)
+        .all()
+    )
 

@@ -57,3 +57,4 @@ class Opportunity(Base):
     @property
     def is_full(self) -> bool:
         return self.available_slots == 0
+ 

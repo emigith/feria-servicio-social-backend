@@ -1,0 +1,19 @@
+* [33maf83a2f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeat/postgres-alembic[m[33m)[m Correo OTP
+* [33m0f2cdd8[m feat(auth): implement staff login protection, OTP send flow, and student JWT on checkin
+* [33mf1a05e8[m feat: migrate otp/checkins to student_id + student queries week 7
+* [33mc3465f9[m feat: week 5 student otp request and fair checkin flow
+* [33m02d2a40[m feat: week 4 enrollment by active period with capacity validation
+* [33m0bbcf82[m 3/18 8:48
+* [33m53ce7b3[m docs: add week 3 catalog notes
+* [33m8f56b57[m feat: week 3 active period and opportunities catalog endpoints
+* [33m89c5792[m .
+* [33m33d9cf0[m 3-11-26 6pm
+* [33mb9b8046[m 3-11-26
+* [33m03d7a9f[m tables
+* [33m5b38674[m feat: week 2 auth users roles and auth dependencies
+* [33m1fb34a4[m p
+* [33m118b701[m env
+* [33m442c61d[m feat: postgres + alembic migrations + student auth (register/login)
+* [33mda07bf6[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m docs: week 2 report + security fix
+* [33m894f53e[m chore: ignore python cache and venv
+* [33mb3a2582[m fix: validate password length (bcrypt 72 bytes) + week2 docs
