@@ -1,14 +1,14 @@
 from uuid import UUID
-
 from sqlalchemy.orm import Session
-
+from app.models.enrollment import Enrollment
 from app.models.opportunity import Opportunity
+from app.models.student import Student
 
 
 class OpportunityRepo:
 
     # --- Endpoints existentes de Emilio (no tocar) ---
-
+    
     def get_active_by_period(self, db: Session, period_id: UUID) -> list[Opportunity]:
         return (
             db.query(Opportunity)
@@ -85,3 +85,24 @@ class OpportunityRepo:
         db.commit()
         db.refresh(opportunity)
         return opportunity
+
+    def set_active_status(
+        self,
+        db: Session,
+        opportunity: Opportunity,
+        is_active: bool,
+    ) -> Opportunity:
+        opportunity.is_active = is_active
+        db.add(opportunity)
+        db.commit()
+        db.refresh(opportunity)
+        return opportunity
+
+    def get_enrollments(self, db: Session, opportunity_id: UUID):
+        return (
+            db.query(Enrollment, Student)
+            .join(Student, Enrollment.student_id == Student.id)
+            .filter(Enrollment.opportunity_id == opportunity_id)
+            .order_by(Enrollment.created_at.asc())
+            .all()
+        )
