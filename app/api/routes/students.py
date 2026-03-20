@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.api.routes.deps import get_current_student, require_roles
+from app.api.deps import get_current_student, require_roles
 from app.core.db import get_db
 from app.repositories.student_repo import StudentRepo
 from app.schemas.checkin import CheckinPublicRequest, CheckinResponse, OtpRequestResponse

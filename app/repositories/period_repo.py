@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.orm import Session
 
 from app.models.period import Period
@@ -9,6 +11,9 @@ class PeriodRepo:
 
     def get_by_name(self, db: Session, name: str) -> Period | None:
         return db.query(Period).filter(Period.name == name).first()
+
+    def get_by_id(self, db: Session, period_id: UUID) -> Period | None:
+        return db.query(Period).filter(Period.id == period_id).first()
 
     def create(
         self,

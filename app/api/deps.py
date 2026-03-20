@@ -83,7 +83,17 @@ def get_current_user(
 
 def require_roles(allowed_roles: list[str]):
     def checker(current_user=Depends(get_current_user)):
-        if current_user.role.value not in allowed_roles:
+        print("ROLE RAW:", current_user.role)
+        print("ROLE VALUE:", getattr(current_user.role, "value", None))
+        print("ALLOWED:", allowed_roles)
+
+        current_role = current_user.role.value.upper()
+        normalized_allowed_roles = [role.upper() for role in allowed_roles]
+
+        print("NORMALIZED CURRENT:", current_role)
+        print("NORMALIZED ALLOWED:", normalized_allowed_roles)
+
+        if current_role not in normalized_allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Insufficient permissions",
