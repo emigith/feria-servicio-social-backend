@@ -49,7 +49,6 @@
             Portal de gestión estratégica para coordinadores y supervisores de la Feria de Servicio Social.
           </p>
         </div>
-
         <div class="space-y-4 pt-4 border-t border-white/5">
           <p class="text-xs text-slate-500 flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
@@ -75,27 +74,33 @@
               </svg>
             </div>
             <h2 class="text-2xl font-bold text-slate-900">Acceso Admin</h2>
-            <p class="text-slate-500 text-sm mt-1 text-balance">Ingresa tus credenciales de seguridad.</p>
+            <p class="text-slate-500 text-sm mt-1">Ingresa tus credenciales de seguridad.</p>
           </div>
 
           <form id="login-form" class="space-y-5">
             <div class="space-y-1">
-              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">ID Usuario</label>
-              <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all" id="username" placeholder="admin.social" required type="text" />
+              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Correo</label>
+              <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all"
+                id="username" placeholder="admin@feria.mx" required type="email" />
             </div>
 
             <div class="space-y-1">
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Contraseña</label>
-              <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all" id="password" placeholder="••••••••" required type="password" />
+              <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all"
+                id="password" placeholder="••••••••" required type="password" />
             </div>
 
             <div id="error-message" class="error-box items-center gap-2 bg-red-50 text-red-700 rounded-lg px-3 py-2 text-xs">
-               <span>⚠️</span>
-               <p>Credenciales no válidas.</p>
+              <span>⚠️</span>
+              <p id="error-text">Credenciales no válidas.</p>
             </div>
 
-            <button class="w-full orange-button text-white font-bold py-3.5 rounded-xl shadow-md mt-4 text-lg active:scale-95 transition-transform" type="submit">
-              Ingresar
+            <button class="w-full orange-button text-white font-bold py-3.5 rounded-xl shadow-md mt-4 text-lg active:scale-95 transition-transform flex items-center justify-center gap-2" type="submit">
+              <span id="btn-text">Ingresar</span>
+              <svg id="btn-spinner" class="hidden animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
             </button>
           </form>
         </div>
@@ -111,16 +116,49 @@
   </main>
 
   <script>
-    const form = document.getElementById("login-form");
-    const errorMessage = document.getElementById("error-message");
-    form.addEventListener("submit", function (e) {
+    const API = 'http://127.0.0.1:8000/api/v1';
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value.trim();
-      if (user === "admin.social" && pass === "123456") {
-        window.location.href = "portal_admin.html";
-      } else {
-        errorMessage.classList.add("show");
+
+      const email    = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const errorBox = document.getElementById('error-message');
+      const errorTxt = document.getElementById('error-text');
+      const spinner  = document.getElementById('btn-spinner');
+      const btnText  = document.getElementById('btn-text');
+
+      errorBox.classList.remove('show');
+      spinner.classList.remove('hidden');
+      btnText.textContent = 'Ingresando...';
+
+      try {
+        const res = await fetch(`${API}/users/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || 'Credenciales incorrectas');
+        }
+
+        if (data.role !== 'admin') {
+          throw new Error('No tienes permisos de administrador');
+        }
+
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('role', data.role);
+        window.location.href = 'portal_admin.html';
+
+      } catch (err) {
+        errorTxt.textContent = err.message;
+        errorBox.classList.add('show');
+      } finally {
+        spinner.classList.add('hidden');
+        btnText.textContent = 'Ingresar';
       }
     });
   </script>

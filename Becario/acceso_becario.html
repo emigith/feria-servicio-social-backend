@@ -40,7 +40,7 @@
 <body class="min-h-screen bg-purple-lava flex items-center justify-center p-6">
   <main class="w-full max-w-md">
     <div class="glass-card rounded-[2.5rem] shadow-2xl p-10 md:p-12 relative overflow-hidden">
-      
+
       <div class="absolute -top-10 -right-10 w-32 h-32 bg-purple-100 rounded-full blur-3xl opacity-50"></div>
 
       <header class="text-center mb-10 relative">
@@ -55,36 +55,40 @@
 
       <form id="login-form" class="space-y-6 relative">
         <div class="space-y-1">
-          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Usuario</label>
-          <input 
-            class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-slate-700 transition-all placeholder:text-slate-300" 
-            id="username" 
-            placeholder="becario.social" 
-            required 
-            type="text" 
+          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Correo</label>
+          <input
+            class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-slate-700 transition-all placeholder:text-slate-300"
+            id="username"
+            placeholder="becario@feria.mx"
+            required
+            type="email"
           />
         </div>
 
         <div class="space-y-1">
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] ml-1">Contraseña</label>
-          <input 
-            class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-slate-700 transition-all placeholder:text-slate-300" 
-            id="password" 
-            placeholder="••••••••" 
-            required 
-            type="password" 
+          <input
+            class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-purple-400 outline-none text-slate-700 transition-all placeholder:text-slate-300"
+            id="password"
+            placeholder="••••••••"
+            required
+            type="password"
           />
         </div>
 
         <div id="error-message" class="error-box items-center gap-2 bg-red-50 text-red-600 rounded-xl px-4 py-3 text-xs border border-red-100">
-           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-             <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
-           </svg>
-           <p>Datos de acceso incorrectos.</p>
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <p id="error-text">Datos de acceso incorrectos.</p>
         </div>
 
-        <button class="w-full purple-button text-white font-bold py-4 rounded-2xl shadow-lg mt-2 text-lg active:scale-95 transition-all" type="submit">
-          Ingresar
+        <button class="w-full purple-button text-white font-bold py-4 rounded-2xl shadow-lg mt-2 text-lg active:scale-95 transition-all flex items-center justify-center gap-2" type="submit">
+          <span id="btn-text">Ingresar</span>
+          <svg id="btn-spinner" class="hidden animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
         </button>
       </form>
 
@@ -100,16 +104,49 @@
   </main>
 
   <script>
-    const form = document.getElementById("login-form");
-    const errorMessage = document.getElementById("error-message");
-    form.addEventListener("submit", function (e) {
+    const API = 'http://127.0.0.1:8000/api/v1';
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value.trim();
-      if (user === "becario.social" && pass === "123456") {
-        window.location.href = "portal_becario.html";
-      } else {
-        errorMessage.classList.add("show");
+
+      const email    = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const errorBox = document.getElementById('error-message');
+      const errorTxt = document.getElementById('error-text');
+      const spinner  = document.getElementById('btn-spinner');
+      const btnText  = document.getElementById('btn-text');
+
+      errorBox.classList.remove('show');
+      spinner.classList.remove('hidden');
+      btnText.textContent = 'Ingresando...';
+
+      try {
+        const res = await fetch(`${API}/users/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || 'Datos de acceso incorrectos.');
+        }
+
+        if (data.role !== 'intern') {
+          throw new Error('No tienes permisos de becario.');
+        }
+
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('role', data.role);
+        window.location.href = 'portal_becario.html';
+
+      } catch (err) {
+        errorTxt.textContent = err.message;
+        errorBox.classList.add('show');
+      } finally {
+        spinner.classList.add('hidden');
+        btnText.textContent = 'Ingresar';
       }
     });
   </script>
