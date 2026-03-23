@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["Lexend", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <title>Portal del Estudiante | Feria de Servicio Social</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Lexend', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .animated-blue-bg {
+      background: linear-gradient(-45deg, #0a1633, #10214d, #18356f, #2450a6, #3b82f6, #7db7ff);
+      background-size: 400% 400%;
+      animation: blueLava 14s ease infinite;
+    }
+
+    @keyframes blueLava {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 50% 100%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 50% 0%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .primary-button {
+      background-color: #0f173d;
+      transition: all 0.25s ease;
+    }
+
+    .primary-button:hover {
+      background-color: #18245c;
+      transform: translateY(-2px);
+    }
+
+    .secondary-button {
+      background-color: #1e3a8a;
+      transition: all 0.25s ease;
+    }
+
+    .secondary-button:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    .back-link {
+      transition: all 0.25s ease;
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+      color: #0f173d;
+    }
+  </style>
+</head>
+
+<body class="font-display text-slate-900 min-h-screen flex flex-col items-center justify-center animated-blue-bg">
+  <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+
+      <main class="flex-1 flex flex-col justify-center items-center px-4 w-full">
+        <div class="flex flex-col w-full items-center justify-center max-w-[1000px] min-h-[80vh] px-4 md:px-6">
+
+          <div class="bg-white/95 backdrop-blur-md p-10 md:p-16 rounded-[2.5rem] shadow-2xl flex flex-col items-center w-full border border-white/30">
+
+
+            <h1 class="text-slate-900 leading-tight mb-3 text-4xl md:text-6xl font-extrabold tracking-tight text-center">
+              Acceso para Estudiante
+            </h1>
+
+            <p class="text-slate-500 mb-10 text-base md:text-lg font-medium text-center max-w-2xl">
+              Antes de empezar, dinos qué necesitas hacer:
+            </p>
+
+            <div class="flex flex-col w-full max-w-md gap-4">
+              <button
+                onclick="window.location.href='preregistro.html'"
+                class="primary-button flex cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl px-8 text-white font-bold h-16 md:h-20 text-lg md:text-xl shadow-md transition-colors">
+                <span>Pre-registro</span>
+              </button>
+
+              <button
+                onclick="window.location.href='acceso_estudiante.html'"
+                class="secondary-button flex cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl px-8 text-white font-bold h-16 md:h-20 text-lg md:text-xl shadow-md transition-colors">
+                <span>Acceso a feria</span>
+              </button>
+            </div>
+
+            <div class="w-full flex justify-end mt-10">
+              <button
+                type="button"
+                onclick="window.location.href='../index.html'"
+                class="back-link flex items-center gap-2 text-slate-600 font-semibold text-base md:text-lg"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                Volver
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </main>
+
+      <footer class="pb-10 pt-2 text-center mt-auto px-4">
+        <p class="text-xs font-bold leading-normal tracking-[0.12em] text-white/70">
+          TECNOLÓGICO DE MONTERREY — SERVICIO SOCIAL 2026
+        </p>
+      </footer>
+
+    </div>
+  </div>
+</body>
+</html>
