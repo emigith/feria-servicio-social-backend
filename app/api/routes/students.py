@@ -10,6 +10,23 @@ from app.services.checkin_service import (
     request_otp_for_current_student,
 )
 
+
+
+from app.schemas.student_views import (
+    StudentActiveEnrollmentResponse,
+    StudentCheckinStatusResponse,
+    StudentEnrollmentHistoryResponse,
+    StudentMeResponse,
+)
+from app.services.student_view_service import (
+    get_current_student_active_enrollment,
+    get_current_student_checkin_status,
+    get_current_student_enrollment_history,
+    get_current_student_profile,
+)
+
+
+
 router = APIRouter(prefix="/students", tags=["students"])
 
 
@@ -101,5 +118,69 @@ def checkin_me(
         otp_code=payload.otp_code,
         method=payload.method,
         device=payload.device,
+        db=db,
+    )
+
+
+@router.get(
+    "/me",
+    response_model=StudentMeResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Perfil del estudiante autenticado",
+)
+def get_my_profile(
+    db: Session = Depends(get_db),
+    current_student=Depends(get_current_student),
+):
+    return get_current_student_profile(
+        student_id=current_student.id,
+        db=db,
+    )
+
+
+@router.get(
+    "/me/checkin-status",
+    response_model=StudentCheckinStatusResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Estado de check-in del estudiante autenticado",
+)
+def get_my_checkin_status(
+    db: Session = Depends(get_db),
+    current_student=Depends(get_current_student),
+):
+    return get_current_student_checkin_status(
+        student_id=current_student.id,
+        db=db,
+    )
+
+
+@router.get(
+    "/me/enrollment",
+    response_model=StudentActiveEnrollmentResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Inscripción activa del estudiante autenticado",
+)
+def get_my_active_enrollment(
+    db: Session = Depends(get_db),
+    current_student=Depends(get_current_student),
+):
+    return get_current_student_active_enrollment(
+        student_id=current_student.id,
+        db=db,
+    )
+
+
+@router.get(
+    "/me/history",
+    response_model=StudentEnrollmentHistoryResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Historial de inscripciones del estudiante autenticado",
+)
+def get_my_enrollment_history(
+    db: Session = Depends(get_db),
+    current_student=Depends(get_current_student),
+):
+    return get_current_student_enrollment_history(
+        student_id=current_student.id,
         db=db,
     )

@@ -25,6 +25,7 @@ from app.models.enrollment import Enrollment
 from app.models.opportunity import Opportunity
 from app.models.period import Period
 
+from app.models.student import Student
 
 # ---------------------------------------------------------------------------
 # Check-in
@@ -144,4 +145,13 @@ def student_has_checkin(db: Session, student_id: uuid.UUID) -> bool:
         .filter(Checkin.student_id == student_id)
         .first()
         is not None
+    )
+
+
+
+def get_student_profile(db: Session, student_id: uuid.UUID) -> Optional[Student]:
+    return (
+        db.query(Student)
+        .filter(Student.id == student_id)
+        .first()
     )
