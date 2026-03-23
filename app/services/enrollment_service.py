@@ -4,6 +4,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.repositories.checkin_repo import CheckinRepo
 from app.repositories.enrollment_repo import EnrollmentRepo
 from app.repositories.opportunity_repo import OpportunityRepo
 from app.repositories.period_repo import PeriodRepo
@@ -13,6 +14,7 @@ def enroll_student_in_opportunity(opportunity_id: UUID, student_id: UUID, db: Se
     opportunity_repo = OpportunityRepo()
     period_repo = PeriodRepo()
     enrollment_repo = EnrollmentRepo()
+    checkin_repo = CheckinRepo()
 
     opportunity = opportunity_repo.get_by_id(db, opportunity_id)
     if not opportunity:
@@ -38,6 +40,13 @@ def enroll_student_in_opportunity(opportunity_id: UUID, student_id: UUID, db: Se
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="OPPORTUNITY_NOT_IN_ACTIVE_PERIOD",
+        )
+
+    checkin = checkin_repo.get_by_student(db, student_id)
+    if not checkin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="CHECKIN_REQUIRED",
         )
 
     existing_enrollment = enrollment_repo.get_by_student_and_period(
