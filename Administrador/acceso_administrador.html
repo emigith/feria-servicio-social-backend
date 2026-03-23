@@ -80,14 +80,24 @@
           <form id="login-form" class="space-y-5">
             <div class="space-y-1">
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Correo</label>
-              <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all"
-                id="username" placeholder="admin@feria.mx" required type="email" />
+              <input
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all"
+                id="username"
+                placeholder="admin@feria.mx"
+                required
+                type="email"
+              />
             </div>
 
             <div class="space-y-1">
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Contraseña</label>
-              <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all"
-                id="password" placeholder="••••••••" required type="password" />
+              <input
+                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-slate-700 text-base transition-all"
+                id="password"
+                placeholder="••••••••"
+                required
+                type="password"
+              />
             </div>
 
             <div id="error-message" class="error-box items-center gap-2 bg-red-50 text-red-700 rounded-lg px-3 py-2 text-xs">
@@ -95,7 +105,10 @@
               <p id="error-text">Credenciales no válidas.</p>
             </div>
 
-            <button class="w-full orange-button text-white font-bold py-3.5 rounded-xl shadow-md mt-4 text-lg active:scale-95 transition-transform flex items-center justify-center gap-2" type="submit">
+            <button
+              class="w-full orange-button text-white font-bold py-3.5 rounded-xl shadow-md mt-4 text-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
+              type="submit"
+            >
               <span id="btn-text">Ingresar</span>
               <svg id="btn-spinner" class="hidden animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -116,49 +129,55 @@
   </main>
 
   <script>
-    const API = 'http://127.0.0.1:8000/api/v1';
+    const API = "http://127.0.0.1:8000/api/v1";
 
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const email    = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-      const errorBox = document.getElementById('error-message');
-      const errorTxt = document.getElementById('error-text');
-      const spinner  = document.getElementById('btn-spinner');
-      const btnText  = document.getElementById('btn-text');
+      const email = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const errorBox = document.getElementById("error-message");
+      const errorTxt = document.getElementById("error-text");
+      const spinner = document.getElementById("btn-spinner");
+      const btnText = document.getElementById("btn-text");
 
-      errorBox.classList.remove('show');
-      spinner.classList.remove('hidden');
-      btnText.textContent = 'Ingresando...';
+      errorBox.classList.remove("show");
+      errorTxt.textContent = "";
+      spinner.classList.remove("hidden");
+      btnText.textContent = "Ingresando...";
 
       try {
         const res = await fetch(`${API}/users/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, password })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || 'Credenciales incorrectas');
+          throw new Error(data.detail || "Credenciales incorrectas");
         }
 
-        if (data.role !== 'admin') {
-          throw new Error('No tienes permisos de administrador');
+        if (!data.access_token) {
+          throw new Error("No se recibió access_token del backend");
         }
 
-        localStorage.setItem('token', data.access_token);
-        localStorage.setItem('role', data.role);
-        window.location.href = 'portal_admin.html';
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("token_type", data.token_type || "bearer");
+        localStorage.setItem("role", "admin");
+        localStorage.setItem("admin_email", email);
+
+        window.location.href = "portal_admin.html";
 
       } catch (err) {
-        errorTxt.textContent = err.message;
-        errorBox.classList.add('show');
+        errorTxt.textContent = err.message || "Failed to fetch";
+        errorBox.classList.add("show");
       } finally {
-        spinner.classList.add('hidden');
-        btnText.textContent = 'Ingresar';
+        spinner.classList.add("hidden");
+        btnText.textContent = "Ingresar";
       }
     });
   </script>
