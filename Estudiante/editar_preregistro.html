@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <title>Editar Pre-Registro | Feria 2026</title>
+  <style>
+    body { font-family: 'Lexend', sans-serif; }
+    .animated-blue-bg {
+      background: linear-gradient(-45deg, #0a1633, #18356f, #3b82f6);
+      background-size: 400% 400%;
+      animation: blueLava 10s ease infinite;
+    }
+    @keyframes blueLava { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  </style>
+</head>
+<body class="animated-blue-bg min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl p-8 md:p-12">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-[#0f173d]">Actualizar mis datos</h1>
+      <p class="text-slate-500 mt-2">Identifícate para modificar tu información de registro.</p>
+    </div>
+
+    <form id="form-auth-edit" class="space-y-6">
+      <div class="space-y-4">
+        <div>
+          <label class="text-sm font-semibold text-navy-accent">Correo Institucional</label>
+          <input id="auth_email" required type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="usuario@tec.mx"/>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-navy-accent">Contraseña</label>
+          <input id="auth_password" required type="password" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="••••••••"/>
+        </div>
+        <button type="submit" class="w-full bg-[#0f173d] text-white py-4 rounded-xl font-bold hover:bg-[#18245c] transition-all">
+          Acceder para editar
+        </button>
+      </div>
+    </form>
+
+    <form id="form-edit-data" class="hidden space-y-6 mt-8 border-t pt-8">
+       <div class="grid grid-cols-2 gap-4">
+          <input id="edit_nombre" type="text" class="px-4 py-3 rounded-xl border" placeholder="Nombre"/>
+          <input id="edit_apellido" type="text" class="px-4 py-3 rounded-xl border" placeholder="Apellido"/>
+       </div>
+       <button type="submit" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-all">
+          Guardar Cambios
+       </button>
+    </form>
+  </div>
+
+  <script>
+    const API = 'http://127.0.0.1:8000/api/v1';
+
+    // Lógica para autenticar y mostrar los datos actuales
+    document.getElementById('form-auth-edit').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('auth_email').value;
+      const password = document.getElementById('auth_password').value;
+
+      try {
+        // Reutilizamos el login normal para obtener el token
+        const res = await fetch(`${API}/students/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ matricula: email, password: password }) // Suponiendo que tu login acepta email o matrícula
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('edit_token', data.access_token);
+          
+          // Mostrar el segundo form y ocultar el primero
+          document.getElementById('form-auth-edit').classList.add('hidden');
+          document.getElementById('form-edit-data').classList.remove('hidden');
+          
+          // Aquí cargaríamos los datos actuales del alumno llamando a /students/me
+        } else {
+          alert("Credenciales incorrectas.");
+        }
+      } catch (err) { alert("Error de conexión."); }
+    });
+  </script>
+</body>
+</html>

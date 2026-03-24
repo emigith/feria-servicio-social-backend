@@ -4,536 +4,195 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Catálogo de Opciones | Feria de Servicio Social</title>
-
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 
   <style>
-    body {
-      font-family: 'Lexend', sans-serif;
-      margin: 0;
-      overflow-x: hidden;
-    }
-
+    body { font-family: 'Lexend', sans-serif; margin: 0; overflow-x: hidden; }
     .bg-student-catalog {
       background: linear-gradient(-45deg, #0a1633, #10214d, #18356f, #2450a6, #3b82f6, #7db7ff);
       background-size: 400% 400%;
       animation: blueFlow 14s ease infinite;
     }
-
     @keyframes blueFlow {
       0% { background-position: 0% 50%; }
-      25% { background-position: 50% 100%; }
       50% { background-position: 100% 50%; }
-      75% { background-position: 50% 0%; }
       100% { background-position: 0% 50%; }
     }
-
     .glass-shell {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow:
-        0 25px 50px -12px rgba(0, 0, 0, 0.25),
-        0 0 40px rgba(59, 130, 246, 0.12);
-      animation: fadeInUp 0.6s ease;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
     }
-
-    .catalog-card {
-      transition: all 0.25s ease;
-    }
-
-    .catalog-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 35px rgba(15, 23, 61, 0.12);
-    }
-
-    .primary-button {
-      background-color: #0f173d;
-      transition: all 0.25s ease;
-    }
-
-    .primary-button:hover {
-      background-color: #18245c;
-      transform: translateY(-2px);
-    }
-
-    .secondary-button {
-      transition: all 0.25s ease;
-    }
-
-    .secondary-button:hover {
-      background-color: #e2e8f0;
-    }
-
-    .chip {
-      transition: all 0.2s ease;
-    }
-
-    .chip:hover {
-      transform: translateY(-1px);
-    }
-
-    .fade-item {
-      animation: fadeInUp 0.7s ease;
-    }
-
+    .catalog-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .catalog-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(15, 23, 61, 0.15); }
+    .primary-button { background-color: #0f173d; transition: all 0.2s ease; color: white; }
+    .primary-button:hover { background-color: #1e2a5a; transform: scale(1.02); }
+    .fade-item { animation: fadeInUp 0.6s ease-out forwards; }
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    .search-focus:focus {
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-    }
+    #no-results { display: none; }
   </style>
 </head>
 
-<body class="bg-student-catalog min-h-screen text-slate-900">
-  <div class="min-h-screen p-4 md:p-8">
-    <main class="glass-shell max-w-7xl mx-auto rounded-[2rem] overflow-hidden">
+<body class="bg-student-catalog min-h-screen p-4 md:p-8">
+  <main class="glass-shell max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden min-h-[90vh] flex flex-col">
+    
+    <section class="px-6 md:px-12 pt-10 pb-8 border-b border-slate-200/60">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div class="fade-item">
+          <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">Portal del Estudiante</span>
+          <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Catálogo de Opciones</h1>
+          <p class="text-slate-500 text-lg mt-3">Encuentra el proyecto ideal para tu Servicio Social.</p>
+        </div>
+        <button onclick="window.location.href='estudiante_inicio.html'" class="px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 w-fit">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver al Inicio
+        </button>
+      </div>
 
-      <!-- HEADER -->
-      <section class="px-6 md:px-10 pt-8 md:pt-10 pb-6 border-b border-slate-200/70">
-        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
-          <div class="fade-item">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-14 h-14 rounded-2xl bg-[#0f173d] text-white flex items-center justify-center font-bold text-xl">
-                FS
-              </div>
+      <div class="mt-10 flex flex-col sm:flex-row items-center gap-4 fade-item" style="animation-delay: 0.1s;">
+        <div class="relative flex-1 w-full">
+          <span class="absolute inset-y-0 left-0 pl-5 flex items-center text-slate-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </span>
+          <input type="text" id="search-input" placeholder="Buscar por socio formador, proyecto o palabras clave..." 
+            class="w-full pl-14 pr-6 py-5 bg-white border-0 rounded-2xl focus:ring-4 focus:ring-blue-500/10 outline-none shadow-sm text-lg transition-all border border-slate-100" />
+        </div>
+        <div class="px-6 py-5 bg-blue-600 rounded-2xl text-white font-bold whitespace-nowrap shadow-lg shadow-blue-900/20">
+          <span id="opportunity-count">0</span> Opciones encontradas
+        </div>
+      </div>
+    </section>
+
+    <section class="flex-1 px-6 md:px-12 py-10">
+      <div id="no-results" class="flex flex-col items-center justify-center py-20 text-center fade-item">
+        <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+          <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-800">No encontramos lo que buscas</h3>
+        <p class="text-slate-500 mt-2">Intenta con otros términos o explora las opciones de la lista.</p>
+      </div>
+
+      <div id="contenedor-oportunidades" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+        <article class="catalog-card bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm fade-item" data-search="aprender contigo educacion ejemplo demo">
+          <div class="flex items-start justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-2xl font-black italic">AC</div>
               <div>
-                <p class="text-xs md:text-sm font-semibold uppercase tracking-[0.22em] text-blue-700">
-                  Plataforma
-                </p>
-                <h2 class="text-lg md:text-xl font-semibold text-slate-800">
-                  Feria de Servicio Social
-                </h2>
+                <h4 class="text-xl font-bold text-slate-900 leading-tight">Aprender Contigo</h4>
+                <p class="text-indigo-600 font-medium text-sm">Organización de Ejemplo</p>
               </div>
             </div>
-
-            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900">
-              Catálogo de opciones
-            </h1>
-            <p class="text-slate-500 text-base md:text-lg mt-3 max-w-3xl leading-relaxed">
-              Explora organizaciones, programas y oportunidades disponibles para participar en la Feria de Servicio Social.
-              Filtra por área, modalidad o disponibilidad para encontrar la opción que mejor se adapte a tus intereses.
-            </p>
+            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider">Demo</span>
           </div>
-
-          <div class="flex flex-col sm:flex-row gap-3 fade-item">
-            <button
-              type="button"
-              onclick="window.location.href='estudiante_inicio.html'"
-              class="secondary-button px-5 py-3 rounded-2xl bg-slate-100 text-slate-700 font-semibold"
-            >
-              ← Volver
-            </button>
-            <button
-              type="button"
-              onclick="window.location.href='preregistro.html'"
-              class="primary-button px-5 py-3 rounded-2xl text-white font-semibold shadow-lg"
-            >
-              Ir a pre-registro
-            </button>
+          <p class="text-slate-600 mb-8 line-clamp-2">Proyecto educativo enfocado en mejorar las habilidades de lectura en niños de comunidades rurales.</p>
+          <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Cupos</p><p class="font-bold text-slate-800">15 disponibles</p></div>
+            <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Modalidad</p><p class="font-bold text-slate-800">Híbrido</p></div>
           </div>
-        </div>
-      </section>
-
-      <!-- FILTROS -->
-      <section class="px-6 md:px-10 py-6 border-b border-slate-200/70 fade-item">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <div class="lg:col-span-5">
-            <label class="block text-sm font-semibold text-slate-600 mb-2">Buscar opción</label>
-            <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">🔎</span>
-              <input
-                type="text"
-                placeholder="Buscar por organización, proyecto o área"
-                class="search-focus w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 bg-white outline-none text-slate-700"
-              />
-            </div>
+          <div class="flex gap-3">
+            <button class="flex-1 py-4 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition-colors">Ver más</button>
+            <button class="primary-button flex-1 py-4 rounded-xl font-bold shadow-lg shadow-slate-900/10">Seleccionar</button>
           </div>
+        </article>
+      </div>
+    </section>
+  </main>
 
-          <div class="lg:col-span-2">
-            <label class="block text-sm font-semibold text-slate-600 mb-2">Área</label>
-            <select class="w-full px-4 py-4 rounded-2xl border border-slate-200 bg-white outline-none text-slate-700 focus:ring-2 focus:ring-blue-500/30">
-              <option>Todas</option>
-              <option>Educación</option>
-              <option>Salud</option>
-              <option>Medio ambiente</option>
-              <option>Desarrollo social</option>
-              <option>Tecnología</option>
-            </select>
-          </div>
+  <script>
+    const API_BASE = 'http://127.0.0.1:8000/api/v1';
 
-          <div class="lg:col-span-2">
-            <label class="block text-sm font-semibold text-slate-600 mb-2">Modalidad</label>
-            <select class="w-full px-4 py-4 rounded-2xl border border-slate-200 bg-white outline-none text-slate-700 focus:ring-2 focus:ring-blue-500/30">
-              <option>Todas</option>
-              <option>Presencial</option>
-              <option>Híbrida</option>
-              <option>Virtual</option>
-            </select>
-          </div>
+    async function cargarDatos() {
+      const contenedor = document.getElementById('contenedor-oportunidades');
+      const counter = document.getElementById('opportunity-count');
+      const token = localStorage.getItem('token'); 
 
-          <div class="lg:col-span-3">
-            <label class="block text-sm font-semibold text-slate-600 mb-2">Disponibilidad</label>
-            <select class="w-full px-4 py-4 rounded-2xl border border-slate-200 bg-white outline-none text-slate-700 focus:ring-2 focus:ring-blue-500/30">
-              <option>Cualquier horario</option>
-              <option>Matutino</option>
-              <option>Vespertino</option>
-              <option>Fin de semana</option>
-            </select>
-          </div>
-        </div>
+      if (!token) return;
 
-        <div class="flex flex-wrap gap-3 mt-5">
-          <span class="chip px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">Impacto social</span>
-          <span class="chip px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-semibold">Alta demanda</span>
-          <span class="chip px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">Con cupo disponible</span>
-          <span class="chip px-4 py-2 rounded-full bg-violet-100 text-violet-700 text-sm font-semibold">Proyectos destacados</span>
-        </div>
-      </section>
+      try {
+        const response = await fetch(`${API_BASE}/opportunities?period=active`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        });
 
-      <!-- RESUMEN -->
-      <section class="px-6 md:px-10 pt-6 fade-item">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h3 class="text-xl md:text-2xl font-bold text-slate-900">Opciones disponibles</h3>
-            <p class="text-slate-500 mt-1">Mostrando 6 organizaciones destacadas para estudiantes.</p>
-          </div>
-          <div class="flex gap-3 text-sm font-semibold">
-            <button class="secondary-button px-4 py-2 rounded-xl bg-slate-100 text-slate-700">Más recientes</button>
-            <button class="secondary-button px-4 py-2 rounded-xl bg-slate-100 text-slate-700">Mayor cupo</button>
-          </div>
-        </div>
-      </section>
+        if (response.ok) {
+          const data = await response.json();
+          counter.innerText = data.length + 1; // +1 por la card de demo
 
-      <!-- GRID DE CARDS -->
-      <section class="px-6 md:px-10 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-
-          <!-- CARD 1 -->
-          <article class="catalog-card bg-white rounded-[1.6rem] p-6 border border-slate-200 shadow-sm fade-item">
-            <div class="flex items-start justify-between gap-4 mb-5">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold">
-                  AC
+          data.forEach((op, index) => {
+            const iniciales = op.company ? op.company.substring(0,2).toUpperCase() : 'SS';
+            const searchText = `${op.title} ${op.company} ${op.description}`.toLowerCase();
+            
+            contenedor.insertAdjacentHTML('afterbegin', `
+              <article class="catalog-card bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm fade-item" 
+                       style="animation-delay: ${index * 0.05}s"
+                       data-search="${searchText}">
+                <div class="flex items-start justify-between mb-6">
+                  <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl font-black shadow-lg shadow-blue-200">${iniciales}</div>
+                    <div>
+                      <h4 class="text-xl font-bold text-slate-900 leading-tight">${op.title}</h4>
+                      <p class="text-blue-600 font-medium text-sm">${op.company}</p>
+                    </div>
+                  </div>
+                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider italic">Disponible</span>
                 </div>
-                <div>
-                  <h4 class="text-xl font-bold text-slate-900">Aprender Contigo</h4>
-                  <p class="text-slate-500 text-sm">Programa educativo comunitario</p>
+                <p class="text-slate-600 mb-8 line-clamp-2">${op.description || 'Explora este increíble proyecto de servicio social.'}</p>
+                <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
+                  <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Ubicación</p><p class="font-bold text-slate-800 text-xs">${op.location || 'Campus'}</p></div>
+                  <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Cupos</p><p class="font-bold text-slate-800 text-xs">${op.capacity} lugares</p></div>
                 </div>
-              </div>
-              <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
-                Cupo abierto
-              </span>
-            </div>
-
-            <p class="text-slate-600 leading-relaxed mb-5">
-              Apoya en actividades de acompañamiento académico, tutorías y desarrollo de materiales para estudiantes de nivel básico.
-            </p>
-
-            <div class="grid grid-cols-2 gap-3 mb-5 text-sm">
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Área</p>
-                <p class="font-semibold text-slate-800">Educación</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Modalidad</p>
-                <p class="font-semibold text-slate-800">Híbrida</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Horario</p>
-                <p class="font-semibold text-slate-800">Matutino</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Cupos</p>
-                <p class="font-semibold text-slate-800">24</p>
-              </div>
-            </div>
-
-            <div class="flex gap-3">
-              <button class="secondary-button flex-1 px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 font-semibold">
-                Ver más
-              </button>
-              <button class="primary-button flex-1 px-4 py-3 rounded-2xl text-white font-semibold shadow-md">
-                Seleccionar
-              </button>
-            </div>
-          </article>
-
-          <!-- CARD 2 -->
-          <article class="catalog-card bg-white rounded-[1.6rem] p-6 border border-slate-200 shadow-sm fade-item">
-            <div class="flex items-start justify-between gap-4 mb-5">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
-                  VS
+                <div class="flex gap-3">
+                  <button onclick="alert('Detalles de: ${op.title}')" class="flex-1 py-4 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition-colors text-sm">Detalles</button>
+                  <button onclick="inscribir('${op.id}')" class="primary-button flex-1 py-4 rounded-xl font-bold shadow-lg shadow-slate-900/20 text-sm uppercase tracking-wide">Seleccionar</button>
                 </div>
-                <div>
-                  <h4 class="text-xl font-bold text-slate-900">Vida Sana MX</h4>
-                  <p class="text-slate-500 text-sm">Promoción y prevención en salud</p>
-                </div>
-              </div>
-              <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">
-                Destacado
-              </span>
-            </div>
+              </article>
+            `);
+          });
+        }
+      } catch (error) { console.error("Error cargando datos:", error); }
+    }
 
-            <p class="text-slate-600 leading-relaxed mb-5">
-              Colabora en campañas de prevención, levantamiento de información y apoyo logístico en jornadas comunitarias de salud.
-            </p>
+    // Búsqueda en tiempo real
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const cards = document.querySelectorAll('.catalog-card');
+      const noResults = document.getElementById('no-results');
+      let visibles = 0;
+      
+      cards.forEach(card => {
+        const content = card.getAttribute('data-search');
+        if (content.includes(term)) {
+          card.style.display = 'block';
+          visibles++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      noResults.style.display = visibles === 0 ? 'flex' : 'none';
+      document.getElementById('opportunity-count').innerText = visibles;
+    });
 
-            <div class="grid grid-cols-2 gap-3 mb-5 text-sm">
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Área</p>
-                <p class="font-semibold text-slate-800">Salud</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Modalidad</p>
-                <p class="font-semibold text-slate-800">Presencial</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Horario</p>
-                <p class="font-semibold text-slate-800">Vespertino</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Cupos</p>
-                <p class="font-semibold text-slate-800">18</p>
-              </div>
-            </div>
+    async function inscribir(id) {
+      const token = localStorage.getItem('token');
+      if (!confirm("¿Estás seguro de que quieres inscribirte en este proyecto?")) return;
+      try {
+        const res = await fetch(`${API_BASE}/opportunities/${id}/enroll`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        });
+        if (res.ok) { alert("¡Inscripción confirmada! Revisa tu correo para los siguientes pasos."); window.location.reload(); }
+        else { const d = await res.json(); alert("Aviso: " + d.detail); }
+      } catch (e) { alert("Error de conexión"); }
+    }
 
-            <div class="flex gap-3">
-              <button class="secondary-button flex-1 px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 font-semibold">
-                Ver más
-              </button>
-              <button class="primary-button flex-1 px-4 py-3 rounded-2xl text-white font-semibold shadow-md">
-                Seleccionar
-              </button>
-            </div>
-          </article>
-
-          <!-- CARD 3 -->
-          <article class="catalog-card bg-white rounded-[1.6rem] p-6 border border-slate-200 shadow-sm fade-item">
-            <div class="flex items-start justify-between gap-4 mb-5">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-violet-100 text-violet-700 flex items-center justify-center text-xl font-bold">
-                  RM
-                </div>
-                <div>
-                  <h4 class="text-xl font-bold text-slate-900">Red Medioambiental</h4>
-                  <p class="text-slate-500 text-sm">Proyectos de sostenibilidad</p>
-                </div>
-              </div>
-              <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">
-                Últimos lugares
-              </span>
-            </div>
-
-            <p class="text-slate-600 leading-relaxed mb-5">
-              Participa en acciones de recuperación de espacios, campañas de reciclaje y actividades de educación ambiental.
-            </p>
-
-            <div class="grid grid-cols-2 gap-3 mb-5 text-sm">
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Área</p>
-                <p class="font-semibold text-slate-800">Medio ambiente</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Modalidad</p>
-                <p class="font-semibold text-slate-800">Presencial</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Horario</p>
-                <p class="font-semibold text-slate-800">Fin de semana</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Cupos</p>
-                <p class="font-semibold text-slate-800">8</p>
-              </div>
-            </div>
-
-            <div class="flex gap-3">
-              <button class="secondary-button flex-1 px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 font-semibold">
-                Ver más
-              </button>
-              <button class="primary-button flex-1 px-4 py-3 rounded-2xl text-white font-semibold shadow-md">
-                Seleccionar
-              </button>
-            </div>
-          </article>
-
-          <!-- CARD 4 -->
-          <article class="catalog-card bg-white rounded-[1.6rem] p-6 border border-slate-200 shadow-sm fade-item">
-            <div class="flex items-start justify-between gap-4 mb-5">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl font-bold">
-                  CI
-                </div>
-                <div>
-                  <h4 class="text-xl font-bold text-slate-900">Comunidad Incluyente</h4>
-                  <p class="text-slate-500 text-sm">Atención a grupos prioritarios</p>
-                </div>
-              </div>
-              <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
-                Cupo abierto
-              </span>
-            </div>
-
-            <p class="text-slate-600 leading-relaxed mb-5">
-              Brinda apoyo en iniciativas orientadas a inclusión, accesibilidad, integración comunitaria y acompañamiento social.
-            </p>
-
-            <div class="grid grid-cols-2 gap-3 mb-5 text-sm">
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Área</p>
-                <p class="font-semibold text-slate-800">Desarrollo social</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Modalidad</p>
-                <p class="font-semibold text-slate-800">Híbrida</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Horario</p>
-                <p class="font-semibold text-slate-800">Matutino</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Cupos</p>
-                <p class="font-semibold text-slate-800">15</p>
-              </div>
-            </div>
-
-            <div class="flex gap-3">
-              <button class="secondary-button flex-1 px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 font-semibold">
-                Ver más
-              </button>
-              <button class="primary-button flex-1 px-4 py-3 rounded-2xl text-white font-semibold shadow-md">
-                Seleccionar
-              </button>
-            </div>
-          </article>
-
-          <!-- CARD 5 -->
-          <article class="catalog-card bg-white rounded-[1.6rem] p-6 border border-slate-200 shadow-sm fade-item">
-            <div class="flex items-start justify-between gap-4 mb-5">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-xl font-bold">
-                  TL
-                </div>
-                <div>
-                  <h4 class="text-xl font-bold text-slate-900">TechLab Social</h4>
-                  <p class="text-slate-500 text-sm">Innovación y transformación digital</p>
-                </div>
-              </div>
-              <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-xs font-bold">
-                Innovación
-              </span>
-            </div>
-
-            <p class="text-slate-600 leading-relaxed mb-5">
-              Desarrolla herramientas tecnológicas, levantamiento de requerimientos y apoyo en procesos digitales para organizaciones civiles.
-            </p>
-
-            <div class="grid grid-cols-2 gap-3 mb-5 text-sm">
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Área</p>
-                <p class="font-semibold text-slate-800">Tecnología</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Modalidad</p>
-                <p class="font-semibold text-slate-800">Virtual</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Horario</p>
-                <p class="font-semibold text-slate-800">Flexible</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Cupos</p>
-                <p class="font-semibold text-slate-800">20</p>
-              </div>
-            </div>
-
-            <div class="flex gap-3">
-              <button class="secondary-button flex-1 px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 font-semibold">
-                Ver más
-              </button>
-              <button class="primary-button flex-1 px-4 py-3 rounded-2xl text-white font-semibold shadow-md">
-                Seleccionar
-              </button>
-            </div>
-          </article>
-
-          <!-- CARD 6 -->
-          <article class="catalog-card bg-white rounded-[1.6rem] p-6 border border-slate-200 shadow-sm fade-item">
-            <div class="flex items-start justify-between gap-4 mb-5">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-700 flex items-center justify-center text-xl font-bold">
-                  FH
-                </div>
-                <div>
-                  <h4 class="text-xl font-bold text-slate-900">Fundación Horizonte</h4>
-                  <p class="text-slate-500 text-sm">Acompañamiento y desarrollo humano</p>
-                </div>
-              </div>
-              <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold">
-                Nuevo
-              </span>
-            </div>
-
-            <p class="text-slate-600 leading-relaxed mb-5">
-              Apoya en actividades de intervención comunitaria, eventos formativos y seguimiento de beneficiarios en programas sociales.
-            </p>
-
-            <div class="grid grid-cols-2 gap-3 mb-5 text-sm">
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Área</p>
-                <p class="font-semibold text-slate-800">Desarrollo humano</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Modalidad</p>
-                <p class="font-semibold text-slate-800">Presencial</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Horario</p>
-                <p class="font-semibold text-slate-800">Vespertino</p>
-              </div>
-              <div class="bg-slate-50 rounded-xl p-3">
-                <p class="text-slate-400 mb-1">Cupos</p>
-                <p class="font-semibold text-slate-800">12</p>
-              </div>
-            </div>
-
-            <div class="flex gap-3">
-              <button class="secondary-button flex-1 px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 font-semibold">
-                Ver más
-              </button>
-              <button class="primary-button flex-1 px-4 py-3 rounded-2xl text-white font-semibold shadow-md">
-                Seleccionar
-              </button>
-            </div>
-          </article>
-
-        </div>
-      </section>
-
-      <!-- FOOTER -->
-      <footer class="px-6 md:px-10 pb-8 pt-2 text-center border-t border-slate-200/70">
-        <p class="text-xs font-bold tracking-[0.14em] text-slate-400 uppercase">
-          Tecnológico de Monterrey — Feria de Servicio Social 2026
-        </p>
-      </footer>
-
-    </main>
-  </div>
+    document.addEventListener('DOMContentLoaded', cargarDatos);
+  </script>
 </body>
 </html>
