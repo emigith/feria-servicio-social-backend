@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script id="tailwind-config">
         tailwind.config = {
@@ -140,90 +141,94 @@
 
         <section class="p-8 space-y-8">
 
-            <div class="grid grid-cols-12 gap-8">
-                <div class="col-span-8 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
-                    <div class="flex justify-between items-start mb-8">
-                        <div>
-                            <h3 class="font-headline text-2xl font-black text-primary">Flujo de Registros</h3>
-                            <p class="text-slate-400 text-sm">Ingresos de estudiantes por hora</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-4xl font-headline font-black text-primary">1,248</span>
-                            <p class="text-[10px] font-bold text-accent uppercase tracking-tighter">Total hoy</p>
-                        </div>
-                    </div>
-                    <div class="h-48 w-full bg-slate-50 rounded-2xl relative overflow-hidden">
-                        <svg class="absolute inset-0 w-full h-full" viewbox="0 0 800 200" preserveAspectRatio="none">
-                            <path d="M0,180 Q150,150 300,100 T600,120 T800,50 L800,200 L0,200 Z" fill="#3b82f6"
-                                fill-opacity="0.1"></path>
-                            <path d="M0,180 Q150,150 300,100 T600,120 T800,50" fill="none" stroke="#3b82f6"
-                                stroke-width="4" stroke-linecap="round"></path>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="col-span-4 bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="font-headline font-bold text-primary">Notificaciones</h3>
-                        <div class="relative">
-                            <span class="material-symbols-outlined text-accent">notifications</span>
-                            <span
-                                class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                        </div>
-                    </div>
-                    <div class="space-y-4">
-                        <div
-                            class="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-accent transition-colors">
-                            <p class="text-[10px] font-bold text-accent uppercase mb-1">Cupos Agotados</p>
-                            <p class="text-sm font-bold text-primary">Proyecto "Aula Móvil"</p>
-                            <p class="text-xs text-slate-400">Revisión automática completada</p>
-                        </div>
-                        <div
-                            class="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-accent transition-colors">
-                            <p class="text-[10px] font-bold text-amber-500 uppercase mb-1">Nueva Solicitud</p>
-                            <p class="text-sm font-bold text-primary">12 Socios nuevos</p>
-                            <p class="text-xs text-slate-400">Esperando validación de Admin</p>
-                        </div>
-                        <div
-                            class="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-accent transition-colors">
-                            <p class="text-[10px] font-bold text-emerald-500 uppercase mb-1">Sistema</p>
-                            <p class="text-sm font-bold text-primary">Backup generado</p>
-                            <p class="text-xs text-slate-400">Exportación a CSV exitosa</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-8">
+            <div class="grid grid-cols-4 gap-6">
+                <!-- KPI 1 -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
                     <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-accent">
                         <span class="material-symbols-outlined text-3xl">how_to_reg</span>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Check-In alumnos</p>
-                        <h4 class="text-2xl font-black text-primary">85%</h4>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ya Ingresaron</p>
+                        <h4 class="text-2xl font-black text-primary">1,248</h4>
                     </div>
                 </div>
+                <!-- KPI 2 -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
                     <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                        <span class="material-symbols-outlined text-3xl">handshake</span>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Socios Activos</p>
-                        <h4 class="text-2xl font-black text-primary">42</h4>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
-                    <div class="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
                         <span class="material-symbols-outlined text-3xl">hub</span>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Proyectos Disponibles
-                        </p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Proyectos Activos</p>
                         <h4 class="text-2xl font-black text-primary">156</h4>
                     </div>
                 </div>
+                <!-- KPI 3 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600">
+                        <span class="material-symbols-outlined text-3xl">data_exploration</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tasa Asistencia</p>
+                        <h4 class="text-2xl font-black text-primary">85%</h4>
+                    </div>
+                </div>
+                <!-- KPI 4 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+                        <span class="material-symbols-outlined text-3xl">schedule</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hora Pico</p>
+                        <h4 class="text-2xl font-black text-primary" id="metric-peak">11:00 AM</h4>
+                    </div>
+                </div>
             </div>
+
+            <div class="grid grid-cols-12 gap-8">
+                <!-- Flujo por Hora -->
+                <div class="col-span-8 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="font-headline text-2xl font-black text-primary">Flujo de Alumnos (Check-in)</h3>
+                            <p class="text-slate-400 text-sm">Ingresos constantes de estudiantes por hora de la feria
+                            </p>
+                        </div>
+                    </div>
+                    <div class="h-64 w-full relative">
+                        <canvas id="flujoChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Asistencia vs Preregistro -->
+                <div class="col-span-4 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                    <h3 class="font-headline text-xl font-black text-primary mb-2">Asistencia vs Preregistros</h3>
+                    <p class="text-slate-400 text-xs mb-6">Conversión general de asistencia al evento</p>
+                    <div class="h-56 w-full relative flex justify-center">
+                        <canvas id="asistenciaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-8">
+                <!-- Preregistrados por día -->
+                <div class="col-span-6 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                    <h3 class="font-headline text-xl font-black text-primary mb-2">Pre-registros por Día</h3>
+                    <p class="text-slate-400 text-xs mb-6">Alumnos registrados a lo largo de los días previos</p>
+                    <div class="h-64 w-full relative">
+                        <canvas id="preregistrosDiaChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Proyectos mas solicitados -->
+                <div class="col-span-6 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                    <h3 class="font-headline text-xl font-black text-primary mb-2">Proyectos Más Solicitados</h3>
+                    <p class="text-slate-400 text-xs mb-6">Top 5 de proyectos por interés del alumno (Deseados)</p>
+                    <div class="h-64 w-full relative">
+                        <canvas id="topProyectosChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <footer class="p-8 border-t border-slate-200 flex justify-between items-center bg-white mt-auto">
@@ -235,6 +240,75 @@
         </footer>
     </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // 1. Flujo de Alumnos (Line)
+            const ctxFlujo = document.getElementById('flujoChart').getContext('2d');
+            const gradientFlujo = ctxFlujo.createLinearGradient(0, 0, 0, 300);
+            gradientFlujo.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
+            gradientFlujo.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+            new Chart(ctxFlujo, {
+                type: 'line',
+                data: {
+                    labels: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+                    datasets: [{
+                        label: 'Check-ins', data: [150, 300, 450, 200, 100, 35, 10, 3],
+                        borderColor: '#3b82f6', backgroundColor: gradientFlujo, borderWidth: 3, fill: true, tension: 0.4,
+                        pointBackgroundColor: '#ffffff', pointBorderColor: '#3b82f6', pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                }
+            });
+
+            // 2. Asistentes vs Pre-registros (Doughnut)
+            const ctxAsistencia = document.getElementById('asistenciaChart').getContext('2d');
+            new Chart(ctxAsistencia, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Asistieron', 'No Asistieron'],
+                    datasets: [{ data: [1248, 219], backgroundColor: ['#10b981', '#f1f5f9'], borderWidth: 0 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '75%',
+                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } }
+                }
+            });
+
+            // 3. Pre-registros por Día (Bar)
+            const ctxPreregistros = document.getElementById('preregistrosDiaChart').getContext('2d');
+            new Chart(ctxPreregistros, {
+                type: 'bar',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    datasets: [{ label: 'Registros', data: [120, 250, 400, 380, 210, 107], backgroundColor: '#8b5cf6', borderRadius: 6 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                }
+            });
+
+            // 4. Proyectos Más Solicitados (Horizontal Bar)
+            const ctxTopProyectos = document.getElementById('topProyectosChart').getContext('2d');
+            new Chart(ctxTopProyectos, {
+                type: 'bar',
+                data: {
+                    labels: ['Inclusión Digital', 'Reforestación', 'Tutorías STEM', 'Refugio Animal', 'Diseño Social'],
+                    datasets: [{ label: 'Intereses', data: [340, 290, 250, 180, 140], backgroundColor: '#f97316', borderRadius: 6 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f1f5f9' } }, y: { grid: { display: false } } }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
