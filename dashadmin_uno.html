@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin Dashboard | Feria de Servicio Social</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0f173d",
+              "accent": "#3b82f6",
+              "surface": "#f8fafc",
+              "on-surface": "#0f172a",
+              "on-surface-variant": "#64748b"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Efecto Lámpara de Lava para el Sidebar */
+        .lava-sidebar {
+            background: linear-gradient(-45deg, #3b82f6, #f97316, #a855f7, #ec4899, #eab308);
+            background-size: 400% 400%;
+            animation: lava-animation 15s ease infinite;
+        }
+
+        @keyframes lava-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav-item-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .nav-item-glass:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+        .nav-item-active {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-on-surface font-body">
+
+<aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 lava-sidebar text-white flex flex-col pt-8 pb-4 shadow-2xl">
+    <div class="px-8 mb-10">
+        <h1 class="text-xl font-extrabold font-headline tracking-tighter leading-tight">
+            Portal Feria <br>Servicio Social <span class="opacity-80 font-medium">- Admin</span>
+        </h1>
+        <p class="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold mt-2">Gestión 2026</p>
+    </div>
+    
+    <nav class="flex-grow px-4 space-y-3">
+        <a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl font-semibold text-sm" href="#">
+            <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+            <span>Dashboard General</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 nav-item-glass rounded-xl font-semibold text-sm" href="#">
+            <span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+            <span>Proyectos</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 nav-item-glass rounded-xl font-semibold text-sm" href="#">
+            <span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+            <span>Gestión de Estudiantes</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 nav-item-glass rounded-xl font-semibold text-sm" href="#">
+            <span class="material-symbols-outlined" data-icon="handshake">handshake</span>
+            <span>Socios Formadores</span>
+        </a>
+    </nav>
+
+    <div class="mt-auto px-4">
+        <div class="border-t border-white/20 pt-4 pb-2">
+            <a class="flex items-center gap-3 px-4 py-2 text-white/70 text-xs hover:text-white transition-colors" href="#">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<main class="ml-72 min-h-screen flex flex-col">
+    
+    <header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 flex justify-between items-center px-8 py-4">
+        <h2 class="font-headline font-bold text-slate-500 text-sm uppercase tracking-widest">Panel de Control Principal</h2>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-primary">Admin General</p>
+                    <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white ring-2 ring-accent ring-offset-2">AD</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="p-8 space-y-8">
+        
+        <div class="grid grid-cols-12 gap-8">
+            <div class="col-span-8 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <h3 class="font-headline text-2xl font-black text-primary">Flujo de Registros</h3>
+                        <p class="text-slate-400 text-sm">Ingresos de estudiantes por hora</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-headline font-black text-primary">1,248</span>
+                        <p class="text-[10px] font-bold text-accent uppercase tracking-tighter">Total hoy</p>
+                    </div>
+                </div>
+                <div class="h-48 w-full bg-slate-50 rounded-2xl relative overflow-hidden">
+                    <svg class="absolute inset-0 w-full h-full" viewbox="0 0 800 200" preserveAspectRatio="none">
+                        <path d="M0,180 Q150,150 300,100 T600,120 T800,50 L800,200 L0,200 Z" fill="#3b82f6" fill-opacity="0.1"></path>
+                        <path d="M0,180 Q150,150 300,100 T600,120 T800,50" fill="none" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="col-span-4 bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-headline font-bold text-primary">Notificaciones</h3>
+                    <div class="relative">
+                        <span class="material-symbols-outlined text-accent">notifications</span>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-accent transition-colors">
+                        <p class="text-[10px] font-bold text-accent uppercase mb-1">Cupos Agotados</p>
+                        <p class="text-sm font-bold text-primary">Proyecto "Aula Móvil"</p>
+                        <p class="text-xs text-slate-400">Revisión automática completada</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-accent transition-colors">
+                        <p class="text-[10px] font-bold text-amber-500 uppercase mb-1">Nueva Solicitud</p>
+                        <p class="text-sm font-bold text-primary">12 Socios nuevos</p>
+                        <p class="text-xs text-slate-400">Esperando validación de Admin</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-accent transition-colors">
+                        <p class="text-[10px] font-bold text-emerald-500 uppercase mb-1">Sistema</p>
+                        <p class="text-sm font-bold text-primary">Backup generado</p>
+                        <p class="text-xs text-slate-400">Exportación a CSV exitosa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-accent">
+                    <span class="material-symbols-outlined text-3xl">how_to_reg</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Check-In alumnos</p>
+                    <h4 class="text-2xl font-black text-primary">85%</h4>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                    <span class="material-symbols-outlined text-3xl">handshake</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Socios Activos</p>
+                    <h4 class="text-2xl font-black text-primary">42</h4>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+                    <span class="material-symbols-outlined text-3xl">hub</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Proyectos Disponibles</p>
+                    <h4 class="text-2xl font-black text-primary">156</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="p-8 border-t border-slate-200 flex justify-between items-center bg-white mt-auto">
+        <p class="text-[10px] font-black uppercase tracking-widest text-slate-300">© 2026 Portal Feria Servicio Social</p>
+        <div class="flex gap-6 text-[10px] font-bold text-slate-400 uppercase">
+            <span class="text-emerald-500">• SISTEMA OPERATIVO 100%</span>
+        </div>
+    </footer>
+</main>
+
+</body>
+</html>
