@@ -19,13 +19,13 @@ def register_student(
     if repo.get_by_email(db, correo):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Student already exists (email)",
+            detail="Ya existe un estudiante registrado con este correo.",
         )
 
     if repo.get_by_matricula(db, matricula):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Student already exists (matricula)",
+            detail="Esta matrícula ya fue registrada previamente.",
         )
 
     hashed = hash_password(password)
@@ -39,6 +39,20 @@ def register_student(
         hashed_password=hashed,
     )
 
+    from app.services.email_service import send_registration_confirmation
+    verify_token = create_access_token(
+        subject=str(student.id),
+        role="verify",
+        token_type="verify",
+    )
+    send_registration_confirmation(
+        to_email=correo,
+        student_name=nombre,
+        matricula=matricula,
+        password=password,
+        verify_token=verify_token,
+    )
+
     return {
         "studentId": str(student.id),
         "matricula": student.matricula,
@@ -49,11 +63,15 @@ def register_student(
 def login_student(matricula: str, password: str, db: Session):
     repo = StudentRepo()
     student = repo.get_by_matricula(db, matricula)
+    
+    # Permitir inicio de sesión con correo si el usuario lo pone en el form
+    if not student and "@" in matricula:
+        student = repo.get_by_email(db, matricula)
 
     if (not student) or (not verify_password(password, student.hashed_password)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
+            detail="Credenciales incorrectas. Verifica que tus datos estén bien escritos.",
         )
 
     access_token = create_access_token(

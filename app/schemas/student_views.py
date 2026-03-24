@@ -57,4 +57,5 @@ class StudentUpdateSchema(BaseModel):
     nombre: Optional[str] = None
     apellido: Optional[str] = None
     email: Optional[EmailStr] = None
-    # No incluimos matrícula porque normalmente es el ID único y no cambia
+    matricula: Optional[str] = None
+    password: Optional[str] = None

@@ -37,3 +37,9 @@ class CheckinResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class QRCheckinRequest(BaseModel):
+    qr_payload: str
+    method: str | None = None
+    device: str | None = None
