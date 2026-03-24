@@ -36,7 +36,6 @@
       overflow: hidden;
       font-family: Inter, system-ui, sans-serif;
     }
-
     body {
       background:
         radial-gradient(circle at 15% 20%, rgba(255,255,255,0.10), transparent 22%),
@@ -45,9 +44,7 @@
         linear-gradient(135deg, #1f1454 0%, #2d2079 45%, #33258a 100%);
       color: white;
     }
-
-    .ambient-blur::before,
-    .ambient-blur::after {
+    .ambient-blur::before, .ambient-blur::after {
       content: "";
       position: absolute;
       border-radius: 9999px;
@@ -55,23 +52,16 @@
       z-index: 0;
       opacity: 0.55;
     }
-
     .ambient-blur::before {
-      width: 220px;
-      height: 220px;
+      width: 220px; height: 220px;
       background: rgba(99, 102, 241, 0.22);
-      top: 8%;
-      left: 10%;
+      top: 8%; left: 10%;
     }
-
     .ambient-blur::after {
-      width: 260px;
-      height: 260px;
+      width: 260px; height: 260px;
       background: rgba(255, 255, 255, 0.10);
-      bottom: 8%;
-      right: 8%;
+      bottom: 8%; right: 8%;
     }
-
     .logo-secret {
       position: relative;
       display: inline-block;
@@ -79,16 +69,11 @@
       transition: transform 0.28s ease;
       z-index: 5;
     }
-
-    .logo-secret:hover {
-      transform: translateY(-3px) scale(1.03);
-    }
-
+    .logo-secret:hover { transform: translateY(-3px) scale(1.03); }
     .secret-menu {
       display: none;
       position: absolute;
-      top: 115%;
-      left: 50%;
+      top: 115%; left: 50%;
       transform: translateX(-50%);
       min-width: 220px;
       background: rgba(255,255,255,0.96);
@@ -98,39 +83,24 @@
       box-shadow: 0 18px 40px rgba(0,0,0,0.22);
       backdrop-filter: blur(10px);
     }
-
-    .secret-menu.show {
-      display: block;
-    }
-
+    .secret-menu.show { display: block; }
     .secret-option {
-      width: 100%;
-      border: none;
-      background: transparent;
-      color: #2d2079;
-      font-weight: 700;
-      padding: 14px 16px;
-      border-radius: 14px;
-      cursor: pointer;
+      width: 100%; border: none;
+      background: transparent; color: #2d2079;
+      font-weight: 700; padding: 14px 16px;
+      border-radius: 14px; cursor: pointer;
       transition: background 0.2s ease, transform 0.2s ease;
     }
-
-    .secret-option:hover {
-      background: #f5f3ff;
-      transform: translateY(-1px);
-    }
-
+    .secret-option:hover { background: #f5f3ff; transform: translateY(-1px); }
     .glass-panel {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.14);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
     }
-
     .access-card {
       transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
     }
-
     .access-card:hover {
       transform: translateY(-6px);
       box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
@@ -153,29 +123,20 @@
               id="central-logo"
               class="w-24 md:w-32 lg:w-36 h-auto drop-shadow-[0_10px_25px_rgba(0,0,0,0.25)] rounded-2xl"
             />
-
             <div id="secret-menu" class="secret-menu">
-              <button
-                class="secret-option"
+              <button class="secret-option"
                 onclick="window.location.href='Becario/acceso_becario.html'">
                 Becario
               </button>
-              <button
-                class="secret-option mt-1"
+              <button class="secret-option mt-1"
                 onclick="window.location.href='Administrador/acceso_administrador.html'">
                 Administrador
               </button>
             </div>
           </div>
 
-          <h1 class="text-4xl md:text-6xl xl:text-7xl font-black tracking-tight leading-none">
-            TEC CCM
-          </h1>
-
-          <p class="mt-4 text-sm md:text-lg tracking-[0.34em] uppercase opacity-90">
-            Feria de Servicio Social
-          </p>
-
+          <h1 class="text-4xl md:text-6xl xl:text-7xl font-black tracking-tight leading-none">TEC CCM</h1>
+          <p class="mt-4 text-sm md:text-lg tracking-[0.34em] uppercase opacity-90">Feria de Servicio Social</p>
           <p class="mt-8 max-w-xl text-sm md:text-base text-white/75 leading-relaxed">
             Tu portal para gestionar y descubrir oportunidades de Servicio Social.
           </p>
@@ -185,36 +146,31 @@
         <div class="glass-panel rounded-[28px] p-4 md:p-6 lg:p-7 shadow-softxl">
           <div class="rounded-[24px] bg-white/95 text-slate-900 shadow-card p-6 md:p-7">
             <div class="mb-6">
-              <p class="text-xs md:text-sm font-bold tracking-[0.22em] uppercase text-slate-500">
-                Acceso al Portal
-              </p>
-              <h2 class="mt-3 text-2xl md:text-3xl font-bold text-slate-900">
-                Elige cómo deseas ingresar
-              </h2>
+              <p class="text-xs md:text-sm font-bold tracking-[0.22em] uppercase text-slate-500">Acceso al Portal</p>
+              <h2 class="mt-3 text-2xl md:text-3xl font-bold text-slate-900">Elige cómo deseas ingresar</h2>
             </div>
 
             <div class="grid grid-cols-1 gap-4">
-              <button
-                class="access-card bg-white border border-slate-200 rounded-[24px] px-6 py-6 text-left flex items-center gap-4"
+
+              <!-- Socio Formador -->
+              <button class="access-card bg-white border border-slate-200 rounded-[24px] px-6 py-6 text-left flex items-center gap-4"
                 onclick="window.location.href='Socio_Formador/acceso_socioformados.html'">
                 <div class="w-14 h-14 rounded-2xl bg-[#f4f1ff] flex items-center justify-center shrink-0">
-                  <svg class="w-7 h-7" fill="none" stroke="#2d2079" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="w-7 h-7" fill="none" stroke="#2d2079" viewBox="0 0 24 24">
                     <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
                   </svg>
                 </div>
                 <div class="flex-1">
                   <h3 class="text-xl md:text-2xl font-bold text-tecPurple">Socio Formador</h3>
-                  <p class="mt-1 text-slate-500 text-sm md:text-base">
-                    Consulta métricas de desempeño, revisa el estado de tus proyectos y da seguimiento a las experiencias.
-                  </p>
+                  <p class="mt-1 text-slate-500 text-sm md:text-base">Consulta métricas, revisa proyectos y da seguimiento.</p>
                 </div>
               </button>
 
-              <button
-                class="access-card bg-white border border-slate-200 rounded-[24px] px-6 py-6 text-left flex items-center gap-4"
-                onclick="window.location.href='Estudiante/estudiante_inicio.html'">
+              <!-- Alumno → va a acceso (check-in con OTP) -->
+              <button class="access-card bg-white border border-slate-200 rounded-[24px] px-6 py-6 text-left flex items-center gap-4"
+                onclick="window.location.href='Estudiante/acceso_estudiante.html'">
                 <div class="w-14 h-14 rounded-2xl bg-[#f4f1ff] flex items-center justify-center shrink-0">
-                  <svg class="w-7 h-7" fill="none" stroke="#2d2079" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="w-7 h-7" fill="none" stroke="#2d2079" viewBox="0 0 24 24">
                     <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
                     <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
                     <path d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
@@ -222,11 +178,10 @@
                 </div>
                 <div class="flex-1">
                   <h3 class="text-xl md:text-2xl font-bold text-tecPurple">Alumno</h3>
-                  <p class="mt-1 text-slate-500 text-sm md:text-base">
-                    Accede al preregistro, revisa experiencias y entra a la feria de proyectos.
-                  </p>
+                  <p class="mt-1 text-slate-500 text-sm md:text-base">Accede al preregistro, revisa experiencias y entra a la feria.</p>
                 </div>
               </button>
+
             </div>
           </div>
         </div>
@@ -246,12 +201,12 @@
     const secretMenu = document.getElementById("secret-menu");
     const secretButton = document.getElementById("secret-button");
 
-    logo.addEventListener("click", function (event) {
+    logo.addEventListener("click", function(event) {
       event.stopPropagation();
       secretMenu.classList.toggle("show");
     });
 
-    document.addEventListener("click", function (event) {
+    document.addEventListener("click", function(event) {
       if (!secretButton.contains(event.target)) {
         secretMenu.classList.remove("show");
       }
