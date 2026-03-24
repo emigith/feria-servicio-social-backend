@@ -9,6 +9,8 @@ from app.services.checkin_service import (
     checkin_current_student,
     request_otp_for_current_student,
 )
+# Añade esta línea al principio de tu archivo de rutas
+from app.schemas.student_views import StudentUpdateSchema
 
 
 
@@ -184,3 +186,15 @@ def get_my_enrollment_history(
         student_id=current_student.id,
         db=db,
     )
+
+# app/api/routes/students.py (o donde tengas las rutas de 'me')
+
+@router.patch("/me", status_code=status.HTTP_200_OK)
+def update_profile(
+    payload: StudentUpdateSchema, # Crea un schema con nombre, apellido, correo (opcionales)
+    db: Session = Depends(get_db),
+    current_student = Depends(get_current_student) # El token que guardamos arriba
+):
+    repo = StudentRepo()
+    updated_student = repo.update(db, student_id=current_student.id, data=payload.dict(exclude_unset=True))
+    return updated_student

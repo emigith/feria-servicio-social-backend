@@ -1,5 +1,7 @@
 from datetime import datetime
 from uuid import UUID
+from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -49,3 +51,10 @@ class StudentEnrollmentHistoryItem(BaseModel):
 class StudentEnrollmentHistoryResponse(BaseModel):
     total: int
     items: list[StudentEnrollmentHistoryItem]
+    
+
+class StudentUpdateSchema(BaseModel):
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    email: Optional[EmailStr] = None
+    # No incluimos matrícula porque normalmente es el ID único y no cambia
