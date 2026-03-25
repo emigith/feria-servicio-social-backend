@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Catálogo de Proyectos | Admin FSS</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c2d12", /* orange-900 strong */
+                        "accent": "#ea580c", /* orange-600 */
+                        "surface": "#fff7ed", /* orange-50 very light white-orange */
+                        "on-surface": "#431407",
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-headline {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Efecto Naranja Lava para el Sidebar */
+        .lava-orange {
+            background: linear-gradient(-45deg, #7c2d12, #9a3412, #c2410c, #ea580c, #f97316);
+            background-size: 400% 400%;
+            animation: lava-animation 14s ease infinite;
+        }
+
+        @keyframes lava-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .nav-item-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item-glass:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+
+        .nav-item-active {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .project-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px -12px rgba(234, 88, 12, 0.15);
+            border-color: #fdba74;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body flex min-h-screen relative">
+
+    <!-- SIDEBAR -->
+    <aside
+        class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 lava-orange text-white flex flex-col pt-8 pb-4 shadow-2xl">
+        <div class="px-8 mb-10">
+            <h1 class="text-xl font-extrabold font-headline tracking-tighter leading-tight">
+                Portal Feria <br>Servicio Social <span class="opacity-80 font-medium">- Admin</span>
+            </h1>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold mt-2">Gestión 2026</p>
+        </div>
+
+        <nav class="flex-grow flex flex-col justify-center px-4 space-y-6 pb-12">
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base"
+                href="dash_admin_uno.html">
+                <span class="material-symbols-outlined text-[22px]" data-icon="dashboard">dashboard</span>
+                <span>Dashboard General</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-active rounded-2xl font-semibold text-base"
+                href="proyecto_admin.html">
+                <span class="material-symbols-outlined text-[22px]" data-icon="assignment">local_library</span>
+                <span>Catálogo Proyectos</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="#">
+                <span class="material-symbols-outlined text-[22px]" data-icon="person_search">person_search</span>
+                <span>Gestión Estudiantes</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto px-4">
+            <div class="border-t border-white/20 pt-4 pb-2">
+                <a class="flex items-center gap-3 px-4 py-2 text-white/70 text-xs hover:text-white transition-colors"
+                    href="../index.html" onclick="localStorage.clear();">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="ml-72 flex-1 flex flex-col bg-slate-50 relative z-10 min-h-screen border-l border-slate-200">
+
+        <header
+            class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-orange-100 flex justify-between items-center px-10 py-5">
+            <div>
+                <h2 class="font-headline font-bold text-accent text-sm uppercase tracking-widest">Módulo de
+                    Administración</h2>
+                <h1 class="text-2xl font-black font-headline text-primary mt-1">Catálogo de Proyectos</h1>
+            </div>
+
+            <div class="flex flex-col items-end gap-3">
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="text-right">
+                        <p class="text-xs font-bold text-primary">Admin General</p>
+                        <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
+                    </div>
+                    <div
+                        class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white ring-2 ring-accent ring-offset-2 shadow-sm">
+                        AD
+                    </div>
+                </div>
+
+                <!-- Botón simulado para cargar datos -->
+                <button
+                    class="bg-accent hover:bg-orange-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-md hover:shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5"
+                    onclick="document.getElementById('fileUpload').click()">
+                    <span class="material-symbols-outlined text-sm">upload_file</span> Cargar CSV de Google Sheets
+                </button>
+                <input type="file" id="fileUpload" accept=".csv" class="hidden">
+            </div>
+        </header>
+
+        <section class="p-10 flex-1">
+
+            <!-- Toolbar superior (Barra de Búsqueda y Filtros) -->
+            <div
+                class="bg-white p-4 rounded-3xl border border-orange-100 shadow-sm flex items-center justify-between mb-8">
+                <div class="relative w-96">
+                    <span
+                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                    <input type="text" placeholder="Buscar por nombre, socio formador o categoría..."
+                        class="w-full pl-12 pr-4 py-3 bg-slate-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-accent outline-none text-slate-700 font-medium transition-all">
+                </div>
+
+                <div class="flex gap-3">
+                    <select
+                        class="bg-slate-50 border-none rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 focus:ring-2 focus:ring-accent outline-none cursor-pointer hover:bg-slate-100 transition-colors">
+                        <option value="">Todas las Modalidades</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="remoto">Remoto</option>
+                        <option value="mixto">Mixto</option>
+                    </select>
+                    <button
+                        class="bg-orange-50 text-accent font-bold px-5 py-3 rounded-2xl hover:bg-orange-100 transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">filter_list</span> Filtros
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grilla Principal del Catálogo -->
+            <div id="projects-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+
+                <!-- Mockup Proyecto 1 -->
+                <article
+                    class="project-card bg-white rounded-[2rem] border border-orange-50 p-6 flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full blur-2xl z-0"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <span
+                                class="px-3 py-1 bg-orange-100 text-accent text-[10px] font-black uppercase tracking-widest rounded-lg">Impacto
+                                Social</span>
+                            <div
+                                class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-accent font-bold">
+                                <span class="material-symbols-outlined text-sm">foundation</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2">Desarrollo de
+                            Comunidades Rurales</h3>
+                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-[14px]">apartment</span> Fundación Tierra Viva</p>
+                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">Apoyo en el desarrollo logístico
+                            e infraestructural de comunidades apartadas mediante la construcción sustentable y
+                            capacitación digital básica.</p>
+                    </div>
+
+                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos
+                                </p>
+                                <p class="text-lg font-black text-primary">12 <span
+                                        class="text-xs text-slate-400 font-medium">/ 20</span></p>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200"></div>
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">
+                                    Modalidad</p>
+                                <p class="text-sm font-bold text-accent bg-orange-50 px-3 py-1 rounded-lg">Presencial
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-primary hover:bg-orange-950 text-white font-bold py-3.5 rounded-xl transition-colors">Editar
+                            Detalles</button>
+                    </div>
+                </article>
+
+                <!-- Mockup Proyecto 2 -->
+                <article
+                    class="project-card bg-white rounded-[2rem] border border-orange-50 p-6 flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-emerald-50 rounded-full blur-2xl z-0"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <span
+                                class="px-3 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-lg">Medio
+                                Ambiente</span>
+                            <div
+                                class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold">
+                                <span class="material-symbols-outlined text-sm">forest</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2">Reforestación
+                            Activa CDMX</h3>
+                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-[14px]">apartment</span> EcoCiudad</p>
+                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">Proyecto de fines de semana
+                            enfocado en la restauración y manutención de parques boscosos dentro de la zona sur de la
+                            ciudad.</p>
+                    </div>
+
+                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos
+                                </p>
+                                <p class="text-lg font-black text-primary">45 <span
+                                        class="text-xs text-slate-400 font-medium">/ 50</span></p>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200"></div>
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">
+                                    Modalidad</p>
+                                <p class="text-sm font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">Mixta
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-primary hover:bg-orange-950 text-white font-bold py-3.5 rounded-xl transition-colors">Editar
+                            Detalles</button>
+                    </div>
+                </article>
+
+                <!-- Mockup Proyecto 3 -->
+                <article
+                    class="project-card bg-white rounded-[2rem] border border-orange-50 p-6 flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl z-0"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <span
+                                class="px-3 py-1 bg-blue-100 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-lg">Tecnología</span>
+                            <div
+                                class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold">
+                                <span class="material-symbols-outlined text-sm">devices</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2">Alfabetización
+                            Digital 3ra Edad</h3>
+                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-[14px]">apartment</span> INAPAM A.C.</p>
+                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">Programa dedicado a incluir
+                            digitalmente a la tercera edad a través del uso de teléfonos inteligentes y prevención de
+                            fraudes online.</p>
+                    </div>
+
+                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos
+                                </p>
+                                <p class="text-lg font-black text-rose-500">LLENO <span
+                                        class="text-xs text-slate-400 font-medium">30/30</span></p>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200"></div>
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">
+                                    Modalidad</p>
+                                <p class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">Remoto</p>
+                            </div>
+                        </div>
+                        <button
+                            class="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 font-bold py-3.5 rounded-xl transition-colors">Ver
+                            Detalles</button>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const csvUrl = '../BASE_CAT_S.S.csv';
+            
+            fetch(csvUrl, { cache: 'no-store' })
+                .then(response => {
+                    if (!response.ok) throw new Error("Require localhost/Live Server");
+                    return response.text();
+                })
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            renderProjects(results.data);
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.log("No se pudo fetch el CSV remotamente.", err);
+                });
+        });
+
+        const styles = [
+            { bg: 'bg-orange-50', text: 'text-accent', iconText: 'text-accent', border: 'border-orange-50', tagBg: 'bg-orange-100', icon: 'foundation', tagTitle: 'Impacto Social' },
+            { bg: 'bg-emerald-50', text: 'text-emerald-600', iconText: 'text-emerald-600', border: 'border-emerald-50', tagBg: 'bg-emerald-100', icon: 'forest', tagTitle: 'Medio Ambiente' },
+            { bg: 'bg-blue-50', text: 'text-blue-600', iconText: 'text-blue-600', border: 'border-blue-50', tagBg: 'bg-blue-100', icon: 'devices', tagTitle: 'Tecnología' }
+        ];
+
+        function renderProjects(data) {
+            const container = document.getElementById('projects-container');
+            let added = 0;
+            let tempHTML = '';
+            
+            data.forEach((row, index) => {
+                let title = row.title || row.Title || row.TITLE;
+                let isActive = String(row.is_active || "").toUpperCase();
+
+                if(!title || isActive.includes("FALSE")) return; // saltar invalidos
+
+                const style = styles[index % styles.length];
+                
+                let modClean = String(row.modality || "No definida");
+                if(modClean.includes('Línea')) modClean = 'Remoto';
+                else if(modClean.includes('Presencial')) modClean = 'Presencial';
+                else if(modClean.includes('Mixto')) modClean = 'Mixto';
+
+                let capacity = parseInt(row.capacity) || 0;
+                let statusClass = capacity > 0 ? 'text-primary' : 'text-rose-500';
+                let capacityText = capacity > 0 ? `${Math.floor(capacity/2)} <span class="text-xs text-slate-400 font-medium">/ ${capacity}</span>` : `LLENO <span class="text-xs text-slate-400 font-medium">${capacity}/${capacity}</span>`;
+
+                let titleClean = String(title).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                let titleShort = titleClean.length > 50 ? titleClean.substring(0, 50) + '...' : titleClean;
+                let companyStr = row.company || row.Company || 'Sin Empresa';
+                let descStr = String(row.description || row.Description || '').replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+
+                const cardHTML = `
+                <article class="project-card bg-white rounded-[2rem] border ${style.border} p-6 flex flex-col justify-between h-full relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 ${style.bg} rounded-full blur-2xl z-0"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 ${style.tagBg} ${style.iconText} text-[10px] font-black uppercase tracking-widest rounded-lg">${style.tagTitle}</span>
+                            <div class="w-10 h-10 rounded-xl ${style.bg} flex items-center justify-center ${style.iconText} font-bold">
+                                <span class="material-symbols-outlined text-sm">${style.icon}</span>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2" title="${titleClean}">${titleShort}</h3>
+                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">apartment</span> ${companyStr}</p>
+                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3" title="${descStr}">${descStr}</p>
+                    </div>
+                    
+                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos</p>
+                                <p class="text-lg font-black ${statusClass}">${capacityText}</p>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200"></div>
+                            <div class="text-center">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Modalidad</p>
+                                <p class="text-sm font-bold ${style.iconText} ${style.bg} px-3 py-1 rounded-lg">${modClean}</p>
+                            </div>
+                        </div>
+                        <button class="w-full bg-primary hover:bg-orange-950 text-white font-bold py-3.5 rounded-xl transition-colors">Editar Detalles</button>
+                    </div>
+                </article>
+                `;
+                tempHTML += cardHTML;
+                added++;
+            });
+
+            if(added > 0) {
+                container.innerHTML = tempHTML;
+                alert("¡Éxito! Se cargaron " + added + " proyectos desde el CSV.");
+            } else {
+                alert("Advertencia: Se leyó el archivo pero no se encontraron filas válidas con la columna 'title'. ¿Verifica que sea CSV separado por comas?");
+            }
+        }
+        
+        document.getElementById('fileUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                if(typeof Papa === 'undefined') {
+                    alert('Error: La librería de lectura (PapaParse) no se cargó. Revisa tu conexión a internet.');
+                    return;
+                }
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        renderProjects(results.data);
+                    },
+                    error: function(err) {
+                        alert("Hubo un error al leer el archivo: " + err.message);
+                    }
+                });
+            }
+            // Resetear input para permitir cargar el mismo archivo múltiples veces
+            e.target.value = '';
+        });
+    </script>
+</body>
+</html>
