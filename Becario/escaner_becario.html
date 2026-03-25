@@ -22,9 +22,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#7c2d12", /* Naranja oscuro institucional */
-                        accent: "#ea580c",  /* Naranja brillante */
-                        surface: "#fff7ed",
+                        primary: "#4c1d95", /* Morado oscuro institucional */
+                        accent: "#9333ea",  /* Morado brillante */
+                        surface: "#faf5ff",
                     },
                     fontFamily: {
                         headline: ["Plus Jakarta Sans", "sans-serif"],
@@ -38,6 +38,25 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
+        }
+
+        .bg-purple-lava {
+            background: linear-gradient(
+                -45deg, 
+                #05010e 0%, 
+                #4c1d95 25%, 
+                #f3e8ff 50%, 
+                #7e22ce 75%, 
+                #0f0524 100%
+            );
+            background-size: 300% 300%;
+            animation: purpleFlow 10s ease-in-out infinite;
+        }
+
+        @keyframes purpleFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .font-headline {
@@ -62,7 +81,7 @@
             border: 0px solid transparent !important;
             border-radius: 2rem !important;
             overflow: hidden !important;
-            box-shadow: 0 20px 25px -5px rgba(234, 88, 12, 0.1) !important;
+            box-shadow: 0 20px 25px -5px rgba(147, 51, 234, 0.1) !important;
             background: #ffffff;
             padding: 0 !important;
         }
@@ -73,7 +92,7 @@
         }
 
         #qr-reader__dashboard_section_csr button {
-            background-color: #ea580c !important;
+            background-color: #9333ea !important;
             color: white !important;
             border-radius: 0.75rem !important;
             padding: 10px 20px !important;
@@ -112,7 +131,7 @@
     </style>
 </head>
 
-<body class="flex flex-col min-h-screen text-slate-800">
+<body class="flex flex-col min-h-screen text-slate-200 bg-purple-lava">
 
     <!-- Header Móvil Fixado -->
     <header class="glass-header sticky top-0 z-30 px-6 py-4 flex justify-between items-center w-full shadow-sm">
@@ -130,7 +149,7 @@
 
         <div class="flex items-center gap-2 text-right">
             <div
-                class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-accent ring-2 ring-white shadow-sm relative isolate">
+                class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-accent ring-2 ring-white shadow-sm relative isolate">
                 <span class="material-symbols-outlined text-[18px] font-bold">qr_code_scanner</span>
             </div>
         </div>
@@ -139,16 +158,16 @@
     <!-- Lector de QR (Principal) -->
     <main class="flex-1 flex flex-col items-center justify-center p-6 relative w-full h-full">
         <div class="text-center mb-6 px-4">
-            <h2 class="text-2xl font-headline font-black text-slate-800 mb-1 tracking-tight">Apunta al código QR</h2>
-            <p class="text-slate-500 text-sm font-medium leading-relaxed">Coloca el código QR del alumno frente la
+            <h2 class="text-2xl font-headline font-black text-white mb-1 tracking-tight">Apunta al código QR</h2>
+            <p class="text-purple-100 text-sm font-medium leading-relaxed">Coloca el código QR del alumno frente la
                 cámara trasera en el recuadro para registrar su entrada.</p>
         </div>
 
         <!-- Contenedor del Lector HTML5 QR (se creará iframe dentro) -->
-        <div class="w-full max-w-sm relative mx-auto bg-white rounded-[2rem] p-2 border border-slate-200 shadow-2xl">
+        <div class="w-full max-w-sm relative mx-auto bg-white/95 backdrop-blur-md rounded-[2rem] p-2 border border-white/20 shadow-2xl">
             <!-- Cuadro naranja simulando visor para estética -->
             <div
-                class="absolute inset-0 pointer-events-none rounded-[2rem] border-[4px] border-orange-200 z-10 opacity-60">
+                class="absolute inset-0 pointer-events-none rounded-[2rem] border-[4px] border-purple-300 z-10 opacity-60">
             </div>
 
             <div id="qr-reader" class="w-full relative z-0"></div>
@@ -162,7 +181,7 @@
         <!-- Indicaciones secundarias y fallback manual -->
         <div class="mt-8 text-center px-4 w-full">
             <button
-                class="bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-3.5 px-6 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 mx-auto active:scale-95">
+                class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3.5 px-6 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 mx-auto active:scale-95">
                 <span class="material-symbols-outlined text-[18px]">keyboard</span>
                 Ingresar matrícula manualmente
             </button>
