@@ -191,8 +191,8 @@
         });
 
         if (res.ok) {
-          alert("¡Tus datos han sido actualizados exitosamente!");
-          document.getElementById('form-edit-data').reset();
+          // Redirigir a la página de confirmación
+          window.location.href = "agradecimiento_editado_preregistro.html";
         } else {
           const errData = await res.json();
           // Intentar parsear los errores de FastAPI o mostrar genérico
