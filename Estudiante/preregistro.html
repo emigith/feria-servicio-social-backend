@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
 
   <script>
     tailwind.config = {
@@ -26,20 +28,42 @@
   <title>Pre-Registro | Feria de Servicio Social</title>
 
   <style>
-    body { font-family: 'Lexend', sans-serif; margin: 0; overflow-x: hidden; }
+    body {
+      font-family: 'Lexend', sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
     .animated-blue-bg {
       background: linear-gradient(-45deg, #0a1633, #10214d, #18356f, #2450a6, #3b82f6, #7db7ff);
       background-size: 400% 400%;
       animation: blueLava 14s ease infinite;
     }
+
     @keyframes blueLava {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
     }
-    .submit-button { background-color: #0f173d; transition: all 0.25s ease; }
-    .submit-button:hover { background-color: #18245c; transform: translateY(-1px); }
-    
+
+    .submit-button {
+      background-color: #0f173d;
+      transition: all 0.25s ease;
+    }
+
+    .submit-button:hover {
+      background-color: #18245c;
+      transform: translateY(-1px);
+    }
+
     .glass-nav {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
@@ -49,17 +73,18 @@
 </head>
 
 <body class="animated-blue-bg font-display text-slate-900 min-h-screen flex flex-col">
-  
+
   <nav class="fixed top-6 left-6 z-50">
-    <button onclick="window.location.href='estudiante_inicio.html'" 
-            class="glass-nav flex items-center gap-2 px-5 py-2.5 rounded-full text-white font-medium hover:bg-white/20 transition-all shadow-lg">
+    <button onclick="window.location.href='estudiante_inicio.html'"
+      class="glass-nav flex items-center gap-2 px-5 py-2.5 rounded-full text-white font-medium hover:bg-white/20 transition-all shadow-lg">
       <span class="material-symbols-outlined text-sm">arrow_back_ios</span>
       <span>Volver</span>
     </button>
   </nav>
 
   <main class="flex-grow flex items-center justify-center p-4 md:p-8 mt-12">
-    <div class="w-full max-w-3xl bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl border border-white/30 overflow-hidden">
+    <div
+      class="w-full max-w-3xl bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl border border-white/30 overflow-hidden">
       <div class="p-8 md:p-12">
         <div class="text-center mb-10">
           <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-2xl mb-5">
@@ -76,12 +101,12 @@
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Nombre(s)</label>
               <input id="first_name" required type="text" placeholder="Ej. Juan"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all"/>
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
             </div>
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Apellidos</label>
               <input id="last_name" required type="text" placeholder="Ej. Pérez"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all"/>
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
             </div>
           </div>
 
@@ -90,26 +115,28 @@
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Matrícula</label>
               <input id="matricula" required type="text" placeholder="A01234567"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all"/>
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
             </div>
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Correo institucional</label>
               <input id="email" required type="email" placeholder="usuario@tec.mx"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all"/>
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Día de asistencia</label>
-              <select class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none transition-all">
+              <select
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none transition-all">
                 <option value="2026-10-24">Octubre 24, 2026</option>
                 <option value="2026-10-25">Octubre 25, 2026</option>
               </select>
             </div>
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Hora</label>
-              <select class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none transition-all">
+              <select
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none transition-all">
                 <option value="09:00">09:00 AM</option>
                 <option value="11:00">11:00 AM</option>
               </select>
@@ -118,11 +145,13 @@
           <div class="flex flex-col gap-2">
             <label class="text-sm font-semibold text-navy-accent">Crea una contraseña</label>
             <input id="password" required type="password" placeholder="Mínimo 8 caracteres"
-              class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all"/>
+              class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
             <p class="text-[10px] text-slate-400">La usarás para editar tu registro después.</p>
           </div>
           <div class="pt-4">
-            <button class="w-full submit-button text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2" type="submit">
+            <button
+              class="w-full submit-button text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2"
+              type="submit">
               <span>Registrarse</span>
               <span class="material-symbols-outlined">send</span>
             </button>
@@ -138,50 +167,51 @@
     </p>
   </footer>
 
- <script>
-const API_BASE = 'http://127.0.0.1:8000/api/v1';
+  <script>
+    const API_BASE = 'http://127.0.0.1:8000/api/v1';
 
-  document.getElementById('form-registro').addEventListener('submit', async (e) => {
-    e.preventDefault();
+    document.getElementById('form-registro').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    // Mapeamos los IDs del HTML a los nombres que espera tu Backend
-    const payload = {
-      matricula: document.getElementById('matricula').value.toUpperCase(),
-      nombre: document.getElementById('first_name').value,
-      apellido: document.getElementById('last_name').value,
-      correo: document.getElementById('email').value,
-      password: document.getElementById('password').value
-    };
+      // Mapeamos los IDs del HTML a los nombres que espera tu Backend
+      const payload = {
+        matricula: document.getElementById('matricula').value.toUpperCase(),
+        nombre: document.getElementById('first_name').value,
+        apellido: document.getElementById('last_name').value,
+        correo: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      };
 
-    try {
-      const response = await fetch(`${API_BASE}/students/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      try {
+        const response = await fetch(`${API_BASE}/students/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok) {
-        alert("¡Registro exitoso! Ya puedes iniciar sesión con tu matrícula y contraseña.");
-        window.location.href = "login.html";
-      } else {
-        // Manejo inteligente de errores de FastAPI
-        if (data.detail && Array.isArray(data.detail)) {
-          const mensajes = data.detail.map(err => {
-            const campo = err.loc[1] || "Error";
-            return `${campo}: ${err.msg}`;
-          }).join('\n');
-          alert("Revisa los siguientes campos:\n" + mensajes);
+        if (response.ok) {
+          alert("¡Registro exitoso! Ya puedes iniciar sesión con tu matrícula y contraseña.");
+          window.location.href = "post_preregistro.html";
         } else {
-          alert(data.detail || "Error desconocido al registrar.");
+          // Manejo inteligente de errores de FastAPI
+          if (data.detail && Array.isArray(data.detail)) {
+            const mensajes = data.detail.map(err => {
+              const campo = err.loc[1] || "Error";
+              return `${campo}: ${err.msg}`;
+            }).join('\n');
+            alert("Revisa los siguientes campos:\n" + mensajes);
+          } else {
+            alert(data.detail || "Error desconocido al registrar.");
+          }
         }
+      } catch (error) {
+        console.error("Error de conexión:", error);
+        alert("No se pudo conectar con el servidor. Verifica que el backend esté corriendo.");
       }
-    } catch (error) {
-      console.error("Error de conexión:", error);
-      alert("No se pudo conectar con el servidor. Verifica que el backend esté corriendo.");
-    }
-  });
+    });
   </script>
 </body>
+
 </html>
