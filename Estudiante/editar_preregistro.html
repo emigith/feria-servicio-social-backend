@@ -39,12 +39,30 @@
       </div>
     </form>
 
-    <form id="form-edit-data" class="hidden space-y-6 mt-8 border-t pt-8">
-       <div class="grid grid-cols-2 gap-4">
-          <input id="edit_nombre" type="text" class="px-4 py-3 rounded-xl border" placeholder="Nombre"/>
-          <input id="edit_apellido" type="text" class="px-4 py-3 rounded-xl border" placeholder="Apellido"/>
+    <form id="form-edit-data" class="hidden space-y-6 mt-8 border-t border-slate-200 pt-8">
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1">
+             <label class="text-xs font-semibold text-slate-500 uppercase">Nombre</label>
+             <input id="edit_nombre" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nombre (Opcional)"/>
+          </div>
+          <div class="flex flex-col gap-1">
+             <label class="text-xs font-semibold text-slate-500 uppercase">Apellido</label>
+             <input id="edit_apellido" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Apellido (Opcional)"/>
+          </div>
+          <div class="flex flex-col gap-1 md:col-span-2">
+             <label class="text-xs font-semibold text-slate-500 uppercase">Correo Institucional</label>
+             <input id="edit_email" type="email" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400 w-full" placeholder="nuevo@tec.mx (Opcional)"/>
+          </div>
+          <div class="flex flex-col gap-1">
+             <label class="text-xs font-semibold text-slate-500 uppercase">Matrícula</label>
+             <input id="edit_matricula" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="A0... (Opcional)"/>
+          </div>
+          <div class="flex flex-col gap-1">
+             <label class="text-xs font-semibold text-slate-500 uppercase">Nueva Contraseña</label>
+             <input id="edit_password" type="password" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="•••••••• (Opcional)"/>
+          </div>
        </div>
-       <button type="submit" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-all">
+       <button type="submit" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-all shadow-md">
           Guardar Cambios
        </button>
     </form>
@@ -81,6 +99,56 @@
         }
       } catch (err) { alert("Error de conexión."); }
     });
+
+    // Lógica para enviar los datos actualizados al Backend
+    document.getElementById('form-edit-data').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const payload = {};
+      const fields = ['nombre', 'apellido', 'email', 'matricula', 'password'];
+      
+      // Solo tomamos los campos que no estén vacíos
+      fields.forEach(f => {
+        const val = document.getElementById('edit_' + f).value.trim();
+        if (val) payload[f] = val;
+      });
+
+      if (Object.keys(payload).length === 0) {
+        alert("No has ingresado ningún dato para actualizar.");
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('edit_token');
+        if (!token) {
+          alert("No estás autenticado. Por favor, vuelve a ingresar.");
+          return;
+        }
+
+        const res = await fetch(`${API}/students/me`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          alert("¡Tus datos han sido actualizados exitosamente!");
+          document.getElementById('form-edit-data').reset();
+        } else {
+          const errData = await res.json();
+          // Intentar parsear los errores de FastAPI o mostrar genérico
+          let msg = errData.detail || "Error al actualizar la información.";
+          if (Array.isArray(errData.detail)) msg = errData.detail.map(d => `${d.loc[1]}: ${d.msg}`).join('\n');
+          alert("Error: " + msg);
+        }
+      } catch (err) {
+        alert("Error de conexión al guardar los datos.");
+      }
+    });
+
   </script>
 </body>
 </html>
