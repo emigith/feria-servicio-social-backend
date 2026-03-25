@@ -113,6 +113,12 @@ def send_registration_confirmation(to_email: str, student_name: str, matricula: 
                Editar información incorrecta
             </a>
         </p>
+        <p style="margin-top: 15px;">
+            <a href="http://127.0.0.1:5500/index.html" 
+               style="background-color: #6b7280; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; display: inline-block;">
+               Ir a la página principal
+            </a>
+        </p>
         <p style="font-size: 12px; color: #6b7280; margin-top: 25px;">
             Nota: Una vez que confirmes que tu información en el enlace de arriba es correcta, recibirás un correo con tu Código QR final de acceso al evento.
         </p>
@@ -136,6 +142,74 @@ def send_registration_confirmation(to_email: str, student_name: str, matricula: 
         print(f"[MAIL ERROR] {e}")
         # No lanzamos excepción aquí para que el registro no falle si falla el correo, 
         # pero podrías hacerlo si prefieres que sea obligatorio.
+
+
+def send_updated_registration_confirmation(to_email: str, student_name: str, matricula: str, password: str | None = None, verify_token: str = "") -> None:
+    if not settings.MAIL_ENABLED:
+        print(f"[MAIL DISABLED] Actualización para {to_email}. Pass: {password}")
+        return
+
+    if not all([settings.MAIL_FROM, settings.MAIL_HOST, settings.MAIL_PORT, settings.MAIL_USERNAME, settings.MAIL_PASSWORD]):
+        raise HTTPException(status_code=500, detail="MAIL_CONFIGURATION_INCOMPLETE")
+
+    subject = "Actualización de Registro - Feria de Servicio Social"
+    display_password = password if password else "[Sin cambios]"
+
+    html_body = f"""
+    <html>
+      <body style="font-family: sans-serif; color: #333;">
+        <h2 style="color: #0f173d;">¡Datos Actualizados Exitosamente!</h2>
+        <p>Hola <b>{student_name}</b>,</p>
+        <p>Has actualizado correctamente tu información para la Feria de Servicio Social 2026.</p>
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e7eb;">
+            <p style="margin: 5px 0;"><strong>Matrícula:</strong> {matricula}</p>
+            <p style="margin: 5px 0;"><strong>Contraseña:</strong> {display_password}</p>
+        </div>
+        
+        <p style="font-size: 16px;">Para recibir tu QR con esta nueva información, confirma tus datos haciendo clic aquí:</p>
+        <p>
+            <a href="http://127.0.0.1:8000/api/v1/students/verify-email-link?token={verify_token}" 
+               style="background-color: #10b981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold; font-size: 16px;">
+               ¡Mi información es correcta, enviar mi QR!
+            </a>
+        </p>
+
+        <p style="margin-top: 30px; font-size: 14px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+           ¿Aún tienes un error en tus datos? Puedes editarlos nuevamente ingresando con tu matrícula y contraseña aquí:
+        </p>
+        <p>
+            <a href="http://127.0.0.1:5500/Estudiante/editar_preregistro.html" 
+               style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; display: inline-block;">
+               Editar información incorrecta
+            </a>
+        </p>
+        <p style="margin-top: 15px;">
+            <a href="http://127.0.0.1:5500/index.html" 
+               style="background-color: #6b7280; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; display: inline-block;">
+               Ir a la página principal
+            </a>
+        </p>
+        <p style="font-size: 12px; color: #6b7280; margin-top: 25px;">
+            Nota: Al confirmar recibirás el Código QR final de acceso al evento. Si habías recibido un QR con información previa, este nuevo lo reemplazará.
+        </p>
+      </body>
+    </html>
+    """
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = subject
+    msg["From"] = settings.MAIL_FROM
+    msg["To"] = to_email
+    msg.attach(MIMEText(html_body, "html", "utf-8"))
+
+    try:
+        with smtplib.SMTP(settings.MAIL_HOST, settings.MAIL_PORT) as server:
+            if settings.MAIL_STARTTLS:
+                server.starttls()
+            server.login(settings.MAIL_USERNAME, settings.MAIL_PASSWORD)
+            server.sendmail(settings.MAIL_FROM, to_email, msg.as_string())
+    except Exception as e:
+        print(f"[MAIL ERROR] {e}")
 
 
 def send_qr_code_email(to_email: str, student_name: str, qr_base64: str) -> None:

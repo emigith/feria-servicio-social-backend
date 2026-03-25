@@ -200,6 +200,25 @@ def update_profile(
 ):
     repo = StudentRepo()
     updated_student = repo.update(db, student_id=current_student.id, data=payload.dict(exclude_unset=True))
+    
+    if updated_student:
+        from app.core.security import create_access_token
+        from app.services.email_service import send_updated_registration_confirmation
+        
+        verify_token = create_access_token(
+            subject=str(updated_student.id),
+            role="verify",
+            token_type="verify",
+        )
+        
+        send_updated_registration_confirmation(
+            to_email=updated_student.email,
+            student_name=updated_student.nombre,
+            matricula=updated_student.matricula,
+            password=payload.password,
+            verify_token=verify_token,
+        )
+
     return updated_student
 
 
@@ -230,6 +249,8 @@ def verify_student_info(
     summary="Endpoint público 1-clic para validación desde correo",
 )
 def verify_email_link_get(token: str, db: Session = Depends(get_db)):
+    from fastapi.responses import HTMLResponse
+
     try:
         payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALG])
         student_id_str = payload.get("sub")
@@ -254,7 +275,120 @@ def verify_email_link_get(token: str, db: Session = Depends(get_db)):
         qr_base64=qr_base64
     )
     
-    return RedirectResponse(url="http://127.0.0.1:5500/Estudiante/gracias_registro.html")
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>¡Registro Confirmado!</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+            * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+            body {{
+                font-family: 'Inter', sans-serif;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #0f173d 0%, #1e3a5f 50%, #0f173d 100%);
+                color: #fff;
+                padding: 20px;
+            }}
+            .container {{
+                background: rgba(255,255,255,0.05);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 20px;
+                padding: 40px;
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+            }}
+            .check-icon {{
+                width: 60px; height: 60px;
+                background: #10b981;
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 20px;
+                font-size: 30px;
+            }}
+            h1 {{ font-size: 24px; margin-bottom: 10px; color: #10b981; }}
+            .subtitle {{ color: #94a3b8; margin-bottom: 25px; font-size: 14px; }}
+            .qr-box {{
+                background: #fff;
+                border-radius: 12px;
+                padding: 20px;
+                display: inline-block;
+                margin: 20px 0;
+            }}
+            .qr-box img {{ width: 200px; height: 200px; }}
+            .info-card {{
+                background: rgba(255,255,255,0.08);
+                border-radius: 10px;
+                padding: 15px;
+                margin: 20px 0;
+                text-align: left;
+            }}
+            .info-card p {{ margin: 5px 0; font-size: 14px; color: #cbd5e1; }}
+            .info-card strong {{ color: #fff; }}
+            .warning {{
+                background: rgba(234, 179, 8, 0.1);
+                border: 1px solid rgba(234, 179, 8, 0.3);
+                border-radius: 8px;
+                padding: 12px;
+                margin: 20px 0;
+                font-size: 13px;
+                color: #fbbf24;
+            }}
+            .btn {{
+                display: inline-block;
+                padding: 12px 25px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 14px;
+                margin-top: 15px;
+                transition: transform 0.2s;
+            }}
+            .btn:hover {{ transform: scale(1.05); }}
+            .btn-primary {{
+                background: #10b981;
+                color: #fff;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="check-icon">✓</div>
+            <h1>¡Registro Confirmado!</h1>
+            <p class="subtitle">Tu información ha sido verificada exitosamente</p>
+
+            <div class="qr-box">
+                <img src="data:image/png;base64,{qr_base64}" alt="Tu Código QR">
+            </div>
+
+            <div class="info-card">
+                <p><strong>Nombre:</strong> {student.nombre} {student.apellido}</p>
+                <p><strong>Matrícula:</strong> {student.matricula}</p>
+                <p><strong>Correo:</strong> {student.email}</p>
+            </div>
+
+            <div class="warning">
+                📱 <strong>¡Guarda este QR!</strong> Toma una captura de pantalla o revísalo en tu correo.
+                Preséntalo el día de la Feria de Servicio Social para registrar tu asistencia.
+            </div>
+
+            <p style="font-size: 13px; color: #94a3b8; margin-top: 10px;">
+                También te hemos enviado este QR a <strong>{student.email}</strong>.
+            </p>
+
+            <a href="http://127.0.0.1:5500/index.html" class="btn btn-primary">Ir a la página principal</a>
+        </div>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
 
 
 @router.post(
