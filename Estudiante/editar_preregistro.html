@@ -16,57 +16,113 @@
     @keyframes blueLava { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
   </style>
 </head>
-<body class="animated-blue-bg min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl p-8 md:p-12">
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-[#0f173d]">Actualizar mis datos</h1>
-      <p class="text-slate-500 mt-2">Identifícate para modificar tu información de registro.</p>
+<body class="min-h-screen animated-blue-bg flex items-center justify-center p-6">
+  <main class="w-full max-w-5xl">
+    <div class="grid md:grid-cols-2 overflow-hidden rounded-3xl shadow-2xl bg-white/90 backdrop-blur-lg min-h-[600px]">
+
+      <!-- Left Text Side -->
+      <section class="hidden md:flex flex-col justify-center bg-[#0f173d] text-white p-8 lg:p-12 relative overflow-hidden">
+        <!-- Ambient shapes -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -ml-20 -mb-20"></div>
+        
+        <div class="mb-10 relative z-10">
+          <h1 class="text-4xl lg:text-5xl font-bold leading-tight mb-6">¿Pusiste mal <br><span class="text-blue-400">tu información?</span></h1>
+          <p class="text-blue-100 text-base lg:text-lg leading-relaxed max-w-sm">
+            ¡Tranqui, aquí lo arreglamos! Asegúrate de que todo esté al cien para que no te pierdas de nada en la feria y, lo más importante, <strong>¡tus horas de servicio cuenten!</strong>
+          </p>
+        </div>
+        
+        <div class="space-y-6 relative z-10">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/10">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+            </div>
+            <div>
+              <p class="font-semibold text-xl">100% Seguro</p>
+              <p class="text-blue-100/80 text-sm">Nadie más puede tocar tu info.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/10">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+            </div>
+            <div>
+              <p class="font-semibold text-xl">Revisa todos los campos</p>
+              <p class="text-blue-100/80 text-sm">Verifica que tu información sea correcta.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Form Side -->
+      <section class="bg-white/95 p-8 lg:p-12 flex flex-col justify-center relative">
+        <div class="w-full max-w-md mx-auto">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-[#0f173d] tracking-tight">Actualizar mis datos</h2>
+            <p class="text-slate-500 mt-2">Identifícate para modificar tu información de registro.</p>
+          </div>
+
+          <form id="form-auth-edit" class="space-y-6">
+            <div class="space-y-4">
+              <div>
+                <label class="text-sm font-semibold text-navy-accent">Correo Institucional</label>
+                <input id="auth_email" required type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="usuario@tec.mx"/>
+              </div>
+              <div>
+                <label class="text-sm font-semibold text-navy-accent">Contraseña</label>
+                <input id="auth_password" required type="password" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="••••••••"/>
+              </div>
+              <button type="submit" class="w-full bg-[#0f173d] text-white py-4 rounded-xl font-bold hover:bg-[#18245c] transition-all shadow-md">
+                Acceder para editar
+              </button>
+            </div>
+          </form>
+
+          <form id="form-edit-data" class="hidden space-y-6 mt-8 border-t border-slate-200 pt-8">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1">
+                   <label class="text-xs font-semibold text-slate-500 uppercase">Nombre</label>
+                   <input id="edit_nombre" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nombre (Opcional)"/>
+                </div>
+                <div class="flex flex-col gap-1">
+                   <label class="text-xs font-semibold text-slate-500 uppercase">Apellido</label>
+                   <input id="edit_apellido" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Apellido (Opcional)"/>
+                </div>
+                <div class="flex flex-col gap-1 md:col-span-2">
+                   <label class="text-xs font-semibold text-slate-500 uppercase">Correo Institucional</label>
+                   <input id="edit_email" type="email" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400 w-full" placeholder="nuevo@tec.mx (Opcional)"/>
+                </div>
+                <div class="flex flex-col gap-1">
+                   <label class="text-xs font-semibold text-slate-500 uppercase">Matrícula</label>
+                   <input id="edit_matricula" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="A0... (Opcional)"/>
+                </div>
+                <div class="flex flex-col gap-1">
+                   <label class="text-xs font-semibold text-slate-500 uppercase">Nueva Contraseña</label>
+                   <input id="edit_password" type="password" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="•••••••• (Opcional)"/>
+                </div>
+             </div>
+             <button type="submit" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-all shadow-md mt-2">
+                Guardar Cambios
+             </button>
+          </form>
+          
+          <div class="mt-8 pt-6 flex justify-center">
+            <a href="estudiante_inicio.html" class="flex items-center gap-1.5 text-slate-400 hover:text-blue-600 transition-colors font-medium text-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+              Volver
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
-
-    <form id="form-auth-edit" class="space-y-6">
-      <div class="space-y-4">
-        <div>
-          <label class="text-sm font-semibold text-navy-accent">Correo Institucional</label>
-          <input id="auth_email" required type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="usuario@tec.mx"/>
-        </div>
-        <div>
-          <label class="text-sm font-semibold text-navy-accent">Contraseña</label>
-          <input id="auth_password" required type="password" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="••••••••"/>
-        </div>
-        <button type="submit" class="w-full bg-[#0f173d] text-white py-4 rounded-xl font-bold hover:bg-[#18245c] transition-all">
-          Acceder para editar
-        </button>
-      </div>
-    </form>
-
-    <form id="form-edit-data" class="hidden space-y-6 mt-8 border-t border-slate-200 pt-8">
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-1">
-             <label class="text-xs font-semibold text-slate-500 uppercase">Nombre</label>
-             <input id="edit_nombre" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nombre (Opcional)"/>
-          </div>
-          <div class="flex flex-col gap-1">
-             <label class="text-xs font-semibold text-slate-500 uppercase">Apellido</label>
-             <input id="edit_apellido" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Apellido (Opcional)"/>
-          </div>
-          <div class="flex flex-col gap-1 md:col-span-2">
-             <label class="text-xs font-semibold text-slate-500 uppercase">Correo Institucional</label>
-             <input id="edit_email" type="email" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400 w-full" placeholder="nuevo@tec.mx (Opcional)"/>
-          </div>
-          <div class="flex flex-col gap-1">
-             <label class="text-xs font-semibold text-slate-500 uppercase">Matrícula</label>
-             <input id="edit_matricula" type="text" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="A0... (Opcional)"/>
-          </div>
-          <div class="flex flex-col gap-1">
-             <label class="text-xs font-semibold text-slate-500 uppercase">Nueva Contraseña</label>
-             <input id="edit_password" type="password" class="px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400" placeholder="•••••••• (Opcional)"/>
-          </div>
-       </div>
-       <button type="submit" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition-all shadow-md">
-          Guardar Cambios
-       </button>
-    </form>
-  </div>
+  </main>
 
   <script>
     const API = 'http://127.0.0.1:8000/api/v1';
