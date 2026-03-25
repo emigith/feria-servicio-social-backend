@@ -1,5 +1,7 @@
 from uuid import UUID
+
 from sqlalchemy.orm import Session
+
 from app.models.enrollment import Enrollment
 from app.models.opportunity import Opportunity
 from app.models.student import Student
@@ -8,7 +10,7 @@ from app.models.student import Student
 class OpportunityRepo:
 
     # --- Endpoints existentes de Emilio (no tocar) ---
-    
+
     def get_active_by_period(self, db: Session, period_id: UUID) -> list[Opportunity]:
         return (
             db.query(Opportunity)
@@ -42,9 +44,11 @@ class OpportunityRepo:
         description: str | None = None,
         location: str | None = None,
         is_active: bool = True,
+        partner_user_id: UUID | None = None,
     ) -> Opportunity:
         opportunity = Opportunity(
             period_id=period_id,
+            partner_user_id=partner_user_id,
             title=title,
             company=company,
             capacity=capacity,
@@ -67,8 +71,8 @@ class OpportunityRepo:
         description: str | None = None,
         location: str | None = None,
         is_active: bool | None = None,
+        partner_user_id: UUID | None = None,
     ) -> Opportunity:
-        """Actualiza solo los campos que se manden (PATCH parcial)."""
         if title is not None:
             opportunity.title = title
         if company is not None:
@@ -81,6 +85,8 @@ class OpportunityRepo:
             opportunity.location = location
         if is_active is not None:
             opportunity.is_active = is_active
+        if partner_user_id is not None:
+            opportunity.partner_user_id = partner_user_id
 
         db.commit()
         db.refresh(opportunity)
@@ -98,11 +104,43 @@ class OpportunityRepo:
         db.refresh(opportunity)
         return opportunity
 
-    def get_enrollments(self, db: Session, opportunity_id: UUID):
+    def get_enrollments_for_partner_opportunity(
+        self,
+        db: Session,
+        opportunity_id: UUID,
+        partner_user_id: UUID,
+    ):
         return (
             db.query(Enrollment, Student)
             .join(Student, Enrollment.student_id == Student.id)
-            .filter(Enrollment.opportunity_id == opportunity_id)
+            .join(Opportunity, Enrollment.opportunity_id == Opportunity.id)
+            .filter(
+                Enrollment.opportunity_id == opportunity_id,
+                Opportunity.partner_user_id == partner_user_id,
+            )
             .order_by(Enrollment.created_at.asc())
             .all()
+        )
+
+    def get_by_partner_user(self, db: Session, partner_user_id: UUID) -> list[Opportunity]:
+        return (
+            db.query(Opportunity)
+            .filter(Opportunity.partner_user_id == partner_user_id)
+            .order_by(Opportunity.created_at.desc())
+            .all()
+        )
+
+    def get_by_id_for_partner(
+        self,
+        db: Session,
+        opportunity_id: UUID,
+        partner_user_id: UUID,
+    ) -> Opportunity | None:
+        return (
+            db.query(Opportunity)
+            .filter(
+                Opportunity.id == opportunity_id,
+                Opportunity.partner_user_id == partner_user_id,
+            )
+            .first()
         )

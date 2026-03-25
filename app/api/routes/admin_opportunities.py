@@ -40,6 +40,7 @@ def create_opportunity(
     return repo.create(
         db=db,
         period_id=payload.period_id,
+        partner_user_id=payload.partner_user_id,
         title=payload.title,
         company=payload.company,
         capacity=payload.capacity,
@@ -81,6 +82,7 @@ def update_opportunity(
         description=payload.description,
         location=payload.location,
         is_active=payload.is_active,
+        partner_user_id=payload.partner_user_id,
     )
 
 
@@ -112,6 +114,8 @@ def deactivate_opportunity(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="OPPORTUNITY_NOT_FOUND")
 
     return repo.update(db=db, opportunity=opportunity, is_active=False)
+
+
 @router.get("/{opportunity_id}/enrollments")
 def get_opportunity_enrollments(
     opportunity_id: UUID,
