@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Escanear Asistencia | FSS Becarios</title>
+
+    <!-- Tipografías y Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Librería HTML5 QR Code Scanner -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#7c2d12", /* Naranja oscuro institucional */
+                        accent: "#ea580c",  /* Naranja brillante */
+                        surface: "#fff7ed",
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans", "sans-serif"],
+                        body: ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .font-headline {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Ocultar botones predeterminados o textos irrelevantes del iframe original de la librería */
+        #qr-reader__dashboard_section_csr span {
+            display: none !important;
+        }
+
+        #qr-reader__dashboard_section_swaplink {
+            display: none !important;
+        }
+
+        #qr-reader__status_span {
+            display: none !important;
+        }
+
+        /* Personalizar el contenedor del lector para que se vea limpio y sin bordes toscos */
+        #qr-reader {
+            border: 0px solid transparent !important;
+            border-radius: 2rem !important;
+            overflow: hidden !important;
+            box-shadow: 0 20px 25px -5px rgba(234, 88, 12, 0.1) !important;
+            background: #ffffff;
+            padding: 0 !important;
+        }
+
+        #qr-reader video {
+            border-radius: 2rem !important;
+            object-fit: cover !important;
+        }
+
+        #qr-reader__dashboard_section_csr button {
+            background-color: #ea580c !important;
+            color: white !important;
+            border-radius: 0.75rem !important;
+            padding: 10px 20px !important;
+            border: none !important;
+            font-weight: bold;
+            font-family: 'Inter', sans-serif;
+            margin-top: 10px !important;
+            margin-bottom: 10px !important;
+        }
+
+        /* Nav superior glassmorphism */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .pulse-soft {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 20px rgba(76, 175, 80, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen text-slate-800">
+
+    <!-- Header Móvil Fixado -->
+    <header class="glass-header sticky top-0 z-30 px-6 py-4 flex justify-between items-center w-full shadow-sm">
+        <div class="flex items-center gap-4">
+            <!-- Boton regresar -->
+            <a href="javascript:history.back()"
+                class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 active:scale-95 transition-transform hover:bg-slate-200">
+                <span class="material-symbols-outlined text-xl">arrow_back</span>
+            </a>
+            <div>
+                <h1 class="font-headline font-black text-lg text-primary leading-tight tracking-tight">Check-In</h1>
+                <p class="text-[10px] text-accent font-bold uppercase tracking-widest mt-0.5">Control de Asistencia</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 text-right">
+            <div
+                class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-accent ring-2 ring-white shadow-sm relative isolate">
+                <span class="material-symbols-outlined text-[18px] font-bold">qr_code_scanner</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Lector de QR (Principal) -->
+    <main class="flex-1 flex flex-col items-center justify-center p-6 relative w-full h-full">
+        <div class="text-center mb-6 px-4">
+            <h2 class="text-2xl font-headline font-black text-slate-800 mb-1 tracking-tight">Apunta al código QR</h2>
+            <p class="text-slate-500 text-sm font-medium leading-relaxed">Coloca el código QR del alumno frente la
+                cámara trasera en el recuadro para registrar su entrada.</p>
+        </div>
+
+        <!-- Contenedor del Lector HTML5 QR (se creará iframe dentro) -->
+        <div class="w-full max-w-sm relative mx-auto bg-white rounded-[2rem] p-2 border border-slate-200 shadow-2xl">
+            <!-- Cuadro naranja simulando visor para estética -->
+            <div
+                class="absolute inset-0 pointer-events-none rounded-[2rem] border-[4px] border-orange-200 z-10 opacity-60">
+            </div>
+
+            <div id="qr-reader" class="w-full relative z-0"></div>
+            <div id="reader-loading"
+                class="absolute inset-0 z-20 bg-white rounded-[2rem] flex flex-col items-center justify-center animate-pulse">
+                <span class="material-symbols-outlined text-4xl text-slate-300 animate-spin">sync</span>
+                <p class="text-slate-400 mt-2 text-sm font-bold">Iniciando cámara...</p>
+            </div>
+        </div>
+
+        <!-- Indicaciones secundarias y fallback manual -->
+        <div class="mt-8 text-center px-4 w-full">
+            <button
+                class="bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-3.5 px-6 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 mx-auto active:scale-95">
+                <span class="material-symbols-outlined text-[18px]">keyboard</span>
+                Ingresar matrícula manualmente
+            </button>
+        </div>
+    </main>
+
+    <!-- MODAL DE ESTADO (UI RESPONSE) -->
+    <div id="status-modal"
+        class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-6 text-center transition-opacity duration-300">
+        <!-- Bloque de Fondo Oscuro Difuminado -->
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md -z-10 transition-opacity"></div>
+
+        <!-- Tarjeta Flotante -->
+        <div id="status-card"
+            class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl transform transition-all scale-95 opacity-0 duration-300 relative border border-white/20">
+
+            <!-- Icono Decorativo Flotante Superior -->
+            <div id="status-icon-glow"
+                class="absolute -top-12 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full blur-2xl opacity-50 -z-10">
+            </div>
+
+            <!-- Contenedor del Icono -->
+            <div id="status-icon-container"
+                class="w-24 h-24 mx-auto rounded-[2rem] flex items-center justify-center mb-6 shadow-xl relative z-10 -mt-2">
+                <span id="status-icon" class="material-symbols-outlined text-[54px] font-bold">sync</span>
+            </div>
+
+            <!-- Titulo y Mensaje -->
+            <h3 id="status-title"
+                class="text-[26px] font-black font-headline tracking-tight mb-2 text-slate-800 leading-tight">
+                Cargando...</h3>
+            <p id="status-message" class="text-slate-500 font-medium mb-8 leading-relaxed text-sm">Verificando pase en
+                la base de datos.</p>
+
+            <!-- Boton Dinámico para continuar -->
+            <button id="status-btn" onclick="resumeScanner()"
+                class="w-full py-4 rounded-xl font-bold text-white shadow-lg shadow-black/10 transition-transform active:scale-95 text-base flex justify-center items-center gap-2 isolate hidden">
+                <span class="material-symbols-outlined text-[18px]">document_scanner</span>
+                <span id="btn-text">Continuar</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements setup
+        const modal = document.getElementById('status-modal');
+        const card = document.getElementById('status-card');
+        const iconContainer = document.getElementById('status-icon-container');
+        const iconGlow = document.getElementById('status-icon-glow');
+        const icon = document.getElementById('status-icon');
+        const title = document.getElementById('status-title');
+        const message = document.getElementById('status-message');
+        const btn = document.getElementById('status-btn');
+        const loadingBox = document.getElementById('reader-loading');
+
+        let html5QrCode;
+        let isScanning = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar el analizador de código QR
+            html5QrCode = new Html5Qrcode("qr-reader");
+
+            const config = {
+                fps: 10,  // Capturas por segundo para análisis (menor es mejor optimizado para batería)
+                qrbox: { width: 250, height: 250 }, // Tamaño del cuadro óptico central
+                aspectRatio: 1.0 // Cuadrado para web movil
+            };
+
+            // Intentar iniciar la cámara trasera "environment"
+            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+                .then(() => {
+                    isScanning = true;
+                    // ocultar recuadro de cargando cuando inicie
+                    if (loadingBox) loadingBox.style.display = 'none';
+                })
+                .catch((err) => {
+                    console.error("Error al iniciar cámara: ", err);
+                    if (loadingBox) {
+                        loadingBox.innerHTML = '<span class="material-symbols-outlined text-4xl text-rose-300">videocam_off</span><p class="text-slate-500 mt-2 font-bold px-4 text-center text-xs">Otorga el permiso de cámara en tu navegador para continuar.</p>';
+                        loadingBox.classList.remove('animate-pulse');
+                    }
+                });
+        });
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Si ya estamos procesando un scan, ignoramos los siguientes milisegundos
+            if (!isScanning) return;
+
+            // 1. Pausar scanner
+            html5QrCode.pause();
+            isScanning = false;
+
+            // Mostrar el UI de "Cargando"
+            showUI('loading', 'Validando Código', 'Verificando asistencia con el servidor seguro de TEC21. Un momento...', null);
+
+            // 2. Ejecutar Fetch /api/v1/students/becario/scan-qr
+            // Se asume que el token de sesion del administrador/becario está en localStorage tras login.
+            const sessionToken = localStorage.getItem('token') || 'TEST_BEARER_TOKEN';
+
+            // Realizar la petición POST
+            fetch('http://localhost:8000/api/v1/students/becario/scan-qr', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${sessionToken}`
+                },
+                body: JSON.stringify({ "qr_payload": decodedText })
+            })
+                .then(response => {
+                    const status = response.status;
+                    if (status === 200) {
+                        showUI('success', '¡Check-in Exitoso!', 'El alumno ha sido registrado en el sistema exitosamente y puede ingresar a la feria.', 'Escanear otro alumno');
+                    } else if (status === 409) {
+                        showUI('warning', 'Registro Duplicado', 'Este alumno ya fue registrado previamente. No puede registrar doble asistencia.', 'Continuar escaneando');
+                    } else if (status === 400 || status === 401 || status === 404) {
+                        showUI('error', 'Código Inválido', 'El código QR no es válido, está dañado o no pertenece a un formato reconocido del sistema.', 'Volver a intentar');
+                    } else {
+                        showUI('error', 'Error Inesperado', `Código ${status}: El servidor respondió con un error al intentar verificar el boleto.`, 'Intentar nuevamente');
+                    }
+                })
+                .catch(error => {
+                    console.error("Fallo de red:", error);
+                    // MOCKUP temporal para diseño cuando el backend no contesta (ej. Live Server frontend).
+                    // Eliminar o comentar este "Fallback Design" en producción uniendo el Fetch con tu API Real.
+                    showUI('success', '¡Check-in Exitoso! (Mock)', `Simulando éxito ya que no hay backend activo respondiendo en tu red local. Detectado: ${decodedText.slice(0, 15)}...`, 'Escanear siguiente');
+                });
+        }
+
+        /* 
+        * Funcionalidad para administrar y dibujar las alertas modales
+        */
+        function showUI(state, titleStr, msgStr, btnStr) {
+            // Limpiar clases globales primero
+            iconContainer.className = "w-24 h-24 mx-auto rounded-[1.5rem] flex items-center justify-center mb-6 shadow-xl relative z-10 transition-colors";
+            btn.className = "w-full py-4 rounded-[1.2rem] font-bold text-white shadow-lg transition-transform active:scale-95 text-[15px] flex justify-center items-center gap-2.5 hidden tracking-wide";
+            iconGlow.className = "absolute -top-12 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full blur-2xl opacity-40 -z-10 transition-colors";
+
+            // Levantar modal y animar tarjeta general (Aparece modal en fade-in/pop)
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            // Forzar un repaint breve para que la animación fluja (truco en javascript JS+CSS)
+            requestAnimationFrame(() => {
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+            });
+
+            // Asignar colores e iconografía basados en el HTTP Status simulado (state)
+            switch (state) {
+                // Durante la inactividad de petición Fetch:
+                case 'loading':
+                    icon.innerText = "sync";
+                    icon.className = "material-symbols-outlined text-[48px] font-bold text-blue-500 animate-spin";
+                    iconContainer.classList.add('bg-blue-50', 'border', 'border-blue-100', 'text-blue-500', 'shadow-blue-500/20');
+                    iconGlow.classList.add('bg-blue-400');
+                    btn.classList.add('hidden'); // Ocultar botón durante el spin
+                    break;
+
+                // Status: HTTP 200 (Success)
+                case 'success':
+                    icon.innerText = "check_circle"; // Checkmark icon
+                    icon.className = "material-symbols-outlined text-[54px] font-bold text-white drop-shadow-sm";
+
+                    // Colores esmeraldas para la alerta
+                    iconContainer.classList.add('bg-emerald-500', 'shadow-emerald-500/40', 'pulse-soft');
+                    iconGlow.classList.add('bg-emerald-400');
+                    btn.classList.add('bg-emerald-500', 'hover:bg-emerald-600', 'shadow-emerald-500/20');
+                    btn.classList.remove('hidden');
+                    document.getElementById('btn-text').innerText = btnStr;
+                    break;
+
+                // Status: HTTP 409 (Conflict)
+                case 'warning':
+                    icon.innerText = "warning";
+                    icon.className = "material-symbols-outlined text-[54px] font-bold text-white drop-shadow-sm";
+
+                    // Colores naranjas/amarillos
+                    iconContainer.classList.add('bg-amber-500', 'shadow-amber-500/40');
+                    iconGlow.classList.add('bg-amber-400');
+                    btn.classList.add('bg-amber-500', 'hover:bg-amber-600', 'shadow-amber-500/20');
+                    btn.classList.remove('hidden');
+                    document.getElementById('btn-text').innerText = btnStr;
+                    break;
+
+                // Status: HTTP 400+ (Error Crítico o Desconocidos)
+                case 'error':
+                    icon.innerText = "cancel";
+                    icon.className = "material-symbols-outlined text-[54px] font-bold text-white drop-shadow-sm";
+
+                    // Colores rojos / rosados
+                    iconContainer.classList.add('bg-rose-500', 'shadow-rose-500/40');
+                    iconGlow.classList.add('bg-rose-400');
+                    btn.classList.add('bg-rose-500', 'hover:bg-rose-600', 'shadow-rose-500/20');
+                    btn.classList.remove('hidden');
+                    document.getElementById('btn-text').innerText = btnStr;
+                    break;
+            }
+
+            title.innerText = titleStr;
+            message.innerText = msgStr;
+        }
+
+        // Evento que cierra el feedback en pantalla y le devuelve control total a la cámara
+        function resumeScanner() {
+            // Regresar estilo CSS original para desaparecer hacia atras
+            card.classList.remove('scale-100', 'opacity-100');
+            card.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+
+                // Quitar la pausa nativa de HTML5QrCode
+                html5QrCode.resume();
+                isScanning = true;
+            }, 300); // ms de transición en tailwind CSS (duration-300)
+        }
+    </script>
+</body>
+
+</html>
