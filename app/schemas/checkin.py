@@ -4,28 +4,6 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class OtpRequestResponse(BaseModel):
-    student_id: UUID
-    expires_at: datetime
-    message: str
-
-    class Config:
-        from_attributes = True
-
-
-class CheckinRequest(BaseModel):
-    otp_code: str
-    method: str | None = None
-    device: str | None = None
-
-
-class CheckinPublicRequest(BaseModel):
-    matricula: str
-    otp_code: str
-    method: str | None = None
-    device: str | None = None
-
-
 class CheckinResponse(BaseModel):
     student_id: UUID
     checked_in_at: datetime
@@ -42,4 +20,4 @@ class CheckinResponse(BaseModel):
 class QRCheckinRequest(BaseModel):
     qr_payload: str
     method: str | None = None
-    device: str | None = None
+    device: str | None = None
