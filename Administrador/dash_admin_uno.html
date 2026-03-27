@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="light" lang="es">
+<html lang="es">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Admin Dashboard | Feria de Servicio Social</title>
+    <title>Panel de Gestión | Feria de Servicio Social</title>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
@@ -14,23 +14,18 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script id="tailwind-config">
+    <script>
         tailwind.config = {
-            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#0f173d",
-                        "accent": "#3b82f6",
-                        "surface": "#f8fafc",
-                        "on-surface": "#0f172a",
-                        "on-surface-variant": "#64748b"
+                        "primary": "#1e293b",
+                        "accent": "#6366f1",
                     },
                     fontFamily: {
                         "headline": ["Plus Jakarta Sans"],
                         "body": ["Inter"]
                     },
-                    borderRadius: { "DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px" },
                 },
             },
         }
@@ -44,14 +39,14 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Efecto Lámpara de Lava para el Sidebar */
-        .lava-sidebar {
+        /* Sidebar Lava Lamp */
+        .sidebar {
             background: linear-gradient(-45deg, #3b82f6, #f97316, #a855f7, #ec4899, #eab308);
             background-size: 400% 400%;
-            animation: lava-animation 15s ease infinite;
+            animation: lava 15s ease infinite;
         }
 
-        @keyframes lava-animation {
+        @keyframes lava {
             0% {
                 background-position: 0% 50%;
             }
@@ -65,210 +60,290 @@
             }
         }
 
-        .nav-item-glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.25s ease;
+            border-radius: 0.75rem;
         }
 
-        .nav-item-glass:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateX(5px);
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(4px);
         }
 
-        .nav-item-active {
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+        .nav-link.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.28);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(8px);
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .kpi-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        /* Chart Cards */
+        .chart-card {
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            animation: blink 1.5s ease-in-out infinite;
+            box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
         }
     </style>
 </head>
 
-<body class="bg-slate-50 text-on-surface font-body">
+<body class="bg-slate-50 text-slate-800 font-body">
 
-    <aside
-        class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 lava-sidebar text-white flex flex-col pt-8 pb-4 shadow-2xl">
-        <div class="px-8 mb-10">
-            <h1 class="text-xl font-extrabold font-headline tracking-tighter leading-tight">
-                Portal Feria <br>Servicio Social <span class="opacity-80 font-medium">- Admin</span>
-            </h1>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold mt-2">Gestión 2026</p>
-        </div>
+    <div class="flex min-h-screen">
 
-        <nav class="flex-grow flex flex-col justify-center px-4 space-y-6 pb-12">
-            <a class="flex items-center gap-4 px-5 py-4 nav-item-active rounded-2xl font-semibold text-base" href="#">
-                <span class="material-symbols-outlined text-[22px]" data-icon="dashboard">dashboard</span>
-                <span>Dashboard General</span>
-            </a>
-            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="proyecto_admin.html">
-                <span class="material-symbols-outlined text-[22px]" data-icon="assignment">assignment</span>
-                <span>Proyectos</span>
-            </a>
-            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="#">
-                <span class="material-symbols-outlined text-[22px]" data-icon="person_search">person_search</span>
-                <span>Gestión de Estudiantes</span>
-            </a>
-        </nav>
+        <!-- Sidebar Flotante -->
+        <aside
+            class="sidebar w-64 fixed left-4 top-4 h-[calc(100vh-2rem)] flex flex-col py-8 px-6 z-50 rounded-3xl shadow-2xl shadow-indigo-500/10">
+            <!-- Branding Top -->
+            <div class="px-3">
+                <h1 class="text-lg font-extrabold font-headline text-white tracking-tight leading-tight">
+                    Portal Feria<br>Servicio Social
+                </h1>
+                <p class="text-[10px] uppercase tracking-[0.25em] text-white/60 font-bold mt-2">Gestión · 2026</p>
+            </div>
 
-        <div class="mt-auto px-4">
-            <div class="border-t border-white/20 pt-4 pb-2">
-                <a class="flex items-center gap-3 px-4 py-2 text-white/70 text-xs hover:text-white transition-colors"
-                    href="../index.html" onclick="localStorage.clear();">
-                    <span class="material-symbols-outlined text-sm">logout</span>
-                    <span>Cerrar Sesión</span>
+            <!-- Navigation Middle (Centered) -->
+            <div class="flex-1 flex flex-col justify-center py-10">
+                <nav class="space-y-4 w-full">
+                    <a class="nav-link active flex items-center gap-3 px-4 py-3 text-sm font-semibold" href="#">
+                        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                        Dashboard Principal
+                    </a>
+                    <a class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-semibold"
+                        href="proyecto_admin.html">
+                        <span class="material-symbols-outlined text-[20px]">assignment</span>
+                        Proyectos
+                    </a>
+                    <a class="nav-link flex items-center gap-3 px-4 py-3 text-sm font-semibold" href="#">
+                        <span class="material-symbols-outlined text-[20px]">person_search</span>
+                        Estudiantes
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Logout Bottom -->
+            <div class="border-t border-white/10 pt-4 w-full">
+                <a class="nav-link flex items-center gap-3 px-4 py-3 text-xs font-medium" href="../index.html"
+                    onclick="localStorage.clear();">
+                    <span class="material-symbols-outlined text-[18px]">logout</span>
+                    Cerrar Sesión
                 </a>
             </div>
-        </div>
-    </aside>
+        </aside>
 
-    <main class="ml-72 min-h-screen flex flex-col">
+        <!-- Main Content (Ajustado para el sidebar flotante) -->
+        <main class="pl-72 pr-4 flex-1 flex flex-col">
 
-        <header
-            class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 flex justify-between items-center px-8 py-4">
-            <h2 class="font-headline font-bold text-slate-500 text-sm uppercase tracking-widest">Panel de Control
-                Principal</h2>
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-3 group cursor-pointer">
+            <!-- Top Bar -->
+            <header
+                class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 flex justify-between items-center px-8 py-3">
+                <div class="flex items-center gap-3">
+                    <span class="live-dot"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600">Feria en Vivo</span>
+                </div>
+                <div class="flex items-center gap-4">
                     <div class="text-right">
-                        <p class="text-xs font-bold text-primary">Admin General</p>
-                        <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
+                        <p class="text-xs font-bold text-slate-800">Administrador</p>
+                        <p class="text-[10px] text-slate-400 font-semibold">Sesión Activa</p>
                     </div>
                     <div
-                        class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white ring-2 ring-accent ring-offset-2">
-                        AD</div>
+                        class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white text-xs shadow-lg shadow-indigo-500/20">
+                        CO</div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <section class="p-8 space-y-8">
+            <!-- Hero + KPIs -->
+            <section class="px-8 pt-7 pb-4">
+                <div class="grid grid-cols-12 gap-6 items-start">
+                    <!-- Greeting -->
+                    <div class="col-span-5 py-2">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-indigo-500 mb-2">Panel de
+                            Control</p>
+                        <h2
+                            class="font-headline text-3xl font-extrabold tracking-tight leading-tight text-slate-900 mb-2">
+                            Bienvenido al<br>Centro de Monitoreo
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
+                            Monitorea la actividad de la Feria de Servicio Social en tiempo real.
+                        </p>
+                    </div>
+                    <!-- KPIs 2x2 -->
+                    <div class="col-span-7 grid grid-cols-2 gap-4">
+                        <div class="kpi-card p-5 flex items-center gap-4">
+                            <div
+                                class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0">
+                                <span class="material-symbols-outlined text-xl">how_to_reg</span>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Ya Ingresaron
+                                </p>
+                                <h4 class="text-2xl font-black text-slate-800 tracking-tight leading-none mt-0.5">1,248
+                                </h4>
 
-            <div class="grid grid-cols-4 gap-6">
-                <!-- KPI 1 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-accent">
-                        <span class="material-symbols-outlined text-3xl">how_to_reg</span>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ya Ingresaron</p>
-                        <h4 class="text-2xl font-black text-primary">1,248</h4>
-                    </div>
-                </div>
-                <!-- KPI 2 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
-                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                        <span class="material-symbols-outlined text-3xl">hub</span>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Proyectos Activos</p>
-                        <h4 class="text-2xl font-black text-primary">156</h4>
-                    </div>
-                </div>
-                <!-- KPI 3 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
-                    <div class="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600">
-                        <span class="material-symbols-outlined text-3xl">data_exploration</span>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tasa Asistencia</p>
-                        <h4 class="text-2xl font-black text-primary">85%</h4>
-                    </div>
-                </div>
-                <!-- KPI 4 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 flex items-center gap-6 shadow-sm">
-                    <div class="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
-                        <span class="material-symbols-outlined text-3xl">schedule</span>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hora Pico</p>
-                        <h4 class="text-2xl font-black text-primary" id="metric-peak">11:00 AM</h4>
-                    </div>
-                </div>
-            </div>
+                            </div>
+                        </div>
+                        <div class="kpi-card p-5 flex items-center gap-4">
+                            <div
+                                class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 shrink-0">
+                                <span class="material-symbols-outlined text-xl">hub</span>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Proyectos
+                                    Activos</p>
+                                <h4 class="text-2xl font-black text-slate-800 tracking-tight leading-none mt-0.5">156
+                                </h4>
 
-            <div class="grid grid-cols-12 gap-8">
-                <!-- Flujo por Hora -->
-                <div class="col-span-8 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <h3 class="font-headline text-2xl font-black text-primary">Flujo de Alumnos (Check-in)</h3>
-                            <p class="text-slate-400 text-sm">Ingresos constantes de estudiantes por hora de la feria
-                            </p>
+                            </div>
+                        </div>
+                        <div class="kpi-card p-5 flex items-center gap-4">
+                            <div
+                                class="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center text-purple-500 shrink-0">
+                                <span class="material-symbols-outlined text-xl">data_exploration</span>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Tasa Asistencia
+                                </p>
+                                <h4 class="text-2xl font-black text-slate-800 tracking-tight leading-none mt-0.5">85%
+                                </h4>
+
+                            </div>
+                        </div>
+                        <div class="kpi-card p-5 flex items-center gap-4">
+                            <div
+                                class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500 shrink-0">
+                                <span class="material-symbols-outlined text-xl">schedule</span>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Hora Pico</p>
+                                <h4 class="text-2xl font-black text-slate-800 tracking-tight leading-none mt-0.5"
+                                    id="metric-peak">11:00 AM</h4>
+
+                            </div>
                         </div>
                     </div>
-                    <div class="h-64 w-full relative">
-                        <canvas id="flujoChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Charts -->
+            <section class="px-8 pb-8 space-y-5 flex-1">
+                <div class="grid grid-cols-12 gap-5">
+                    <div class="col-span-8 chart-card p-7">
+                        <div class="flex justify-between items-center mb-5">
+                            <div>
+                                <h3 class="font-headline text-lg font-extrabold text-slate-800 tracking-tight">Flujo de
+                                    Alumnos (Check-in)</h3>
+                                <p class="text-slate-400 text-xs mt-0.5">Ingresos de estudiantes por hora</p>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-1 border border-slate-100">
+                                <span class="live-dot" style="width:5px;height:5px;"></span>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase">En Vivo</span>
+                            </div>
+                        </div>
+                        <div class="h-56 w-full"><canvas id="flujoChart"></canvas></div>
+                    </div>
+                    <div class="col-span-4 chart-card p-7">
+                        <h3 class="font-headline text-lg font-extrabold text-slate-800 tracking-tight mb-0.5">Asistencia
+                            vs Pre-registros</h3>
+                        <p class="text-slate-400 text-xs mb-5">Conversión de asistencia</p>
+                        <div class="h-52 w-full flex justify-center"><canvas id="asistenciaChart"></canvas></div>
                     </div>
                 </div>
-
-                <!-- Asistencia vs Preregistro -->
-                <div class="col-span-4 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
-                    <h3 class="font-headline text-xl font-black text-primary mb-2">Asistencia vs Preregistros</h3>
-                    <p class="text-slate-400 text-xs mb-6">Conversión general de asistencia al evento</p>
-                    <div class="h-56 w-full relative flex justify-center">
-                        <canvas id="asistenciaChart"></canvas>
+                <div class="grid grid-cols-12 gap-5">
+                    <div class="col-span-6 chart-card p-7">
+                        <h3 class="font-headline text-lg font-extrabold text-slate-800 tracking-tight mb-0.5">
+                            Pre-registros por Día</h3>
+                        <p class="text-slate-400 text-xs mb-5">Registros en los días previos</p>
+                        <div class="h-56 w-full"><canvas id="preregistrosDiaChart"></canvas></div>
+                    </div>
+                    <div class="col-span-6 chart-card p-7">
+                        <h3 class="font-headline text-lg font-extrabold text-slate-800 tracking-tight mb-0.5">Proyectos
+                            Más Solicitados</h3>
+                        <p class="text-slate-400 text-xs mb-5">Top 5 por interés del alumno</p>
+                        <div class="h-56 w-full"><canvas id="topProyectosChart"></canvas></div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="grid grid-cols-12 gap-8">
-                <!-- Preregistrados por día -->
-                <div class="col-span-6 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
-                    <h3 class="font-headline text-xl font-black text-primary mb-2">Pre-registros por Día</h3>
-                    <p class="text-slate-400 text-xs mb-6">Alumnos registrados a lo largo de los días previos</p>
-                    <div class="h-64 w-full relative">
-                        <canvas id="preregistrosDiaChart"></canvas>
-                    </div>
+            <footer class="px-8 py-4 border-t border-slate-100 flex justify-between items-center bg-white">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-300">© 2026 Portal Feria Servicio
+                    Social</p>
+                <div class="flex items-center gap-2">
+                    <span class="live-dot" style="width:5px;height:5px;"></span>
+                    <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Sistema Operativo
+                        100%</span>
                 </div>
-
-                <!-- Proyectos mas solicitados -->
-                <div class="col-span-6 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
-                    <h3 class="font-headline text-xl font-black text-primary mb-2">Proyectos Más Solicitados</h3>
-                    <p class="text-slate-400 text-xs mb-6">Top 5 de proyectos por interés del alumno (Deseados)</p>
-                    <div class="h-64 w-full relative">
-                        <canvas id="topProyectosChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <footer class="p-8 border-t border-slate-200 flex justify-between items-center bg-white mt-auto">
-            <p class="text-[10px] font-black uppercase tracking-widest text-slate-300">© 2026 Portal Feria Servicio
-                Social</p>
-            <div class="flex gap-6 text-[10px] font-bold text-slate-400 uppercase">
-                <span class="text-emerald-500">• SISTEMA OPERATIVO 100%</span>
-            </div>
-        </footer>
-    </main>
+            </footer>
+        </main>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.color = '#64748b';
+            Chart.defaults.color = '#94a3b8';
+            const gridColor = '#f1f5f9';
 
-            // 1. Flujo de Alumnos (Line)
+            // 1. Flujo de Alumnos
             const ctxFlujo = document.getElementById('flujoChart').getContext('2d');
-            const gradientFlujo = ctxFlujo.createLinearGradient(0, 0, 0, 300);
-            gradientFlujo.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
-            gradientFlujo.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+            const grad = ctxFlujo.createLinearGradient(0, 0, 0, 280);
+            grad.addColorStop(0, 'rgba(99,102,241,0.2)');
+            grad.addColorStop(1, 'rgba(99,102,241,0.0)');
             new Chart(ctxFlujo, {
                 type: 'line',
                 data: {
                     labels: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
                     datasets: [{
                         label: 'Check-ins', data: [150, 300, 450, 200, 100, 35, 10, 3],
-                        borderColor: '#3b82f6', backgroundColor: gradientFlujo, borderWidth: 3, fill: true, tension: 0.4,
-                        pointBackgroundColor: '#ffffff', pointBorderColor: '#3b82f6', pointRadius: 4
+                        borderColor: '#6366f1', backgroundColor: grad, borderWidth: 2.5, fill: true, tension: 0.4,
+                        pointBackgroundColor: '#fff', pointBorderColor: '#6366f1', pointBorderWidth: 2, pointRadius: 4
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                    scales: { y: { beginAtZero: true, grid: { color: gridColor } }, x: { grid: { display: false } } }
                 }
             });
 
-            // 2. Asistentes vs Pre-registros (Doughnut)
-            const ctxAsistencia = document.getElementById('asistenciaChart').getContext('2d');
-            new Chart(ctxAsistencia, {
+            // 2. Doughnut
+            new Chart(document.getElementById('asistenciaChart').getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: ['Asistieron', 'No Asistieron'],
@@ -276,35 +351,33 @@
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, cutout: '75%',
-                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } }
+                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } } }
                 }
             });
 
-            // 3. Pre-registros por Día (Bar)
-            const ctxPreregistros = document.getElementById('preregistrosDiaChart').getContext('2d');
-            new Chart(ctxPreregistros, {
+            // 3. Bar
+            new Chart(document.getElementById('preregistrosDiaChart').getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-                    datasets: [{ label: 'Registros', data: [120, 250, 400, 380, 210, 107], backgroundColor: '#8b5cf6', borderRadius: 6 }]
+                    datasets: [{ label: 'Registros', data: [120, 250, 400, 380, 210, 107], backgroundColor: '#8b5cf6', borderRadius: 8 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                    scales: { y: { beginAtZero: true, grid: { color: gridColor } }, x: { grid: { display: false } } }
                 }
             });
 
-            // 4. Proyectos Más Solicitados (Horizontal Bar)
-            const ctxTopProyectos = document.getElementById('topProyectosChart').getContext('2d');
-            new Chart(ctxTopProyectos, {
+            // 4. Horizontal Bar
+            new Chart(document.getElementById('topProyectosChart').getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: ['Inclusión Digital', 'Reforestación', 'Tutorías STEM', 'Refugio Animal', 'Diseño Social'],
-                    datasets: [{ label: 'Intereses', data: [340, 290, 250, 180, 140], backgroundColor: '#f97316', borderRadius: 6 }]
+                    datasets: [{ label: 'Intereses', data: [340, 290, 250, 180, 140], backgroundColor: '#f97316', borderRadius: 8 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } },
-                    scales: { x: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f1f5f9' } }, y: { grid: { display: false } } }
+                    scales: { x: { beginAtZero: true, grid: { color: gridColor } }, y: { grid: { display: false } } }
                 }
             });
         });
