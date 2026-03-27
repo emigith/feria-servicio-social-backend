@@ -5,9 +5,10 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
   <script>
     tailwind.config = {
@@ -69,6 +70,30 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
+
+    .time-option {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid #e2e8f0;
+    }
+
+    .time-option:hover:not(:disabled) {
+      border-color: #93c5fd;
+      transform: scale(1.02);
+    }
+
+    .time-option.selected {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 
@@ -76,13 +101,14 @@
 
   <nav class="fixed top-6 left-6 z-50">
     <button onclick="window.location.href='estudiante_inicio.html'"
-      class="glass-nav flex items-center gap-2 px-5 py-2.5 rounded-full text-white font-medium hover:bg-white/20 transition-all shadow-lg">
-      <span class="material-symbols-outlined text-sm">arrow_back_ios</span>
+      class="glass-nav flex items-center gap-2 px-5 py-2.5 rounded-full text-white font-medium hover:bg-white/20 transition-all shadow-lg group">
+      <span
+        class="material-symbols-outlined text-[18px] transition-transform group-hover:-translate-x-1">arrow_back_ios</span>
       <span>Volver</span>
     </button>
   </nav>
 
-  <main class="flex-grow flex items-center justify-center p-4 md:p-8 mt-12">
+  <main class="flex-grow flex items-center justify-center p-4 md:p-8 mt-16 mb-16">
     <div
       class="w-full max-w-3xl bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl border border-white/30 overflow-hidden">
       <div class="p-8 md:p-12">
@@ -91,8 +117,7 @@
             <span class="material-symbols-outlined text-blue-700 text-3xl">edit_note</span>
           </div>
           <h1 class="text-4xl font-bold text-navy-accent mb-3">Pre-Registro</h1>
-          <p class="text-slate-500 text-base md:text-lg max-w-xl mx-auto">
-            Completa el formulario para registrar tu participación en la Feria de Servicio Social 2026.
+          <p class="text-slate-500 text-base md:text-lg">Selecciona tu horario para la Feria de Servicio Social 2026.
           </p>
         </div>
 
@@ -101,59 +126,56 @@
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Nombre(s)</label>
               <input id="first_name" required type="text" placeholder="Ej. Juan"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none focus:ring-2 focus:ring-blue-400/30 transition-all" />
             </div>
             <div class="flex flex-col gap-2">
               <label class="text-sm font-semibold text-navy-accent">Apellidos</label>
               <input id="last_name" required type="text" placeholder="Ej. Pérez"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
-            </div>
-          </div>
-
-          <div class="grid grid-co
-          ls-1 md:grid-cols-2 gap-6">
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-navy-accent">Matrícula</label>
-              <input id="matricula" required type="text" placeholder="A01234567"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
-            </div>
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-navy-accent">Correo institucional</label>
-              <input id="email" required type="email" placeholder="usuario@tec.mx"
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none focus:ring-2 focus:ring-blue-400/30 transition-all" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-navy-accent">Día de asistencia</label>
-              <select
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none transition-all">
-                <option value="2026-10-24">Octubre 24, 2026</option>
-                <option value="2026-10-25">Octubre 25, 2026</option>
-              </select>
+              <label class="text-sm font-semibold text-navy-accent">Matrícula</label>
+              <input id="matricula" required type="text" placeholder="A01234567"
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none focus:ring-2 focus:ring-blue-400/30 transition-all" />
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-sm font-semibold text-navy-accent">Hora</label>
-              <select
-                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none transition-all">
-                <option value="09:00">09:00 AM</option>
-                <option value="11:00">11:00 AM</option>
-              </select>
+              <label class="text-sm font-semibold text-navy-accent">Correo institucional</label>
+              <input id="email" required type="email" placeholder="usuario@tec.mx"
+                class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none focus:ring-2 focus:ring-blue-400/30 transition-all" />
             </div>
           </div>
+
           <div class="flex flex-col gap-2">
-            <label class="text-sm font-semibold text-navy-accent">Crea una contraseña</label>
-            <input id="password" required type="password" placeholder="Mínimo 8 caracteres"
-              class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg focus:ring-2 focus:ring-blue-400/30 outline-none transition-all" />
-            <p class="text-[10px] text-slate-400">La usarás para editar tu registro después.</p>
+            <label class="text-sm font-semibold text-navy-accent">Día de asistencia</label>
+            <select id="select-dia"
+              class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none focus:ring-2 focus:ring-blue-400/30 transition-all">
+              <option value="2026-10-24">Sábado 24 de Octubre, 2026</option>
+              <option value="2026-10-25">Domingo 25 de Octubre, 2026</option>
+            </select>
           </div>
+
+          <div class="flex flex-col gap-3">
+            <label class="text-sm font-semibold text-navy-accent">Selecciona un Horario</label>
+            <div id="horarios-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            </div>
+            <input type="hidden" id="selected-time" required>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-navy-accent">Contraseña</label>
+            <input id="password" required type="password" placeholder="Mínimo 8 caracteres"
+              class="w-full px-4 py-3 rounded-xl border border-border-soft bg-field-bg outline-none focus:ring-2 focus:ring-blue-400/30 transition-all" />
+          </div>
+
           <div class="pt-4">
             <button
-              class="w-full submit-button text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2"
+              class="w-full submit-button text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 group"
               type="submit">
-              <span>Registrarse</span>
-              <span class="material-symbols-outlined">send</span>
+              <span>Registrarse ahora</span>
+              <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">send</span>
             </button>
           </div>
         </form>
@@ -161,7 +183,7 @@
     </div>
   </main>
 
-  <footer class="w-full py-8 text-center">
+  <footer class="w-full py-8 text-center mt-auto">
     <p class="text-xs font-semibold tracking-widest text-white/70 uppercase">
       TECNOLÓGICO DE MONTERREY — SERVICIO SOCIAL 2026
     </p>
@@ -169,17 +191,89 @@
 
   <script>
     const API_BASE = 'http://127.0.0.1:8000/api/v1';
+    const listaHoras = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00"];
 
+    // Base de datos de cupos local (Simulación)
+    let dbCupos = JSON.parse(localStorage.getItem('cupos_feria_v4')) || {};
+
+    const container = document.getElementById('horarios-container');
+    const inputHidden = document.getElementById('selected-time');
+    const selectDia = document.getElementById('select-dia');
+
+    function renderizarHorarios() {
+      container.innerHTML = '';
+      const dia = selectDia.value;
+
+      listaHoras.forEach(hora => {
+        const llave = `${dia}_${hora}`;
+        if (dbCupos[llave] === undefined) dbCupos[llave] = 150;
+
+        const cupos = dbCupos[llave];
+
+        // Determinar color de la bolita
+        let colorClase = 'bg-green-500'; // 150 - 100
+        if (cupos <= 0) colorClase = 'bg-gray-400';
+        else if (cupos <= 69) colorClase = 'bg-red-600'; // 69 para abajo
+        else if (cupos <= 99) colorClase = 'bg-yellow-500'; // 99 - 70
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.disabled = cupos <= 0;
+        btn.className = `time-option flex flex-col items-center justify-center p-3 rounded-xl bg-white ${cupos <= 0 ? 'opacity-40 cursor-not-allowed grayscale' : 'cursor-pointer hover:bg-slate-50'}`;
+
+        // Si esta hora ya estaba seleccionada antes de cambiar el día
+        if (inputHidden.value === hora && cupos > 0) {
+          btn.classList.add('selected', 'ring-2', 'ring-blue-500');
+        }
+
+        btn.innerHTML = `
+          <span class="text-[15px] font-bold text-navy-accent">${hora}</span>
+          <div class="flex items-center gap-1.5 mt-1 bg-slate-100 px-2 py-0.5 rounded-full">
+            <span class="status-dot ${colorClase}"></span>
+            <span class="text-[10px] font-bold text-slate-600">${cupos}</span>
+          </div>
+        `;
+
+        btn.onclick = () => {
+          if (cupos > 0) {
+            document.querySelectorAll('.time-option').forEach(b => b.classList.remove('selected', 'ring-2', 'ring-blue-500'));
+            btn.classList.add('selected', 'ring-2', 'ring-blue-500');
+            inputHidden.value = hora;
+          }
+        };
+
+        container.appendChild(btn);
+      });
+    }
+
+    selectDia.onchange = () => {
+      inputHidden.value = ''; // Reset selección al cambiar día
+      renderizarHorarios();
+    };
+
+    // Carga inicial
+    renderizarHorarios();
+
+    // Envío del Formulario
     document.getElementById('form-registro').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Mapeamos los IDs del HTML a los nombres que espera tu Backend
+      const hora = inputHidden.value;
+      if (!hora) {
+        alert("Por favor selecciona un horario de la lista.");
+        return;
+      }
+
+      const llave = `${selectDia.value}_${hora}`;
+
       const payload = {
         matricula: document.getElementById('matricula').value.toUpperCase(),
         nombre: document.getElementById('first_name').value,
         apellido: document.getElementById('last_name').value,
         correo: document.getElementById('email').value,
-        password: document.getElementById('password').value
+        password: document.getElementById('password').value,
+        fecha: selectDia.value,
+        hora: hora
       };
 
       try {
@@ -189,26 +283,20 @@
           body: JSON.stringify(payload)
         });
 
-        const data = await response.json();
-
         if (response.ok) {
-          alert("¡Registro exitoso! Ya puedes iniciar sesión con tu matrícula y contraseña.");
+          // Descontar cupo (Simulado)
+          dbCupos[llave] -= 1;
+          localStorage.setItem('cupos_feria_v4', JSON.stringify(dbCupos));
+
+          alert("¡Registro exitoso! Tu cupo ha sido reservado.");
           window.location.href = "post_preregistro.html";
         } else {
-          // Manejo inteligente de errores de FastAPI
-          if (data.detail && Array.isArray(data.detail)) {
-            const mensajes = data.detail.map(err => {
-              const campo = err.loc[1] || "Error";
-              return `${campo}: ${err.msg}`;
-            }).join('\n');
-            alert("Revisa los siguientes campos:\n" + mensajes);
-          } else {
-            alert(data.detail || "Error desconocido al registrar.");
-          }
+          const data = await response.json();
+          alert(data.detail || "Error al registrar.");
         }
       } catch (error) {
-        console.error("Error de conexión:", error);
-        alert("No se pudo conectar con el servidor. Verifica que el backend esté corriendo.");
+        console.error(error);
+        alert("Error: No se pudo conectar con el servidor.");
       }
     });
   </script>
