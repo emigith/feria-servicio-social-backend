@@ -233,11 +233,28 @@
         }
         localStorage.setItem('role', 'student');
         localStorage.setItem('student_id', data.student_id);
+        if (data.matricula) localStorage.setItem('student_matricula', data.matricula);
+        if (data.nombre) localStorage.setItem('student_nombre', data.nombre);
 
-        successBox.classList.add('show');
-        setTimeout(() => {
-          window.location.href = 'catalogo_opciones.html';
-        }, 1500);
+        // Verificar si el alumno ya hizo check-in en la feria
+        if (data.has_checkin === false) {
+          // Sin check-in: mostrar página del QR
+          successBox.innerHTML = `
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <p>Sesión iniciada. Redirigiendo...</p>`;
+          successBox.classList.add('show');
+          setTimeout(() => {
+            window.location.href = 'sin_checkin.html';
+          }, 1200);
+        } else {
+          // Con check-in: acceso al catálogo
+          successBox.classList.add('show');
+          setTimeout(() => {
+            window.location.href = 'catalogo_opciones.html';
+          }, 1500);
+        }
 
       } catch (err) {
         errorTxt.textContent = err.message;
