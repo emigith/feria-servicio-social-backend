@@ -2,6 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password, verify_password, create_access_token
+from app.repositories.checkin_repo import CheckinRepo
 from app.repositories.student_repo import StudentRepo
 from app.repositories.user_repo import UserRepo
 
@@ -80,9 +81,20 @@ def login_student(matricula: str, password: str, db: Session):
         token_type="student",
     )
 
+    checkin_repo = CheckinRepo()
+    checkin = checkin_repo.get_by_student(db, student.id)
+
     return {
         "access_token": access_token,
         "token_type": "bearer",
+        "has_checkin": checkin is not None,
+        "student": {
+            "id": str(student.id),
+            "matricula": student.matricula,
+            "nombre": student.nombre,
+            "apellido": student.apellido,
+            "email": student.email,
+        }
     }
 
 

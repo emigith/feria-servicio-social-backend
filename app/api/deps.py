@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.core.db import get_db
 from app.core.security import decode_token
+from app.repositories.checkin_repo import CheckinRepo
 from app.repositories.student_repo import StudentRepo
 from app.repositories.user_repo import UserRepo
 
@@ -50,6 +51,21 @@ def get_current_student(
             detail="Student not found",
         )
 
+    return student
+
+
+def get_checked_in_student(
+    db: Session = Depends(get_db),
+    student=Depends(get_current_student),
+):
+    """Igual que get_current_student pero además exige que el alumno haya hecho check-in."""
+    checkin_repo = CheckinRepo()
+    checkin = checkin_repo.get_by_student(db, student.id)
+    if not checkin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="CHECKIN_REQUIRED",
+        )
     return student
 
 

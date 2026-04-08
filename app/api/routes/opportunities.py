@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_student
+from app.api.deps import get_checked_in_student, get_current_student
 from app.core.db import get_db
 from app.schemas.enrollment import EnrollmentResponse
 from app.schemas.opportunity import OpportunityDetailResponse, OpportunityResponse
@@ -20,7 +20,7 @@ router = APIRouter(prefix="/opportunities")
 def list_opportunities(
     period: str = Query(...),
     db: Session = Depends(get_db),
-    current_student=Depends(get_current_student),
+    current_student=Depends(get_checked_in_student),
 ):
     if period != "active":
         raise HTTPException(
@@ -35,7 +35,7 @@ def list_opportunities(
 def get_opportunity_endpoint(
     opportunity_id: UUID,
     db: Session = Depends(get_db),
-    current_student=Depends(get_current_student),
+    current_student=Depends(get_checked_in_student),
 ):
     return get_opportunity_by_id(opportunity_id, db)
 
