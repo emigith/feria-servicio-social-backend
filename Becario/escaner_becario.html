@@ -41,22 +41,28 @@
         }
 
         .bg-purple-lava {
-            background: linear-gradient(
-                -45deg, 
-                #05010e 0%, 
-                #4c1d95 25%, 
-                #f3e8ff 50%, 
-                #7e22ce 75%, 
-                #0f0524 100%
-            );
+            background: linear-gradient(-45deg,
+                    #05010e 0%,
+                    #4c1d95 30%,
+                    #581c87 50%,
+                    #4c1d95 70%,
+                    #0f0524 100%);
             background-size: 300% 300%;
             animation: purpleFlow 10s ease-in-out infinite;
         }
 
         @keyframes purpleFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .font-headline {
@@ -128,10 +134,115 @@
                 box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
             }
         }
+
+        /* Floating QR decorations - blob style like post_preregistro */
+        .floating-qr-card {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes blob {
+
+            0%,
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+
+        @keyframes blob-slow {
+
+            0%,
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(-25px, -40px) scale(1.05);
+            }
+
+            66% {
+                transform: translate(15px, 30px) scale(0.95);
+            }
+        }
+
+        .anim-blob {
+            animation: blob 7s infinite;
+        }
+
+        .anim-blob-slow {
+            animation: blob-slow 10s infinite;
+        }
+
+        .anim-blob-mid {
+            animation: blob 12s infinite;
+        }
+
+        .anim-blob-fast {
+            animation: blob-slow 8s infinite;
+        }
     </style>
 </head>
 
 <body class="flex flex-col min-h-screen text-slate-200 bg-purple-lava">
+
+    <!-- Floating QR decorations (same style as post_preregistro) -->
+    <div class="floating-qr-card anim-blob" style="top:10%;left:6%">
+        <div
+            class="w-12 h-12 bg-white rounded-xl shadow-lg border border-white/50 flex items-center justify-center text-purple-700 transform -rotate-6 opacity-80">
+            <span class="material-symbols-outlined text-[22px]">qr_code_2</span>
+        </div>
+    </div>
+    <div class="floating-qr-card anim-blob-slow" style="top:22%;right:7%">
+        <div
+            class="w-10 h-10 bg-white rounded-lg shadow-lg border border-white/50 flex items-center justify-center text-purple-600 transform rotate-12 opacity-70">
+            <span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+        </div>
+    </div>
+    <div class="floating-qr-card anim-blob-mid" style="bottom:18%;left:8%">
+        <div
+            class="w-14 h-14 bg-white rounded-xl shadow-lg border border-white/50 flex items-center justify-center text-purple-700 transform rotate-6 opacity-85">
+            <span class="material-symbols-outlined text-[26px]">qr_code_2</span>
+        </div>
+    </div>
+    <div class="floating-qr-card anim-blob-fast" style="bottom:35%;right:5%">
+        <div
+            class="w-11 h-11 bg-white rounded-xl shadow-lg border border-white/50 flex items-center justify-center text-purple-600 transform -rotate-12 opacity-70">
+            <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+        </div>
+    </div>
+    <div class="floating-qr-card anim-blob" style="top:60%;left:4%">
+        <div
+            class="w-9 h-9 bg-white rounded-lg shadow-lg border border-white/50 flex items-center justify-center text-purple-500 transform rotate-3 opacity-75">
+            <span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+        </div>
+    </div>
+    <div class="floating-qr-card anim-blob-slow" style="top:75%;right:10%">
+        <div
+            class="w-10 h-10 bg-white rounded-lg shadow-lg border border-white/50 flex items-center justify-center text-purple-600 transform -rotate-8 opacity-65">
+            <span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+        </div>
+    </div>
+    <div class="floating-qr-card anim-blob-mid" style="top:40%;right:3%">
+        <div
+            class="w-10 h-10 bg-white rounded-xl shadow-lg border border-white/50 flex items-center justify-center text-purple-700 transform rotate-10 opacity-75">
+            <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+        </div>
+    </div>
+    <div class="floating-qr-card anim-blob-fast" style="top:85%;left:15%">
+        <div
+            class="w-11 h-11 bg-white rounded-lg shadow-lg border border-white/50 flex items-center justify-center text-purple-500 transform -rotate-3 opacity-70">
+            <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+        </div>
+    </div>
 
     <!-- Header Móvil Fixado -->
     <header class="glass-header sticky top-0 z-30 px-6 py-4 flex justify-between items-center w-full shadow-sm">
@@ -157,34 +268,30 @@
 
     <!-- Lector de QR (Principal) -->
     <main class="flex-1 flex flex-col items-center justify-center p-6 relative w-full h-full">
-        <div class="text-center mb-6 px-4">
-            <h2 class="text-2xl font-headline font-black text-white mb-1 tracking-tight">Apunta al código QR</h2>
-            <p class="text-purple-100 text-sm font-medium leading-relaxed">Coloca el código QR del alumno frente la
-                cámara trasera en el recuadro para registrar su entrada.</p>
-        </div>
-
-        <!-- Contenedor del Lector HTML5 QR (se creará iframe dentro) -->
-        <div class="w-full max-w-sm relative mx-auto bg-white/95 backdrop-blur-md rounded-[2rem] p-2 border border-white/20 shadow-2xl">
-            <!-- Cuadro naranja simulando visor para estética -->
-            <div
-                class="absolute inset-0 pointer-events-none rounded-[2rem] border-[4px] border-purple-300 z-10 opacity-60">
+        <!-- Glass Card contenedor -->
+        <div
+            class="w-full max-w-sm mx-auto bg-white/95 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-white/30 p-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-headline font-black text-slate-800 mb-1 tracking-tight">Apunta al código QR
+                </h2>
+                <p class="text-slate-500 text-sm font-medium leading-relaxed">Coloca el código QR del alumno frente la
+                    cámara para registrar su entrada.</p>
             </div>
 
-            <div id="qr-reader" class="w-full relative z-0"></div>
-            <div id="reader-loading"
-                class="absolute inset-0 z-20 bg-white rounded-[2rem] flex flex-col items-center justify-center animate-pulse">
-                <span class="material-symbols-outlined text-4xl text-slate-300 animate-spin">sync</span>
-                <p class="text-slate-400 mt-2 text-sm font-bold">Iniciando cámara...</p>
-            </div>
-        </div>
+            <!-- Contenedor del Lector HTML5 QR -->
+            <div class="w-full relative rounded-[1.5rem] overflow-hidden border border-slate-200 shadow-inner">
+                <!-- Cuadro decorativo visor -->
+                <div
+                    class="absolute inset-0 pointer-events-none rounded-[1.5rem] border-[3px] border-purple-300 z-10 opacity-50">
+                </div>
 
-        <!-- Indicaciones secundarias y fallback manual -->
-        <div class="mt-8 text-center px-4 w-full">
-            <button
-                class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3.5 px-6 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 mx-auto active:scale-95">
-                <span class="material-symbols-outlined text-[18px]">keyboard</span>
-                Ingresar matrícula manualmente
-            </button>
+                <div id="qr-reader" class="w-full relative z-0"></div>
+                <div id="reader-loading"
+                    class="absolute inset-0 z-20 bg-white rounded-[1.5rem] flex flex-col items-center justify-center animate-pulse">
+                    <span class="material-symbols-outlined text-4xl text-slate-300 animate-spin">sync</span>
+                    <p class="text-slate-400 mt-2 text-sm font-bold">Iniciando cámara...</p>
+                </div>
+            </div>
         </div>
     </main>
 
