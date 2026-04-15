@@ -28,3 +28,24 @@ class UserRepo:
         self.db.commit()
         self.db.refresh(user)
         return user
+
+    def create_socioformador(self, username: str, plain_password: str, hashed_password: str) -> User:
+        from app.models.user import UserRole
+        user = User(
+            username=username,
+            plain_password=plain_password,
+            hashed_password=hashed_password,
+            role=UserRole.socioformador,
+        )
+        self.db.add(user)
+        self.db.flush()  # obtiene el id sin hacer commit todavía
+        return user
+
+    def get_all_socioformadores(self) -> list[User]:
+        from app.models.user import UserRole
+        return (
+            self.db.query(User)
+            .filter(User.role == UserRole.socioformador)
+            .order_by(User.created_at.asc())
+            .all()
+        )

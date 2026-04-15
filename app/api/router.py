@@ -7,6 +7,7 @@ from app.api.routes.opportunities import router as opportunities_router
 from app.api.routes.periods import router as periods_router
 from app.api.routes.students import router as students_router
 from app.api.routes.admin_opportunities import router as admin_opportunities_router
+from app.api.routes.admin_socioformadores import router as admin_socioformadores_router
 from app.api.routes.partner import router as partner_router
 
 api_router = APIRouter()
@@ -19,4 +20,5 @@ api_router.include_router(opportunities_router, tags=["opportunities"])
 api_router.include_router(periods_router, tags=["periods"])
 api_router.include_router(students_router, tags=["students"])
 api_router.include_router(admin_opportunities_router, tags=["admin-opportunities"])
+api_router.include_router(admin_socioformadores_router, tags=["admin-socioformadores"])
 api_router.include_router(partner_router, tags=["partner"])
