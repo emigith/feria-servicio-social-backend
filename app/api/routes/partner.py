@@ -9,14 +9,24 @@ from app.schemas.opportunity import (
     PartnerOpportunityResponse,
     PartnerOpportunityEnrollmentsResponse,
     PartnerOpportunityDashboardResponse,
+    PartnerGeneralDashboardResponse,
 )
 from app.services.partner_service import (
     get_partner_opportunities,
     get_partner_opportunity_enrollments,
     get_partner_opportunity_dashboard,
+    get_partner_general_dashboard,
 )
 
 router = APIRouter(prefix="/partner", tags=["partner"])
+
+
+@router.get("/dashboard", response_model=PartnerGeneralDashboardResponse)
+def get_general_dashboard(
+    db: Session = Depends(get_db),
+    current_user=Depends(require_roles(["socioformador"])),
+):
+    return get_partner_general_dashboard(current_user.id, db)
 
 
 @router.get("/opportunities", response_model=list[PartnerOpportunityResponse])

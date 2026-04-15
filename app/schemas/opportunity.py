@@ -119,3 +119,25 @@ class PartnerOpportunityDashboardResponse(BaseModel):
     available_slots: int
     is_full: bool
     enrollment_rate: float
+
+
+class PartnerDashboardOpportunityItem(BaseModel):
+    id: UUID
+    title: str
+    company: str
+    capacity: int
+    enrolled_count: int
+    available_slots: int
+    is_full: bool
+    enrollment_rate: float
+
+    class Config:
+        from_attributes = True
+
+
+class PartnerGeneralDashboardResponse(BaseModel):
+    total_opportunities: int
+    total_enrolled: int
+    total_capacity: int
+    overall_enrollment_rate: float
+    opportunities: list[PartnerDashboardOpportunityItem]

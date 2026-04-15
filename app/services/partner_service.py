@@ -13,6 +13,34 @@ def get_partner_opportunities(partner_user_id: UUID, db: Session):
     return repo.get_by_partner_user(db, partner_user_id)
 
 
+def get_partner_general_dashboard(partner_user_id: UUID, db: Session):
+    opportunities = repo.get_by_partner_user(db, partner_user_id)
+
+    total_capacity = sum(o.capacity for o in opportunities)
+    total_enrolled = sum(o.enrolled_count for o in opportunities)
+    overall_rate = round((total_enrolled / total_capacity) * 100, 2) if total_capacity > 0 else 0.0
+
+    return {
+        "total_opportunities": len(opportunities),
+        "total_enrolled": total_enrolled,
+        "total_capacity": total_capacity,
+        "overall_enrollment_rate": overall_rate,
+        "opportunities": [
+            {
+                "id": o.id,
+                "title": o.title,
+                "company": o.company,
+                "capacity": o.capacity,
+                "enrolled_count": o.enrolled_count,
+                "available_slots": o.available_slots,
+                "is_full": o.is_full,
+                "enrollment_rate": round((o.enrolled_count / o.capacity) * 100, 2) if o.capacity > 0 else 0.0,
+            }
+            for o in opportunities
+        ],
+    }
+
+
 def get_partner_opportunity_enrollments(
     partner_user_id: UUID,
     opportunity_id: UUID,
