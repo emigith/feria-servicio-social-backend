@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Dashboard | Socio Formador</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Lexend', sans-serif; }
+    .gold-bar {
+      background: linear-gradient(-45deg, #854d0e, #ca8a04, #f59e0b, #fbbf24, #ca8a04);
+      background-size: 400% 400%;
+      animation: goldFlow 10s ease infinite;
+    }
+    @keyframes goldFlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .progress-bar { transition: width 0.8s ease; }
+  </style>
+</head>
+
+<body class="min-h-screen bg-slate-100">
+
+  <!-- Navbar -->
+  <header class="gold-bar shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="text-white font-bold text-xl tracking-tight">Feria de Servicio Social</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-white/80 text-sm font-medium hidden sm:block">Socio Formador</span>
+        <button id="logout-btn" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-4 py-2 rounded-xl text-sm transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Salir
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- Loading -->
+    <div id="loading" class="flex flex-col items-center justify-center py-32 gap-4">
+      <div class="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-slate-500 text-lg">Cargando dashboard...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="error-section" class="hidden flex-col items-center justify-center py-32 gap-4">
+      <svg class="w-16 h-16 text-red-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p id="error-text" class="text-slate-600 text-lg text-center">Error al cargar los datos.</p>
+      <button onclick="loadDashboard()" class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold px-6 py-3 rounded-xl transition-all">
+        Reintentar
+      </button>
+    </div>
+
+    <!-- Dashboard content -->
+    <div id="dashboard" class="hidden">
+
+      <!-- Título -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-900">Mi Dashboard</h1>
+        <p class="text-slate-500 mt-1">Resumen general de tus proyectos de servicio social</p>
+      </div>
+
+      <!-- Tarjetas resumen -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+        <div class="card-hover bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-slate-500 text-sm font-medium">Total Proyectos</span>
+            <div class="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <p id="stat-total-opp" class="text-4xl font-bold text-slate-900">—</p>
+        </div>
+
+        <div class="card-hover bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-slate-500 text-sm font-medium">Total Inscritos</span>
+            <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <p id="stat-total-enrolled" class="text-4xl font-bold text-slate-900">—</p>
+        </div>
+
+        <div class="card-hover bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-slate-500 text-sm font-medium">Capacidad Total</span>
+            <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <p id="stat-total-capacity" class="text-4xl font-bold text-slate-900">—</p>
+        </div>
+
+        <div class="card-hover bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-slate-500 text-sm font-medium">Ocupación General</span>
+            <div class="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <p id="stat-overall-rate" class="text-4xl font-bold text-slate-900">—</p>
+          <div class="mt-3 bg-slate-100 rounded-full h-2">
+            <div id="overall-bar" class="progress-bar bg-yellow-500 h-2 rounded-full" style="width: 0%"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Gráficas -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+
+        <!-- Dona: ocupación general -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 class="text-base font-bold text-slate-900 mb-1">Ocupación General</h2>
+          <p class="text-slate-400 text-xs mb-6">Inscritos vs lugares disponibles en todos tus proyectos</p>
+          <div class="flex items-center justify-center" style="height: 240px;">
+            <canvas id="chart-donut"></canvas>
+          </div>
+        </div>
+
+        <!-- Barras: inscritos vs capacidad por proyecto -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <h2 class="text-base font-bold text-slate-900 mb-1">Inscritos por Proyecto</h2>
+          <p class="text-slate-400 text-xs mb-6">Comparativa de inscritos vs capacidad máxima</p>
+          <div style="height: 240px;">
+            <canvas id="chart-bars"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tabla de proyectos -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+          <h2 class="text-lg font-bold text-slate-900">Mis Proyectos</h2>
+          <span id="projects-count" class="text-sm text-slate-500"></span>
+        </div>
+
+        <!-- Sin proyectos -->
+        <div id="no-projects" class="hidden flex-col items-center justify-center py-16 gap-3">
+          <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="text-slate-500 font-medium">No tienes proyectos asignados aún.</p>
+        </div>
+
+        <!-- Tabla -->
+        <div id="projects-table-wrapper" class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">Proyecto</th>
+                <th class="px-6 py-3 text-left">Empresa</th>
+                <th class="px-6 py-3 text-center">Inscritos</th>
+                <th class="px-6 py-3 text-center">Capacidad</th>
+                <th class="px-6 py-3 text-center">Ocupación</th>
+                <th class="px-6 py-3 text-center">Estado</th>
+                <th class="px-6 py-3 text-center">Detalle</th>
+              </tr>
+            </thead>
+            <tbody id="projects-tbody" class="divide-y divide-slate-100 text-sm text-slate-700">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const API = "http://localhost:8000/api/v1";
+    const token = localStorage.getItem("sf_token");
+
+    if (!token) {
+      window.location.href = "acceso_socioformador.html";
+    }
+
+    document.getElementById("logout-btn").addEventListener("click", () => {
+      localStorage.removeItem("sf_token");
+      localStorage.removeItem("sf_role");
+      window.location.href = "acceso_socioformador.html";
+    });
+
+    async function loadDashboard() {
+      const loading = document.getElementById("loading");
+      const errorSection = document.getElementById("error-section");
+      const dashboard = document.getElementById("dashboard");
+
+      loading.classList.remove("hidden");
+      loading.classList.add("flex");
+      errorSection.classList.add("hidden");
+      dashboard.classList.add("hidden");
+
+      try {
+        const res = await fetch(`${API}/partner/dashboard`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (res.status === 401) {
+          localStorage.removeItem("sf_token");
+          window.location.href = "acceso_socioformador.html";
+          return;
+        }
+
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+
+        const data = await res.json();
+        renderDashboard(data);
+
+      } catch (err) {
+        loading.classList.add("hidden");
+        loading.classList.remove("flex");
+        document.getElementById("error-text").innerText = "No se pudo conectar con el servidor. ¿Está el backend corriendo?";
+        errorSection.classList.remove("hidden");
+        errorSection.classList.add("flex");
+      }
+    }
+
+    let chartDonut = null;
+    let chartBars = null;
+
+    function renderCharts(data) {
+      const available = data.total_capacity - data.total_enrolled;
+
+      // -- Dona --
+      if (chartDonut) chartDonut.destroy();
+      chartDonut = new Chart(document.getElementById("chart-donut"), {
+        type: "doughnut",
+        data: {
+          labels: ["Inscritos", "Disponibles"],
+          datasets: [{
+            data: [data.total_enrolled, Math.max(available, 0)],
+            backgroundColor: ["#ca8a04", "#e2e8f0"],
+            borderWidth: 0,
+            hoverOffset: 6,
+          }]
+        },
+        options: {
+          cutout: "72%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: { font: { family: "Lexend", size: 13 }, padding: 16, color: "#475569" }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ${ctx.label}: ${ctx.parsed} (${data.total_capacity > 0 ? Math.round(ctx.parsed / data.total_capacity * 100) : 0}%)`
+              }
+            }
+          },
+          maintainAspectRatio: false,
+        }
+      });
+
+      // -- Barras --
+      if (chartBars) chartBars.destroy();
+      const labels = data.opportunities.map(o => o.title.length > 18 ? o.title.slice(0, 16) + "…" : o.title);
+      chartBars = new Chart(document.getElementById("chart-bars"), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Inscritos",
+              data: data.opportunities.map(o => o.enrolled_count),
+              backgroundColor: "#ca8a04",
+              borderRadius: 6,
+              borderSkipped: false,
+            },
+            {
+              label: "Capacidad",
+              data: data.opportunities.map(o => o.capacity),
+              backgroundColor: "#e2e8f0",
+              borderRadius: 6,
+              borderSkipped: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: { font: { family: "Lexend", size: 13 }, padding: 16, color: "#475569" }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { family: "Lexend", size: 11 }, color: "#94a3b8" } },
+            y: { grid: { color: "#f1f5f9" }, ticks: { font: { family: "Lexend", size: 11 }, color: "#94a3b8" }, beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function renderDashboard(data) {
+      // Tarjetas resumen
+      document.getElementById("stat-total-opp").innerText = data.total_opportunities;
+      document.getElementById("stat-total-enrolled").innerText = data.total_enrolled;
+      document.getElementById("stat-total-capacity").innerText = data.total_capacity;
+      document.getElementById("stat-overall-rate").innerText = `${data.overall_enrollment_rate}%`;
+      document.getElementById("overall-bar").style.width = `${Math.min(data.overall_enrollment_rate, 100)}%`;
+
+      // Gráficas
+      renderCharts(data);
+
+      // Tabla de proyectos
+      const tbody = document.getElementById("projects-tbody");
+      tbody.innerHTML = "";
+
+      if (data.opportunities.length === 0) {
+        document.getElementById("projects-table-wrapper").classList.add("hidden");
+        const noProjects = document.getElementById("no-projects");
+        noProjects.classList.remove("hidden");
+        noProjects.classList.add("flex");
+      } else {
+        document.getElementById("projects-count").innerText = `${data.opportunities.length} proyecto(s)`;
+        data.opportunities.forEach(opp => {
+          const rate = opp.enrollment_rate;
+          const barColor = rate >= 90 ? "bg-red-500" : rate >= 60 ? "bg-yellow-500" : "bg-green-500";
+          const statusBadge = opp.is_full
+            ? `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">Lleno</span>`
+            : `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Disponible</span>`;
+
+          tbody.innerHTML += `
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-medium text-slate-900">${opp.title}</td>
+              <td class="px-6 py-4 text-slate-600">${opp.company}</td>
+              <td class="px-6 py-4 text-center font-semibold">${opp.enrolled_count}</td>
+              <td class="px-6 py-4 text-center">${opp.capacity}</td>
+              <td class="px-6 py-4 text-center min-w-[140px]">
+                <div class="flex items-center gap-2">
+                  <div class="flex-1 bg-slate-100 rounded-full h-2">
+                    <div class="${barColor} h-2 rounded-full" style="width: ${Math.min(rate, 100)}%"></div>
+                  </div>
+                  <span class="text-xs font-semibold text-slate-600 w-12 text-right">${rate}%</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center">${statusBadge}</td>
+              <td class="px-6 py-4 text-center">
+                <a href="detalle_oportunidad.html?id=${opp.id}" class="inline-flex items-center gap-1 text-yellow-700 hover:text-yellow-900 font-semibold text-xs transition-colors">
+                  Ver
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      // Mostrar dashboard
+      document.getElementById("loading").classList.add("hidden");
+      document.getElementById("loading").classList.remove("flex");
+      document.getElementById("dashboard").classList.remove("hidden");
+      document.getElementById("dashboard").classList.add("block");
+    }
+
+    loadDashboard();
+  </script>
+
+</body>
+</html>
