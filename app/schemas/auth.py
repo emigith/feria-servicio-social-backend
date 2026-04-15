@@ -15,7 +15,7 @@ class StudentLoginRequest(BaseModel):
 
 
 class UserLoginRequest(BaseModel):
-    email: EmailStr
+    username: str = Field(min_length=1)
     password: str = Field(min_length=1)
 
 

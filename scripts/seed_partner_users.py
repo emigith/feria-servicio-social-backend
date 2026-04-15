@@ -16,11 +16,13 @@ def run():
     try:
         users = [
             {
+                "username": "socio.formador1",
                 "email": "socio1@feria.mx",
                 "password": "Socio1234!",
                 "role": UserRole.socioformador,
             },
             {
+                "username": "socio.formador2",
                 "email": "socio2@feria.mx",
                 "password": "Socio1234!",
                 "role": UserRole.socioformador,
@@ -31,11 +33,14 @@ def run():
             exists = db.query(User).filter(User.email == item["email"]).first()
             if not exists:
                 user = User(
+                    username=item["username"],
                     email=item["email"],
                     hashed_password=hash_password(item["password"]),
                     role=item["role"],
                 )
                 db.add(user)
+            else:
+                exists.username = item["username"]
 
         db.commit()
     finally:

@@ -98,9 +98,12 @@ def login_student(matricula: str, password: str, db: Session):
     }
 
 
-def login_user(email: str, password: str, db: Session):
+def login_user(username: str, password: str, db: Session):
     repo = UserRepo(db)
-    user = repo.get_by_email(email)
+    user = repo.get_by_username(username)
+
+    if not user and "@" in username:
+        user = repo.get_by_email(username)
 
     if (not user) or (not verify_password(password, user.hashed_password)):
         raise HTTPException(
