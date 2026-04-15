@@ -126,14 +126,45 @@
   <script>
     const form = document.getElementById("login-form");
     const errorMessage = document.getElementById("error-message");
-    form.addEventListener("submit", function (e) {
+    const errorText = errorMessage.querySelector("p");
+    const submitButton = form.querySelector("button[type='submit']");
+    const originalButtonText = submitButton.innerText;
+
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value.trim();
-      if (user === "socio.formador" && pass === "123456") {
-        window.location.href = "portal_SF.html";
-      } else {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      errorMessage.classList.remove("show");
+      submitButton.disabled = true;
+      submitButton.innerText = "Cargando...";
+
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/users/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem("sf_token", data.access_token);
+          localStorage.setItem("sf_role", data.role);
+          window.location.href = "portal_SF.html";
+        } else {
+          errorText.innerText = data.detail || "Credenciales incorrectas.";
+          errorMessage.classList.add("show");
+          submitButton.disabled = false;
+          submitButton.innerText = originalButtonText;
+        }
+      } catch (error) {
+        errorText.innerText = "Error de conexión con el servidor.";
         errorMessage.classList.add("show");
+        submitButton.disabled = false;
+        submitButton.innerText = originalButtonText;
       }
     });
   </script>
