@@ -266,11 +266,27 @@
 
       const llave = `${selectDia.value}_${hora}`;
 
+      const matricula = document.getElementById('matricula').value.toUpperCase();
+      const correo = document.getElementById('email').value.trim();
+
+      // Validar que la matrícula coincida con el correo (A01234567 → A01234567@tec.mx)
+      const expectedEmail = `${matricula.toLowerCase()}@tec.mx`;
+      if (correo.toLowerCase() !== expectedEmail) {
+        const continuar = confirm(
+          `⚠️ Tu matrícula y correo no coinciden.\n\n` +
+          `Matrícula: ${matricula}\n` +
+          `Correo esperado: ${expectedEmail}\n` +
+          `Correo ingresado: ${correo}\n\n` +
+          `¿Deseas continuar de todas formas?`
+        );
+        if (!continuar) return;
+      }
+
       const payload = {
-        matricula: document.getElementById('matricula').value.toUpperCase(),
+        matricula: matricula,
         nombre: document.getElementById('first_name').value,
         apellido: document.getElementById('last_name').value,
-        correo: document.getElementById('email').value,
+        correo: correo,
         password: document.getElementById('password').value,
         fecha: selectDia.value,
         hora: hora

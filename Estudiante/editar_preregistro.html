@@ -162,7 +162,7 @@
       
       const payload = {};
       const fields = ['nombre', 'apellido', 'email', 'matricula', 'password'];
-      
+
       // Solo tomamos los campos que no estén vacíos
       fields.forEach(f => {
         const val = document.getElementById('edit_' + f).value.trim();
@@ -172,6 +172,23 @@
       if (Object.keys(payload).length === 0) {
         alert("No has ingresado ningún dato para actualizar.");
         return;
+      }
+
+      // Validar coincidencia matrícula/correo si se editaron ambos o uno de los dos
+      const newMatricula = (payload.matricula || '').toUpperCase();
+      const newEmail = (payload.email || '').toLowerCase();
+      if (newMatricula && newEmail) {
+        const expectedEmail = `${newMatricula.toLowerCase()}@tec.mx`;
+        if (newEmail !== expectedEmail) {
+          const continuar = confirm(
+            `⚠️ Tu matrícula y correo no coinciden.\n\n` +
+            `Matrícula: ${newMatricula}\n` +
+            `Correo esperado: ${expectedEmail}\n` +
+            `Correo ingresado: ${newEmail}\n\n` +
+            `¿Deseas continuar de todas formas?`
+          );
+          if (!continuar) return;
+        }
       }
 
       try {
