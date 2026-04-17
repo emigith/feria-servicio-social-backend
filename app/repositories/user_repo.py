@@ -49,3 +49,13 @@ class UserRepo:
             .order_by(User.created_at.asc())
             .all()
         )
+
+    def delete_all_socioformadores(self) -> int:
+        from app.models.user import UserRole
+        deleted = (
+            self.db.query(User)
+            .filter(User.role == UserRole.socioformador)
+            .delete(synchronize_session=False)
+        )
+        self.db.commit()
+        return deleted

@@ -32,6 +32,7 @@ class Opportunity(Base):
         nullable=True,
     )
 
+    project_code: Mapped[str | None] = mapped_column(String(30), nullable=True, index=True)
     title: Mapped[str] = mapped_column(String(150), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     company: Mapped[str] = mapped_column(String(150), nullable=False)
@@ -61,9 +62,9 @@ class Opportunity(Base):
     # --- Computed property ---
     @property
     def enrolled_count(self) -> int:
-        """Cupos ocupados. Cuenta alumnos válidos para la oportunidad."""
+        """Cupos ocupados (ENROLLED + CHECKED_IN)."""
         return self.enrollments.filter(
-            Enrollment.status == "CHECKED_IN"
+            Enrollment.status.in_(["ENROLLED", "CHECKED_IN"])
         ).count()
 
     @property

@@ -120,9 +120,12 @@ def load_csv_socioformadores(
             is_active_raw = proj.get("is_active", "TRUE").strip().upper()
             is_active = is_active_raw in ("TRUE", "1", "YES", "SI")
 
+            raw_code = (proj.get("id") or "").strip()[:30] or None
+
             opp = Opportunity(
                 period_id=period_id,
                 partner_user_id=user.id,
+                project_code=raw_code,
                 title=(proj.get("title") or "Sin título").strip()[:150],
                 company=company[:150],
                 description=(proj.get("description") or "").strip() or None,

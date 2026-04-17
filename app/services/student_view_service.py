@@ -73,9 +73,12 @@ def get_current_student_enrollment_history(student_id, db: Session):
                 "opportunity_id": enrollment.opportunity.id,
                 "period_id": enrollment.period.id,
                 "period_name": enrollment.period.name,
+                "project_code": enrollment.opportunity.project_code,
                 "title": enrollment.opportunity.title,
                 "company": enrollment.opportunity.company,
                 "location": enrollment.opportunity.location,
+                "modality": enrollment.opportunity.modality,
+                "credit_hours": enrollment.opportunity.credit_hours,
                 "status": enrollment.status,
                 "enrolled_at": enrollment.created_at,
             }

@@ -4,17 +4,13 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.repositories.checkin_repo import CheckinRepo
 from app.repositories.enrollment_repo import EnrollmentRepo
 from app.repositories.opportunity_repo import OpportunityRepo
-from app.repositories.period_repo import PeriodRepo
 
 
 def enroll_student_in_opportunity(opportunity_id: UUID, student_id: UUID, db: Session):
     opportunity_repo = OpportunityRepo()
-    period_repo = PeriodRepo()
     enrollment_repo = EnrollmentRepo()
-    checkin_repo = CheckinRepo()
 
     opportunity = opportunity_repo.get_by_id(db, opportunity_id)
     if not opportunity:
@@ -29,30 +25,11 @@ def enroll_student_in_opportunity(opportunity_id: UUID, student_id: UUID, db: Se
             detail="OPPORTUNITY_INACTIVE",
         )
 
-    active_period = period_repo.get_active(db)
-    if not active_period:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="NO_ACTIVE_PERIOD",
-        )
-
-    if opportunity.period_id != active_period.id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="OPPORTUNITY_NOT_IN_ACTIVE_PERIOD",
-        )
-
-    checkin = checkin_repo.get_by_student(db, student_id)
-    if not checkin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="CHECKIN_REQUIRED",
-        )
-
+    # Un alumno solo puede inscribirse a un proyecto por período
     existing_enrollment = enrollment_repo.get_by_student_and_period(
         db,
         student_id=student_id,
-        period_id=active_period.id,
+        period_id=opportunity.period_id,
     )
     if existing_enrollment:
         raise HTTPException(
@@ -72,7 +49,7 @@ def enroll_student_in_opportunity(opportunity_id: UUID, student_id: UUID, db: Se
             db=db,
             student_id=student_id,
             opportunity_id=opportunity.id,
-            period_id=active_period.id,
+            period_id=opportunity.period_id,
             status="ENROLLED",
         )
     except IntegrityError:

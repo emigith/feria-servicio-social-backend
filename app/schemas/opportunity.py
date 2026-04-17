@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 class OpportunityResponse(BaseModel):
     id: UUID
     period_id: UUID
+    project_code: str | None
     title: str
     description: str | None
     company: str
@@ -27,6 +28,7 @@ class OpportunityResponse(BaseModel):
 class OpportunityDetailResponse(BaseModel):
     id: UUID
     period_id: UUID
+    project_code: str | None
     title: str
     description: str | None
     company: str
@@ -73,6 +75,7 @@ class OpportunityAdminResponse(BaseModel):
     """Response completo para el panel admin — incluye conteo de inscritos."""
     id: UUID
     period_id: UUID
+    project_code: str | None
     title: str
     description: str | None
     company: str

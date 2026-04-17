@@ -41,9 +41,12 @@ class StudentEnrollmentHistoryItem(BaseModel):
     opportunity_id: UUID
     period_id: UUID
     period_name: str
+    project_code: str | None = None
     title: str
     company: str
     location: str | None = None
+    modality: str | None = None
+    credit_hours: int | None = None
     status: str
     enrolled_at: datetime
 

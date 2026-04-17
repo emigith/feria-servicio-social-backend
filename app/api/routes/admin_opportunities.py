@@ -11,6 +11,7 @@ from app.schemas.opportunity import (
     OpportunityAdminResponse,
 )
 from app.repositories.enrollment_repo import EnrollmentRepo
+from app.repositories.user_repo import UserRepo
 
 router = APIRouter(prefix="/admin/opportunities", tags=["admin-opportunities"])
 
@@ -178,3 +179,15 @@ def delete_enrollment(
     if not enrollment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ENROLLMENT_NOT_FOUND")
     enrollment_repo.delete(db, enrollment)
+
+
+@router.delete("", status_code=status.HTTP_200_OK)
+def delete_all_opportunities(
+    db: Session = Depends(get_db),
+    current_user=Depends(require_roles(["admin"])),
+):
+    """Elimina TODOS los proyectos y socioformadores (y sus inscripciones en cascada)."""
+    deleted_opps = repo.delete_all(db)
+    user_repo = UserRepo(db)
+    deleted_sf = user_repo.delete_all_socioformadores()
+    return {"deleted_opportunities": deleted_opps, "deleted_socioformadores": deleted_sf}

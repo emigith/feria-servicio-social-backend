@@ -46,6 +46,7 @@ class OpportunityRepo:
         is_active: bool = True,
         partner_user_id: UUID | None = None,
         credit_hours: int | None = None,
+        project_code: str | None = None,
     ) -> Opportunity:
         opportunity = Opportunity(
             period_id=period_id,
@@ -57,6 +58,7 @@ class OpportunityRepo:
             location=location,
             is_active=is_active,
             credit_hours=credit_hours,
+            project_code=project_code,
         )
         db.add(opportunity)
         db.commit()
@@ -165,3 +167,9 @@ class OpportunityRepo:
             )
             .first()
         )
+
+    def delete_all(self, db: Session) -> int:
+        """Elimina TODOS los proyectos de la base de datos. Retorna el número eliminado."""
+        deleted = db.query(Opportunity).delete(synchronize_session=False)
+        db.commit()
+        return deleted
