@@ -6,6 +6,9 @@ from app.models.period import Period
 
 
 class PeriodRepo:
+    def get_all(self, db: Session) -> list[Period]:
+        return db.query(Period).order_by(Period.starts_at).all()
+
     def get_active(self, db: Session) -> Period | None:
         return db.query(Period).filter(Period.is_active == True).first()
 

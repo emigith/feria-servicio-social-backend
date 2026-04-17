@@ -12,6 +12,7 @@ class Checkin(Base):
     __table_args__ = (
         UniqueConstraint("student_id", name="uq_checkins_student_id"),
         Index("idx_checkins_student_id", "student_id"),
+        Index("idx_checkins_checked_in_at", "checked_in_at"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

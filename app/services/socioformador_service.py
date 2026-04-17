@@ -13,6 +13,23 @@ from app.models.opportunity import Opportunity
 from app.repositories.user_repo import UserRepo
 
 
+def _parse_modality(raw: str) -> str:
+    """
+    Convierte el código de modalidad del CSV a etiqueta legible.
+    Ejemplos: 'CLIN | Proyecto Solidario Línea' → 'Remoto'
+              'CLIP | Proyecto Solidario Mixto'  → 'Mixto'
+              'PSP | Proyecto Solidario Presencial' → 'Presencial'
+    """
+    code = raw.strip()[:4].upper()
+    if code.startswith("CLIN"):
+        return "Remoto"
+    if code.startswith("CLIP"):
+        return "Mixto"
+    if code.startswith("PSP"):
+        return "Presencial"
+    return "Presencial"
+
+
 def _slugify(text: str, max_len: int = 30) -> str:
     """Convierte nombre de empresa en username válido (sin acentos, sin espacios)."""
     normalized = unicodedata.normalize("NFD", text)
@@ -105,6 +122,7 @@ def load_csv_socioformadores(
                 company=company[:150],
                 description=(proj.get("description") or "").strip() or None,
                 location=(proj.get("location") or "").strip()[:150] or None,
+                modality=_parse_modality(proj.get("modality") or ""),
                 capacity=capacity,
                 is_active=is_active,
             )

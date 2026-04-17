@@ -13,7 +13,10 @@ class OpportunityResponse(BaseModel):
     description: str | None
     company: str
     location: str | None
+    modality: str
     capacity: int
+    available_slots: int
+    enrolled_count: int
     is_active: bool
 
     class Config:
@@ -27,7 +30,10 @@ class OpportunityDetailResponse(BaseModel):
     description: str | None
     company: str
     location: str | None
+    modality: str
     capacity: int
+    available_slots: int
+    enrolled_count: int
     is_active: bool
 
     class Config:
@@ -56,6 +62,7 @@ class OpportunityAdminUpdate(BaseModel):
     capacity: int | None = Field(None, gt=0, description="No puede ser menor a inscritos actuales")
     description: str | None = None
     location: str | None = Field(None, max_length=150)
+    modality: str | None = Field(None, max_length=20)
     is_active: bool | None = None
 
 
@@ -67,6 +74,7 @@ class OpportunityAdminResponse(BaseModel):
     description: str | None
     company: str
     location: str | None
+    modality: str
     capacity: int
     is_active: bool
     created_at: datetime

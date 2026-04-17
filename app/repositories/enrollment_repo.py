@@ -52,10 +52,17 @@ class EnrollmentRepo:
         db.refresh(enrollment)
         return enrollment
     def get_by_opportunity(self, db: Session, opportunity_id: UUID) -> list[Enrollment]:
-     """Lista todos los inscritos en una oportunidad."""
-     return (
-        db.query(Enrollment)
-        .filter(Enrollment.opportunity_id == opportunity_id)
-        .all()
-    )
+        """Lista todos los inscritos en una oportunidad."""
+        return (
+            db.query(Enrollment)
+            .filter(Enrollment.opportunity_id == opportunity_id)
+            .all()
+        )
+
+    def get_by_id(self, db: Session, enrollment_id: UUID) -> Enrollment | None:
+        return db.query(Enrollment).filter(Enrollment.id == enrollment_id).first()
+
+    def delete(self, db: Session, enrollment: Enrollment) -> None:
+        db.delete(enrollment)
+        db.commit()
 

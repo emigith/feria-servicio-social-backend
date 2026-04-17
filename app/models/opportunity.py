@@ -36,6 +36,7 @@ class Opportunity(Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     company: Mapped[str] = mapped_column(String(150), nullable=False)
     location: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    modality: Mapped[str] = mapped_column(String(20), nullable=False, default="Presencial")
     capacity: Mapped[int] = mapped_column(Integer, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)

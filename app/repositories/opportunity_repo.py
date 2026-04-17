@@ -70,6 +70,7 @@ class OpportunityRepo:
         capacity: int | None = None,
         description: str | None = None,
         location: str | None = None,
+        modality: str | None = None,
         is_active: bool | None = None,
         partner_user_id: UUID | None = None,
     ) -> Opportunity:
@@ -83,6 +84,8 @@ class OpportunityRepo:
             opportunity.description = description
         if location is not None:
             opportunity.location = location
+        if modality is not None:
+            opportunity.modality = modality
         if is_active is not None:
             opportunity.is_active = is_active
         if partner_user_id is not None:
@@ -129,6 +132,19 @@ class OpportunityRepo:
             .order_by(Opportunity.created_at.desc())
             .all()
         )
+
+    def delete_all_by_period(self, db: Session, period_id: UUID) -> int:
+        """Elimina todas las oportunidades de un período. Retorna el número eliminado."""
+        deleted = (
+            db.query(Opportunity)
+            .filter(Opportunity.period_id == period_id)
+            .delete(synchronize_session=False)
+        )
+        db.commit()
+        return deleted
+
+    def count_by_period(self, db: Session, period_id: UUID) -> int:
+        return db.query(Opportunity).filter(Opportunity.period_id == period_id).count()
 
     def get_by_id_for_partner(
         self,

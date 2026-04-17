@@ -1,7 +1,7 @@
 ﻿import uuid
 from datetime import datetime
 
-from sqlalchemy import String, DateTime, UniqueConstraint
+from sqlalchemy import String, DateTime, UniqueConstraint, Index
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -13,6 +13,7 @@ class Student(Base):
     __tablename__ = "students"
     __table_args__ = (
         UniqueConstraint("matricula", name="uq_students_matricula"),
+        Index("idx_students_created_at", "created_at"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

@@ -81,6 +81,7 @@ def update_opportunity(
         capacity=payload.capacity,
         description=payload.description,
         location=payload.location,
+        modality=payload.modality,
         is_active=payload.is_active,
         partner_user_id=payload.partner_user_id,
     )
@@ -133,8 +134,46 @@ def get_opportunity_enrollments(
         {
             "enrollment_id": e.id,
             "student_id": e.student_id,
+            "matricula": e.student.matricula if e.student else None,
+            "nombre": e.student.nombre if e.student else None,
+            "apellido": e.student.apellido if e.student else None,
+            "email": e.student.email if e.student else None,
             "status": e.status,
             "created_at": e.created_at,
         }
         for e in enrollments
     ]
+
+
+@router.delete("/by-period/{period_id}", status_code=status.HTTP_200_OK)
+def delete_opportunities_by_period(
+    period_id: UUID,
+    db: Session = Depends(get_db),
+    current_user=Depends(require_roles(["admin"])),
+):
+    """Elimina TODAS las oportunidades de un período (y sus inscripciones en cascada)."""
+    deleted = repo.delete_all_by_period(db, period_id)
+    return {"deleted": deleted}
+
+
+@router.get("/count/by-period/{period_id}")
+def count_opportunities_by_period(
+    period_id: UUID,
+    db: Session = Depends(get_db),
+    current_user=Depends(require_roles(["admin"])),
+):
+    """Cuenta cuántas oportunidades existen para un período."""
+    return {"count": repo.count_by_period(db, period_id)}
+
+
+@router.delete("/enrollments/{enrollment_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_enrollment(
+    enrollment_id: UUID,
+    db: Session = Depends(get_db),
+    current_user=Depends(require_roles(["admin"])),
+):
+    enrollment_repo = EnrollmentRepo()
+    enrollment = enrollment_repo.get_by_id(db, enrollment_id)
+    if not enrollment:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ENROLLMENT_NOT_FOUND")
+    enrollment_repo.delete(db, enrollment)

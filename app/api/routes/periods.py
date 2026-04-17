@@ -5,8 +5,19 @@ from app.api.deps import require_roles
 from app.core.db import get_db
 from app.schemas.period import PeriodCreateRequest, PeriodResponse
 from app.services.period_service import create_period, get_active_period
+from app.repositories.period_repo import PeriodRepo
 
 router = APIRouter(prefix="/periods")
+
+_period_repo = PeriodRepo()
+
+
+@router.get("", response_model=list[PeriodResponse])
+def list_periods(
+    db: Session = Depends(get_db),
+    current_user=Depends(require_roles(["admin", "ADMIN", "intern", "INTERN"])),
+):
+    return _period_repo.get_all(db)
 
 
 @router.get("/active", response_model=PeriodResponse)
