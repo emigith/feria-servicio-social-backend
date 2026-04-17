@@ -6,192 +6,412 @@
   <title>Catálogo de Opciones | Feria de Servicio Social</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
   <style>
     body { font-family: 'Lexend', sans-serif; margin: 0; overflow-x: hidden; }
+
     .bg-student-catalog {
       background: linear-gradient(-45deg, #0a1633, #10214d, #18356f, #2450a6, #3b82f6, #7db7ff);
       background-size: 400% 400%;
       animation: blueFlow 14s ease infinite;
     }
     @keyframes blueFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+
     .glass-shell {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.3);
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
     }
-    .catalog-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .catalog-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(15, 23, 61, 0.15); }
-    .primary-button { background-color: #0f173d; transition: all 0.2s ease; color: white; }
-    .primary-button:hover { background-color: #1e2a5a; transform: scale(1.02); }
-    .fade-item { animation: fadeInUp 0.6s ease-out forwards; }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .catalog-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    #no-results { display: none; }
+    .catalog-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(15, 23, 61, 0.12);
+    }
+
+    .fade-item { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .enroll-btn {
+      background-color: #0f173d;
+      transition: all 0.2s ease;
+      color: white;
+    }
+    .enroll-btn:hover:not(:disabled) { background-color: #1e2a5a; transform: scale(1.02); }
+    .enroll-btn:disabled { background-color: #94a3b8; cursor: not-allowed; transform: none; }
+
+    /* Colores por modalidad */
+    .badge-presencial { background:#dcfce7; color:#15803d; }
+    .badge-remoto     { background:#dbeafe; color:#1d4ed8; }
+    .badge-mixto      { background:#f3e8ff; color:#7c3aed; }
+
+    /* Avatar color cycling */
+    .avatar-0 { background: #1e40af; }
+    .avatar-1 { background: #065f46; }
+    .avatar-2 { background: #7c2d12; }
+    .avatar-3 { background: #581c87; }
+    .avatar-4 { background: #0e7490; }
+    .avatar-5 { background: #9d174d; }
   </style>
 </head>
 
 <body class="bg-student-catalog min-h-screen p-4 md:p-8">
   <main class="glass-shell max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden min-h-[90vh] flex flex-col">
-    
+
+    <!-- ── Header ── -->
     <section class="px-6 md:px-12 pt-10 pb-8 border-b border-slate-200/60">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div class="fade-item">
-          <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">Portal del Estudiante</span>
+          <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">
+            Portal del Estudiante
+          </span>
           <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Catálogo de Opciones</h1>
           <p class="text-slate-500 text-lg mt-3">Encuentra el proyecto ideal para tu Servicio Social.</p>
         </div>
-        <button onclick="window.location.href='estudiante_inicio.html'" class="px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 w-fit">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <button onclick="window.location.href='estudiante_inicio.html'"
+          class="px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 w-fit">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           Volver al Inicio
         </button>
       </div>
 
-      <div class="mt-10 flex flex-col sm:flex-row items-center gap-4 fade-item" style="animation-delay: 0.1s;">
+      <!-- ── Búsqueda + filtros ── -->
+      <div class="mt-8 flex flex-col sm:flex-row items-center gap-3 fade-item" style="animation-delay:0.1s">
         <div class="relative flex-1 w-full">
           <span class="absolute inset-y-0 left-0 pl-5 flex items-center text-slate-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
           </span>
-          <input type="text" id="search-input" placeholder="Buscar por socio formador, proyecto o palabras clave..." 
-            class="w-full pl-14 pr-6 py-5 bg-white border-0 rounded-2xl focus:ring-4 focus:ring-blue-500/10 outline-none shadow-sm text-lg transition-all border border-slate-100" />
+          <input type="text" id="search-input"
+            placeholder="Buscar por empresa, proyecto o palabras clave..."
+            class="w-full pl-14 pr-6 py-4 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 outline-none text-base transition-all"/>
         </div>
-        <div class="px-6 py-5 bg-blue-600 rounded-2xl text-white font-bold whitespace-nowrap shadow-lg shadow-blue-900/20">
-          <span id="opportunity-count">0</span> Opciones encontradas
+
+        <select id="filter-modality"
+          class="border border-slate-200 rounded-2xl px-5 py-4 text-sm font-semibold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/30 cursor-pointer">
+          <option value="">Todas las modalidades</option>
+          <option value="Presencial">Presencial</option>
+          <option value="Remoto">Remoto</option>
+          <option value="Mixto">Mixto</option>
+        </select>
+
+        <div class="px-6 py-4 bg-blue-600 rounded-2xl text-white font-bold whitespace-nowrap shadow-lg shadow-blue-900/20 text-sm">
+          <span id="opportunity-count">0</span> opciones
         </div>
       </div>
     </section>
 
+    <!-- ── Contenido ── -->
     <section class="flex-1 px-6 md:px-12 py-10">
-      <div id="no-results" class="flex flex-col items-center justify-center py-20 text-center fade-item">
-        <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-6">
-          <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3 class="text-2xl font-bold text-slate-800">No encontramos lo que buscas</h3>
-        <p class="text-slate-500 mt-2">Intenta con otros términos o explora las opciones de la lista.</p>
+
+      <!-- Loading -->
+      <div id="loading-state" class="flex flex-col items-center justify-center py-24 gap-4 text-slate-400">
+        <svg class="animate-spin h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+        <p class="font-medium">Cargando proyectos…</p>
       </div>
 
-      <div id="contenedor-oportunidades" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-        <article class="catalog-card bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm fade-item" data-search="aprender contigo educacion ejemplo demo">
-          <div class="flex items-start justify-between mb-6">
-            <div class="flex items-center gap-4">
-              <div class="w-16 h-16 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-2xl font-black italic">AC</div>
-              <div>
-                <h4 class="text-xl font-bold text-slate-900 leading-tight">Aprender Contigo</h4>
-                <p class="text-indigo-600 font-medium text-sm">Organización de Ejemplo</p>
-              </div>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider">Demo</span>
-          </div>
-          <p class="text-slate-600 mb-8 line-clamp-2">Proyecto educativo enfocado en mejorar las habilidades de lectura en niños de comunidades rurales.</p>
-          <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Cupos</p><p class="font-bold text-slate-800">15 disponibles</p></div>
-            <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Modalidad</p><p class="font-bold text-slate-800">Híbrido</p></div>
-          </div>
-          <div class="flex gap-3">
-            <button class="flex-1 py-4 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition-colors">Ver más</button>
-            <button class="primary-button flex-1 py-4 rounded-xl font-bold shadow-lg shadow-slate-900/10">Seleccionar</button>
-          </div>
-        </article>
+      <!-- Sin resultados (filtro) -->
+      <div id="no-results" class="hidden flex-col items-center justify-center py-20 text-center fade-item">
+        <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+          <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-800">Sin resultados</h3>
+        <p class="text-slate-500 mt-2">Intenta con otros términos o cambia el filtro de modalidad.</p>
       </div>
+
+      <!-- Sin proyectos en la BD -->
+      <div id="empty-db" class="hidden flex-col items-center justify-center py-24 text-center gap-3 text-slate-400 fade-item">
+        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+        <p class="font-semibold text-lg">No hay proyectos disponibles por el momento.</p>
+        <p class="text-sm">El administrador aún no ha cargado el catálogo de este período.</p>
+      </div>
+
+      <!-- Grid de proyectos -->
+      <div id="contenedor-oportunidades" class="hidden grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8"></div>
     </section>
   </main>
 
+  <!-- ── Modal de confirmación de inscripción ── -->
+  <div id="enroll-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm">
+      <div class="p-8 flex flex-col items-center gap-4 text-center">
+        <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-xl text-slate-900">¿Inscribirse en este proyecto?</h3>
+          <p id="modal-project-title" class="text-blue-600 font-semibold mt-1 text-sm"></p>
+          <p id="modal-project-company" class="text-slate-500 text-sm"></p>
+          <p class="text-slate-400 text-xs mt-3">Solo puedes inscribirte en un proyecto por período.</p>
+        </div>
+        <div class="flex gap-3 w-full mt-1">
+          <button id="modal-cancel"
+            class="flex-1 py-3 border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition-colors text-sm">
+            Cancelar
+          </button>
+          <button id="modal-confirm"
+            class="flex-1 py-3 bg-[#0f173d] hover:bg-[#1e2a5a] text-white rounded-xl font-bold transition-colors text-sm">
+            Confirmar
+          </button>
+        </div>
+        <p id="modal-error" class="hidden text-xs text-red-500 font-semibold bg-red-50 px-3 py-2 rounded-lg w-full"></p>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_BASE = 'http://127.0.0.1:8000/api/v1';
+    const token = localStorage.getItem('token');
+    if (!token) location.href = 'acceso_estudiante.html';
 
+    // ── Estado ──────────────────────────────────────────────────────────────
+    let allOpportunities = [];
+    let pendingEnrollId = null;
+
+    // ── Colores de avatar según índice ──────────────────────────────────────
+    const AVATAR_COLORS = ['#1e40af','#065f46','#7c2d12','#581c87','#0e7490','#9d174d'];
+
+    // ── Modalidad → estilos ─────────────────────────────────────────────────
+    const MODALITY = {
+      'Presencial': { badge: 'badge-presencial', icon: 'location_on',  label: 'Presencial' },
+      'Remoto':     { badge: 'badge-remoto',     icon: 'computer',     label: 'Remoto' },
+      'Mixto':      { badge: 'badge-mixto',      icon: 'sync_alt',     label: 'Mixto' },
+    };
+
+    // ── Cargar proyectos ─────────────────────────────────────────────────────
     async function cargarDatos() {
-      const contenedor = document.getElementById('contenedor-oportunidades');
-      const counter = document.getElementById('opportunity-count');
-      const token = localStorage.getItem('token'); 
-
-      if (!token) return;
-
       try {
-        const response = await fetch(`${API_BASE}/opportunities?period=active`, {
-          method: 'GET',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        const res = await fetch(`${API_BASE}/opportunities?period=active`, {
+          headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          counter.innerText = data.length + 1; // +1 por la card de demo
+        document.getElementById('loading-state').classList.add('hidden');
 
-          data.forEach((op, index) => {
-            const iniciales = op.company ? op.company.substring(0,2).toUpperCase() : 'SS';
-            const searchText = `${op.title} ${op.company} ${op.description}`.toLowerCase();
-            
-            contenedor.insertAdjacentHTML('afterbegin', `
-              <article class="catalog-card bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm fade-item" 
-                       style="animation-delay: ${index * 0.05}s"
-                       data-search="${searchText}">
-                <div class="flex items-start justify-between mb-6">
-                  <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl font-black shadow-lg shadow-blue-200">${iniciales}</div>
-                    <div>
-                      <h4 class="text-xl font-bold text-slate-900 leading-tight">${op.title}</h4>
-                      <p class="text-blue-600 font-medium text-sm">${op.company}</p>
-                    </div>
-                  </div>
-                  <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider italic">Disponible</span>
-                </div>
-                <p class="text-slate-600 mb-8 line-clamp-2">${op.description || 'Explora este increíble proyecto de servicio social.'}</p>
-                <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
-                  <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Ubicación</p><p class="font-bold text-slate-800 text-xs">${op.location || 'Campus'}</p></div>
-                  <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Cupos</p><p class="font-bold text-slate-800 text-xs">${op.capacity} lugares</p></div>
-                </div>
-                <div class="flex gap-3">
-                  <button onclick="alert('Detalles de: ${op.title}')" class="flex-1 py-4 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition-colors text-sm">Detalles</button>
-                  <button onclick="inscribir('${op.id}')" class="primary-button flex-1 py-4 rounded-xl font-bold shadow-lg shadow-slate-900/20 text-sm uppercase tracking-wide">Seleccionar</button>
-                </div>
-              </article>
-            `);
-          });
+        if (res.status === 401) { location.href = 'acceso_estudiante.html'; return; }
+        if (res.status === 403) {
+          // Estudiante no ha hecho check-in — mostrar pantalla sin_checkin
+          location.href = 'sin_checkin.html'; return;
         }
-      } catch (error) { console.error("Error cargando datos:", error); }
+
+        if (!res.ok) {
+          document.getElementById('empty-db').classList.remove('hidden');
+          document.getElementById('empty-db').classList.add('flex');
+          return;
+        }
+
+        allOpportunities = await res.json();
+
+        if (allOpportunities.length === 0) {
+          document.getElementById('empty-db').classList.remove('hidden');
+          document.getElementById('empty-db').classList.add('flex');
+          return;
+        }
+
+        document.getElementById('contenedor-oportunidades').classList.remove('hidden');
+        applyFilters();
+
+      } catch (err) {
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('empty-db').classList.remove('hidden');
+        document.getElementById('empty-db').classList.add('flex');
+        console.error('Error cargando proyectos:', err);
+      }
     }
 
-    // Búsqueda en tiempo real
-    document.getElementById('search-input').addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      const cards = document.querySelectorAll('.catalog-card');
-      const noResults = document.getElementById('no-results');
-      let visibles = 0;
-      
-      cards.forEach(card => {
-        const content = card.getAttribute('data-search');
-        if (content.includes(term)) {
-          card.style.display = 'block';
-          visibles++;
-        } else {
-          card.style.display = 'none';
-        }
+    // ── Filtrar en cliente ───────────────────────────────────────────────────
+    function applyFilters() {
+      const q        = document.getElementById('search-input').value.toLowerCase();
+      const modality = document.getElementById('filter-modality').value;
+
+      const filtered = allOpportunities.filter(op => {
+        const matchQ = !q || `${op.title} ${op.company} ${op.description || ''}`.toLowerCase().includes(q);
+        const matchM = !modality || op.modality === modality;
+        return matchQ && matchM;
       });
-      
-      noResults.style.display = visibles === 0 ? 'flex' : 'none';
-      document.getElementById('opportunity-count').innerText = visibles;
+
+      renderCards(filtered);
+
+      document.getElementById('opportunity-count').textContent = filtered.length;
+      const noRes = document.getElementById('no-results');
+      if (filtered.length === 0 && allOpportunities.length > 0) {
+        noRes.classList.remove('hidden');
+        noRes.classList.add('flex');
+        document.getElementById('contenedor-oportunidades').classList.add('hidden');
+      } else {
+        noRes.classList.add('hidden');
+        noRes.classList.remove('flex');
+        document.getElementById('contenedor-oportunidades').classList.remove('hidden');
+      }
+    }
+
+    // ── Renderizar tarjetas ──────────────────────────────────────────────────
+    function renderCards(projects) {
+      const container = document.getElementById('contenedor-oportunidades');
+      container.innerHTML = '';
+
+      projects.forEach((op, i) => {
+        const initials  = (op.company || 'SS').substring(0, 2).toUpperCase();
+        const avatarBg  = AVATAR_COLORS[i % AVATAR_COLORS.length];
+        const modStyle  = MODALITY[op.modality] || MODALITY['Presencial'];
+        const slots     = op.available_slots ?? op.capacity;
+        const isFull    = slots <= 0;
+        const slotsText = isFull
+          ? `<span class="text-rose-600 font-bold">Sin cupos</span>`
+          : `<span class="font-bold text-slate-800">${slots} disponibles</span>`;
+
+        container.insertAdjacentHTML('beforeend', `
+          <article class="catalog-card bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm fade-item"
+            style="animation-delay:${i * 0.04}s"
+            data-id="${op.id}">
+
+            <div class="flex items-start justify-between mb-5">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white shadow-lg shrink-0"
+                  style="background:${avatarBg}">${initials}</div>
+                <div>
+                  <h4 class="text-lg font-extrabold text-slate-900 leading-tight line-clamp-2">${op.title}</h4>
+                  <p class="text-blue-600 font-semibold text-sm mt-0.5">${op.company}</p>
+                </div>
+              </div>
+              <span class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1 ${modStyle.badge}">
+                <span class="material-symbols-outlined text-[12px]">${modStyle.icon}</span>
+                ${modStyle.label}
+              </span>
+            </div>
+
+            <p class="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-6 min-h-[3.75rem]">
+              ${op.description || 'Explora este proyecto de servicio social y descubre cómo puedes contribuir.'}
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 mb-6">
+              <div class="bg-slate-50 px-4 py-3 rounded-xl">
+                <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Cupos disponibles</p>
+                ${slotsText}
+              </div>
+              <div class="bg-slate-50 px-4 py-3 rounded-xl">
+                <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Capacidad total</p>
+                <p class="font-bold text-slate-800">${op.capacity} lugares</p>
+              </div>
+              ${op.location ? `
+              <div class="col-span-2 bg-slate-50 px-4 py-3 rounded-xl flex items-center gap-2">
+                <span class="material-symbols-outlined text-slate-400 text-[16px]">location_on</span>
+                <p class="text-sm text-slate-600 font-medium">${op.location}</p>
+              </div>` : ''}
+            </div>
+
+            <div class="flex gap-3">
+              <button onclick="verDetalle('${op.id}')"
+                class="flex-1 py-3.5 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition-colors text-sm">
+                Ver más
+              </button>
+              <button
+                class="enroll-btn flex-1 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-lg shadow-slate-900/10"
+                ${isFull ? 'disabled' : ''}
+                onclick="abrirModalInscripcion('${op.id}', \`${op.title.replace(/`/g,"'")}\`, \`${op.company.replace(/`/g,"'")}\`)">
+                ${isFull ? 'Sin cupos' : 'Seleccionar'}
+              </button>
+            </div>
+          </article>
+        `);
+      });
+    }
+
+    // ── Ver detalle (placeholder) ────────────────────────────────────────────
+    function verDetalle(id) {
+      const op = allOpportunities.find(o => o.id === id);
+      if (!op) return;
+      alert(`${op.title}\n\n${op.description || 'Sin descripción.'}\n\nEmpresa: ${op.company}\nModalidad: ${op.modality}\nUbicación: ${op.location || 'No especificada'}`);
+    }
+
+    // ── Modal de inscripción ─────────────────────────────────────────────────
+    function abrirModalInscripcion(id, title, company) {
+      pendingEnrollId = id;
+      document.getElementById('modal-project-title').textContent = title;
+      document.getElementById('modal-project-company').textContent = company;
+      document.getElementById('modal-error').classList.add('hidden');
+      document.getElementById('modal-confirm').disabled = false;
+      document.getElementById('modal-confirm').textContent = 'Confirmar';
+      document.getElementById('enroll-modal').classList.remove('hidden');
+    }
+
+    document.getElementById('modal-cancel').addEventListener('click', () => {
+      document.getElementById('enroll-modal').classList.add('hidden');
+      pendingEnrollId = null;
     });
 
-    async function inscribir(id) {
-      const token = localStorage.getItem('token');
-      if (!confirm("¿Estás seguro de que quieres inscribirte en este proyecto?")) return;
+    document.getElementById('enroll-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('enroll-modal')) {
+        document.getElementById('enroll-modal').classList.add('hidden');
+        pendingEnrollId = null;
+      }
+    });
+
+    document.getElementById('modal-confirm').addEventListener('click', async () => {
+      if (!pendingEnrollId) return;
+      const btn = document.getElementById('modal-confirm');
+      const errorEl = document.getElementById('modal-error');
+      btn.disabled = true;
+      btn.textContent = 'Inscribiendo…';
+      errorEl.classList.add('hidden');
+
       try {
-        const res = await fetch(`${API_BASE}/opportunities/${id}/enroll`, {
+        const res = await fetch(`${API_BASE}/opportunities/${pendingEnrollId}/enroll`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
         });
-        if (res.ok) { alert("¡Inscripción confirmada! Revisa tu correo para los siguientes pasos."); window.location.reload(); }
-        else { const d = await res.json(); alert("Aviso: " + d.detail); }
-      } catch (e) { alert("Error de conexión"); }
-    }
 
+        if (res.ok) {
+          document.getElementById('enroll-modal').classList.add('hidden');
+          // Recargar para reflejar cupos actualizados
+          await cargarDatos();
+        } else {
+          const d = await res.json().catch(() => ({}));
+          errorEl.textContent = d.detail || 'Error al inscribirse. Intenta de nuevo.';
+          errorEl.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Confirmar';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Error de conexión. Intenta de nuevo.';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Confirmar';
+      }
+    });
+
+    // ── Filtros en tiempo real ───────────────────────────────────────────────
+    document.getElementById('search-input').addEventListener('input', applyFilters);
+    document.getElementById('filter-modality').addEventListener('change', applyFilters);
+
+    // ── Init ────────────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', cargarDatos);
   </script>
 </body>

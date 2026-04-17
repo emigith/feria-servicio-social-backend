@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Estudiantes por Proyecto | Feria de Servicio Social</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c2d12",
+                        "accent": "#ea580c",
+                        "surface": "#fff7ed",
+                        "on-surface": "#431407",
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* Sidebar Lava Naranja */
+        .lava-orange {
+            background: linear-gradient(-45deg, #7c2d12, #9a3412, #c2410c, #ea580c, #f97316);
+            background-size: 400% 400%;
+            animation: lava-animation 14s ease infinite;
+        }
+        @keyframes lava-animation {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav-item-glass {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .nav-item-glass:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(5px);
+        }
+        .nav-item-active {
+            background: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .live-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 2px rgba(34,197,94,0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.3); }
+            50%       { box-shadow: 0 0 0 6px rgba(34,197,94,0.1); }
+        }
+
+        .badge-enrolled  { background:#ffedd5; color:#9a3412; }
+        .badge-checkedin { background:#dcfce7; color:#15803d; }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex">
+
+    <!-- ── Sidebar ── -->
+    <aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 lava-orange text-white flex flex-col pt-8 pb-4 shadow-2xl">
+        <div class="px-8 mb-10">
+            <h1 class="text-xl font-extrabold font-headline tracking-tighter leading-tight">
+                Portal Feria <br>Servicio Social <span class="opacity-80 font-medium">- Admin</span>
+            </h1>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold mt-2">Gestión 2026</p>
+        </div>
+
+        <nav class="flex-grow flex flex-col justify-center px-4 space-y-6 pb-12">
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base text-white"
+                href="dash_admin_uno.html">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard General</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base text-white"
+                href="proyecto_admin.html">
+                <span class="material-symbols-outlined text-[22px]">local_library</span>
+                <span>Catálogo Proyectos</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-active rounded-2xl font-semibold text-base text-white"
+                href="estudiantes_admin.html">
+                <span class="material-symbols-outlined text-[22px]">person_search</span>
+                <span>Gestión Estudiantes</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto px-4">
+            <div class="border-t border-white/20 pt-4 pb-2">
+                <a class="flex items-center gap-3 px-4 py-2 text-white/70 text-xs hover:text-white transition-colors"
+                    href="../index.html" onclick="localStorage.clear();">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="ml-72 flex-1 flex flex-col bg-slate-50 min-h-screen border-l border-slate-200">
+
+        <!-- Top Bar -->
+        <header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-orange-100 flex justify-between items-center px-10 py-5">
+            <div>
+                <h2 class="font-headline font-bold text-accent text-sm uppercase tracking-widest">Módulo de Administración</h2>
+                <h1 class="text-2xl font-black font-headline text-primary mt-1">Gestión de Estudiantes</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-primary">Admin General</p>
+                    <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white ring-2 ring-accent ring-offset-2 shadow-sm">
+                    AD
+                </div>
+            </div>
+        </header>
+
+        <div class="px-8 py-8 flex-1">
+
+            <!-- Page Title -->
+            <div class="mb-8">
+                <h2 class="font-headline font-bold text-2xl text-slate-800">Estudiantes por Proyecto</h2>
+                <p class="text-slate-500 text-sm mt-1">Consulta y gestiona los inscritos en cada oportunidad.</p>
+            </div>
+
+            <!-- Project Selector -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
+                <div class="flex flex-col sm:flex-row gap-4 items-end">
+                    <div class="flex-1">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                            Selecciona un Proyecto
+                        </label>
+                        <select id="project-select"
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40 bg-white">
+                            <option value="">— Elige un proyecto —</option>
+                        </select>
+                    </div>
+                    <div class="shrink-0">
+                        <button id="load-btn"
+                            class="px-5 py-2.5 bg-accent text-white text-sm font-semibold rounded-xl disabled:opacity-40 hover:bg-orange-700 transition-colors shadow-md shadow-orange-500/30"
+                            disabled>
+                            <span class="material-symbols-outlined text-[18px] align-middle mr-1">search</span>
+                            Ver Estudiantes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enrollments Table -->
+            <div id="table-section" class="hidden">
+
+                <!-- Section Header -->
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 id="project-title" class="font-headline font-bold text-lg text-slate-800"></h3>
+                        <p id="project-meta" class="text-slate-500 text-sm mt-0.5"></p>
+                    </div>
+                    <span id="total-badge"
+                        class="px-3 py-1 bg-orange-50 text-accent text-xs font-bold rounded-full border border-orange-200"></span>
+                </div>
+
+                <!-- Table Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div id="table-loading" class="flex items-center justify-center py-16 gap-3 text-slate-400">
+                        <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                        </svg>
+                        <span class="text-sm">Cargando...</span>
+                    </div>
+
+                    <div id="table-empty" class="hidden flex-col items-center justify-center py-16 gap-2 text-slate-400">
+                        <span class="material-symbols-outlined text-5xl">person_off</span>
+                        <p class="text-sm font-medium">No hay estudiantes inscritos en este proyecto.</p>
+                    </div>
+
+                    <table id="enrollment-table" class="hidden w-full text-sm">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estudiante</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Matrícula</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Correo</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Inscrito el</th>
+                                <th class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="enrollment-tbody" class="divide-y divide-slate-50"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Initial empty state -->
+            <div id="initial-state" class="flex flex-col items-center justify-center py-24 gap-3 text-slate-300">
+                <span class="material-symbols-outlined text-7xl">manage_search</span>
+                <p class="text-base font-medium">Selecciona un proyecto para ver sus estudiantes</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ── Remove Confirmation Modal ── -->
+    <div id="confirm-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4">
+            <div class="flex flex-col items-center gap-4 text-center">
+                <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-red-500 text-3xl">person_remove</span>
+                </div>
+                <div>
+                    <h4 class="font-headline font-bold text-lg text-slate-800">¿Eliminar inscripción?</h4>
+                    <p id="modal-student-name" class="text-slate-500 text-sm mt-1"></p>
+                    <p class="text-slate-400 text-xs mt-1">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="flex gap-3 w-full mt-2">
+                    <button id="modal-cancel"
+                        class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button id="modal-confirm"
+                        class="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://127.0.0.1:8000/api/v1';
+        const token = localStorage.getItem('admin_token');
+        if (!token) location.href = 'acceso_administrador.html';
+
+        const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+        // ── State ──────────────────────────────────────────────────────────────
+        let currentEnrollments = [];
+        let pendingDeleteId = null;
+        let pendingDeleteRow = null;
+
+        // ── Load Projects ──────────────────────────────────────────────────────
+        async function loadProjects() {
+            try {
+                const res = await fetch(`${API}/admin/opportunities`, { headers });
+                if (res.status === 401) { location.href = 'acceso_administrador.html'; return; }
+                const data = await res.json();
+
+                const select = document.getElementById('project-select');
+                data
+                    .filter(p => p.is_active)
+                    .sort((a, b) => a.title.localeCompare(b.title))
+                    .forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.textContent = `${p.title} — ${p.company}`;
+                        opt.dataset.title = p.title;
+                        opt.dataset.company = p.company;
+                        opt.dataset.capacity = p.capacity;
+                        select.appendChild(opt);
+                    });
+            } catch (e) {
+                console.error('Error cargando proyectos:', e);
+            }
+        }
+
+        // ── Load Enrollments ───────────────────────────────────────────────────
+        async function loadEnrollments(opportunityId) {
+            showLoading(true);
+            document.getElementById('initial-state').classList.add('hidden');
+            document.getElementById('table-section').classList.remove('hidden');
+
+            try {
+                const res = await fetch(`${API}/admin/opportunities/${opportunityId}/enrollments`, { headers });
+                if (res.status === 401) { location.href = 'acceso_administrador.html'; return; }
+                currentEnrollments = await res.json();
+                renderTable(currentEnrollments);
+            } catch (e) {
+                console.error('Error cargando inscritos:', e);
+                showLoading(false);
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('table-loading').classList.toggle('hidden', !show);
+            document.getElementById('enrollment-table').classList.add('hidden');
+            document.getElementById('table-empty').classList.add('hidden');
+        }
+
+        function renderTable(enrollments) {
+            const select = document.getElementById('project-select');
+            const opt = select.options[select.selectedIndex];
+
+            document.getElementById('project-title').textContent = opt.dataset.title || '';
+            document.getElementById('project-meta').textContent = opt.dataset.company || '';
+            document.getElementById('total-badge').textContent =
+                `${enrollments.length} / ${opt.dataset.capacity || '?'} inscritos`;
+
+            showLoading(false);
+
+            const tbody = document.getElementById('enrollment-tbody');
+            tbody.innerHTML = '';
+
+            if (enrollments.length === 0) {
+                document.getElementById('table-empty').classList.remove('hidden');
+                document.getElementById('table-empty').classList.add('flex');
+                return;
+            }
+
+            document.getElementById('enrollment-table').classList.remove('hidden');
+
+            enrollments.forEach(e => {
+                const tr = document.createElement('tr');
+                tr.id = `row-${e.enrollment_id}`;
+                tr.className = 'hover:bg-slate-50 transition-colors';
+
+                const statusBadge = e.status === 'CHECKED_IN'
+                    ? `<span class="badge-checkedin px-2.5 py-1 rounded-full text-xs font-semibold">Check-in ✓</span>`
+                    : `<span class="badge-enrolled px-2.5 py-1 rounded-full text-xs font-semibold">Inscrito</span>`;
+
+                const date = e.created_at
+                    ? new Date(e.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '—';
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-medium text-slate-800">
+                        ${e.nombre || '—'} ${e.apellido || ''}
+                    </td>
+                    <td class="px-6 py-4 text-slate-600">${e.matricula || '—'}</td>
+                    <td class="px-6 py-4 text-slate-500">${e.email || '—'}</td>
+                    <td class="px-6 py-4">${statusBadge}</td>
+                    <td class="px-6 py-4 text-slate-400 text-xs">${date}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button
+                            class="remove-btn px-3 py-1.5 text-xs font-semibold text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-1 ml-auto"
+                            data-id="${e.enrollment_id}"
+                            data-name="${(e.nombre || '') + ' ' + (e.apellido || '')}">
+                            <span class="material-symbols-outlined text-[15px]">person_remove</span>
+                            Quitar
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Bind remove buttons
+            tbody.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', () => openModal(btn.dataset.id, btn.dataset.name, btn.closest('tr')));
+            });
+        }
+
+        // ── Delete Modal ───────────────────────────────────────────────────────
+        function openModal(enrollmentId, studentName, row) {
+            pendingDeleteId = enrollmentId;
+            pendingDeleteRow = row;
+            document.getElementById('modal-student-name').textContent =
+                `Se eliminará la inscripción de ${studentName.trim()}.`;
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            pendingDeleteId = null;
+            pendingDeleteRow = null;
+        }
+
+        async function confirmDelete() {
+            if (!pendingDeleteId) return;
+
+            const btn = document.getElementById('modal-confirm');
+            btn.disabled = true;
+            btn.textContent = 'Eliminando…';
+
+            try {
+                const res = await fetch(`${API}/admin/opportunities/enrollments/${pendingDeleteId}`, {
+                    method: 'DELETE',
+                    headers,
+                });
+
+                if (res.ok || res.status === 204) {
+                    // Remove row from DOM
+                    pendingDeleteRow?.remove();
+
+                    // Update badge count
+                    const select = document.getElementById('project-select');
+                    const opt = select.options[select.selectedIndex];
+                    const tbody = document.getElementById('enrollment-tbody');
+                    const remaining = tbody.querySelectorAll('tr').length;
+                    document.getElementById('total-badge').textContent =
+                        `${remaining} / ${opt.dataset.capacity || '?'} inscritos`;
+
+                    if (remaining === 0) {
+                        document.getElementById('enrollment-table').classList.add('hidden');
+                        document.getElementById('table-empty').classList.remove('hidden');
+                        document.getElementById('table-empty').classList.add('flex');
+                    }
+                } else {
+                    alert('Error al eliminar la inscripción. Intenta de nuevo.');
+                }
+            } catch (e) {
+                alert('Error de red. Intenta de nuevo.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Eliminar';
+                closeModal();
+            }
+        }
+
+        // ── Event Listeners ────────────────────────────────────────────────────
+        document.getElementById('project-select').addEventListener('change', function () {
+            document.getElementById('load-btn').disabled = !this.value;
+        });
+
+        document.getElementById('load-btn').addEventListener('click', function () {
+            const id = document.getElementById('project-select').value;
+            if (id) loadEnrollments(id);
+        });
+
+        document.getElementById('modal-cancel').addEventListener('click', closeModal);
+        document.getElementById('modal-confirm').addEventListener('click', confirmDelete);
+        document.getElementById('confirm-modal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ── Init ───────────────────────────────────────────────────────────────
+        loadProjects();
+    </script>
+</body>
+
+</html>

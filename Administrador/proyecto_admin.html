@@ -112,7 +112,7 @@
                 <span class="material-symbols-outlined text-[22px]" data-icon="assignment">local_library</span>
                 <span>Catálogo Proyectos</span>
             </a>
-            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="#">
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="estudiantes_admin.html">
                 <span class="material-symbols-outlined text-[22px]" data-icon="person_search">person_search</span>
                 <span>Gestión Estudiantes</span>
             </a>
@@ -146,19 +146,24 @@
                         <p class="text-xs font-bold text-primary">Admin General</p>
                         <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
                     </div>
-                    <div
-                        class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white ring-2 ring-accent ring-offset-2 shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white ring-2 ring-accent ring-offset-2 shadow-sm">
                         AD
                     </div>
                 </div>
 
-                <!-- Botón simulado para cargar datos -->
-                <button
-                    class="bg-accent hover:bg-orange-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-md hover:shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5"
-                    onclick="document.getElementById('fileUpload').click()">
-                    <span class="material-symbols-outlined text-sm">upload_file</span> Cargar CSV de Google Sheets
-                </button>
-                <input type="file" id="fileUpload" accept=".csv" class="hidden">
+                <!-- Upload CSV + Período -->
+                <div class="flex items-center gap-2">
+                    <select id="period-select"
+                        class="border border-orange-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40 bg-white">
+                        <option value="">— Período —</option>
+                    </select>
+                    <button id="upload-btn"
+                        class="bg-accent hover:bg-orange-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-md shadow-orange-500/30 transition-all hover:-translate-y-0.5"
+                        onclick="document.getElementById('fileUpload').click()" disabled>
+                        <span class="material-symbols-outlined text-sm">upload_file</span> Cargar CSV
+                    </button>
+                    <input type="file" id="fileUpload" accept=".csv,.xlsx" class="hidden">
+                </div>
             </div>
         </header>
 
@@ -175,281 +180,550 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <select
+                    <select id="filter-period"
+                        class="bg-slate-50 border-none rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 focus:ring-2 focus:ring-accent outline-none cursor-pointer hover:bg-slate-100 transition-colors">
+                        <option value="">Todos los Períodos</option>
+                    </select>
+                    <select id="filter-modality"
                         class="bg-slate-50 border-none rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 focus:ring-2 focus:ring-accent outline-none cursor-pointer hover:bg-slate-100 transition-colors">
                         <option value="">Todas las Modalidades</option>
-                        <option value="presencial">Presencial</option>
-                        <option value="remoto">Remoto</option>
-                        <option value="mixto">Mixto</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Remoto">Remoto</option>
+                        <option value="Mixto">Mixto</option>
                     </select>
-                    <button
+                    <button id="filter-clear"
                         class="bg-orange-50 text-accent font-bold px-5 py-3 rounded-2xl hover:bg-orange-100 transition-colors flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">filter_list</span> Filtros
+                        <span class="material-symbols-outlined text-sm">filter_list_off</span> Limpiar
                     </button>
+                </div>
+            </div>
+
+            <!-- Conteo y estado -->
+            <div class="flex items-center justify-between mb-6">
+                <p id="project-count" class="text-slate-500 text-sm font-medium"></p>
+                <div id="loading-indicator" class="hidden flex items-center gap-2 text-slate-400 text-sm">
+                    <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                    Cargando proyectos...
                 </div>
             </div>
 
             <!-- Grilla Principal del Catálogo -->
             <div id="projects-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
 
-                <!-- Mockup Proyecto 1 -->
-                <article
-                    class="project-card bg-white rounded-[2rem] border border-orange-50 p-6 flex flex-col justify-between h-full relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full blur-2xl z-0"></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-start mb-4">
-                            <span
-                                class="px-3 py-1 bg-orange-100 text-accent text-[10px] font-black uppercase tracking-widest rounded-lg">Impacto
-                                Social</span>
-                            <div
-                                class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-accent font-bold">
-                                <span class="material-symbols-outlined text-sm">foundation</span>
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2">Desarrollo de
-                            Comunidades Rurales</h3>
-                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span
-                                class="material-symbols-outlined text-[14px]">apartment</span> Fundación Tierra Viva</p>
-                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">Apoyo en el desarrollo logístico
-                            e infraestructural de comunidades apartadas mediante la construcción sustentable y
-                            capacitación digital básica.</p>
-                    </div>
-
-                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos
-                                </p>
-                                <p class="text-lg font-black text-primary">12 <span
-                                        class="text-xs text-slate-400 font-medium">/ 20</span></p>
-                            </div>
-                            <div class="w-px h-8 bg-slate-200"></div>
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">
-                                    Modalidad</p>
-                                <p class="text-sm font-bold text-accent bg-orange-50 px-3 py-1 rounded-lg">Presencial
-                                </p>
-                            </div>
-                        </div>
-                        <button
-                            class="w-full bg-primary hover:bg-orange-950 text-white font-bold py-3.5 rounded-xl transition-colors">Editar
-                            Detalles</button>
-                    </div>
-                </article>
-
-                <!-- Mockup Proyecto 2 -->
-                <article
-                    class="project-card bg-white rounded-[2rem] border border-orange-50 p-6 flex flex-col justify-between h-full relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-emerald-50 rounded-full blur-2xl z-0"></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-start mb-4">
-                            <span
-                                class="px-3 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-lg">Medio
-                                Ambiente</span>
-                            <div
-                                class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold">
-                                <span class="material-symbols-outlined text-sm">forest</span>
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2">Reforestación
-                            Activa CDMX</h3>
-                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span
-                                class="material-symbols-outlined text-[14px]">apartment</span> EcoCiudad</p>
-                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">Proyecto de fines de semana
-                            enfocado en la restauración y manutención de parques boscosos dentro de la zona sur de la
-                            ciudad.</p>
-                    </div>
-
-                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos
-                                </p>
-                                <p class="text-lg font-black text-primary">45 <span
-                                        class="text-xs text-slate-400 font-medium">/ 50</span></p>
-                            </div>
-                            <div class="w-px h-8 bg-slate-200"></div>
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">
-                                    Modalidad</p>
-                                <p class="text-sm font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">Mixta
-                                </p>
-                            </div>
-                        </div>
-                        <button
-                            class="w-full bg-primary hover:bg-orange-950 text-white font-bold py-3.5 rounded-xl transition-colors">Editar
-                            Detalles</button>
-                    </div>
-                </article>
-
-                <!-- Mockup Proyecto 3 -->
-                <article
-                    class="project-card bg-white rounded-[2rem] border border-orange-50 p-6 flex flex-col justify-between h-full relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl z-0"></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-start mb-4">
-                            <span
-                                class="px-3 py-1 bg-blue-100 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-lg">Tecnología</span>
-                            <div
-                                class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold">
-                                <span class="material-symbols-outlined text-sm">devices</span>
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2">Alfabetización
-                            Digital 3ra Edad</h3>
-                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span
-                                class="material-symbols-outlined text-[14px]">apartment</span> INAPAM A.C.</p>
-                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">Programa dedicado a incluir
-                            digitalmente a la tercera edad a través del uso de teléfonos inteligentes y prevención de
-                            fraudes online.</p>
-                    </div>
-
-                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos
-                                </p>
-                                <p class="text-lg font-black text-rose-500">LLENO <span
-                                        class="text-xs text-slate-400 font-medium">30/30</span></p>
-                            </div>
-                            <div class="w-px h-8 bg-slate-200"></div>
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">
-                                    Modalidad</p>
-                                <p class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">Remoto</p>
-                            </div>
-                        </div>
-                        <button
-                            class="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 font-bold py-3.5 rounded-xl transition-colors">Ver
-                            Detalles</button>
-                    </div>
-                </article>
+                <!-- Las tarjetas se renderizan dinámicamente desde la API -->
+                <div id="empty-state" class="col-span-3 flex flex-col items-center justify-center py-24 gap-3 text-slate-300">
+                    <span class="material-symbols-outlined text-7xl">folder_open</span>
+                    <p class="text-base font-medium">No hay proyectos en la base de datos.</p>
+                    <p class="text-sm">Selecciona un período y sube un CSV para comenzar.</p>
+                </div>
 
             </div>
         </section>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const csvUrl = '../BASE_CAT_S.S.csv';
-            
-            fetch(csvUrl, { cache: 'no-store' })
-                .then(response => {
-                    if (!response.ok) throw new Error("Require localhost/Live Server");
-                    return response.text();
-                })
-                .then(csvText => {
-                    Papa.parse(csvText, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function(results) {
-                            renderProjects(results.data);
-                        }
-                    });
-                })
-                .catch(err => {
-                    console.log("No se pudo fetch el CSV remotamente.", err);
-                });
-        });
+    <!-- ── Modal de Edición de Proyecto ── -->
+    <div id="edit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-8 pt-7 pb-4 border-b border-slate-100">
+                <div>
+                    <h3 class="font-headline font-bold text-xl text-primary">Editar Proyecto</h3>
+                    <p id="edit-modal-company" class="text-accent text-xs font-semibold mt-0.5"></p>
+                </div>
+                <button id="edit-modal-close"
+                    class="w-9 h-9 rounded-xl hover:bg-slate-100 flex items-center justify-center transition-colors">
+                    <span class="material-symbols-outlined text-slate-400">close</span>
+                </button>
+            </div>
 
-        const styles = [
-            { bg: 'bg-orange-50', text: 'text-accent', iconText: 'text-accent', border: 'border-orange-50', tagBg: 'bg-orange-100', icon: 'foundation', tagTitle: 'Impacto Social' },
-            { bg: 'bg-emerald-50', text: 'text-emerald-600', iconText: 'text-emerald-600', border: 'border-emerald-50', tagBg: 'bg-emerald-100', icon: 'forest', tagTitle: 'Medio Ambiente' },
-            { bg: 'bg-blue-50', text: 'text-blue-600', iconText: 'text-blue-600', border: 'border-blue-50', tagBg: 'bg-blue-100', icon: 'devices', tagTitle: 'Tecnología' }
+            <!-- Form -->
+            <form id="edit-form" class="px-8 py-6 space-y-5">
+                <input type="hidden" id="edit-id">
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Título del proyecto</label>
+                        <input id="edit-title" type="text" maxlength="150" required
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Empresa / Organización</label>
+                        <input id="edit-company" type="text" maxlength="150" required
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ubicación</label>
+                        <input id="edit-location" type="text" maxlength="150"
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40"
+                            placeholder="Opcional">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Capacidad (cupos)</label>
+                        <input id="edit-capacity" type="number" min="1" required
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Modalidad</label>
+                        <select id="edit-modality"
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40 bg-white">
+                            <option value="Presencial">Presencial</option>
+                            <option value="Remoto">Remoto (En Línea)</option>
+                            <option value="Mixto">Mixto</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Descripción</label>
+                        <textarea id="edit-description" rows="4"
+                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none"
+                            placeholder="Describe el proyecto..."></textarea>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="flex items-center gap-3 cursor-pointer select-none">
+                            <div class="relative">
+                                <input id="edit-active" type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-accent transition-colors"></div>
+                                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-700">Proyecto activo</p>
+                                <p class="text-xs text-slate-400">Los estudiantes pueden ver e inscribirse</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Error -->
+                <p id="edit-error" class="hidden text-xs font-semibold text-red-500 bg-red-50 px-3 py-2 rounded-lg"></p>
+
+                <!-- Actions -->
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="edit-cancel-btn"
+                        class="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-3 bg-accent hover:bg-orange-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-md shadow-orange-500/20 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">save</span>
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Modal de confirmación reemplazo ── -->
+    <div id="replace-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4">
+            <div class="flex flex-col items-center gap-4 text-center">
+                <div class="w-14 h-14 rounded-full bg-orange-50 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-accent text-3xl">warning</span>
+                </div>
+                <div>
+                    <h4 class="font-headline font-bold text-lg text-primary">¿Reemplazar proyectos?</h4>
+                    <p id="modal-count-text" class="text-slate-500 text-sm mt-1"></p>
+                    <p class="text-slate-400 text-xs mt-1">Los proyectos actuales y sus inscripciones se eliminarán permanentemente.</p>
+                </div>
+                <div class="flex gap-3 w-full mt-2">
+                    <button id="modal-cancel"
+                        class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button id="modal-confirm"
+                        class="flex-1 px-4 py-2.5 bg-accent text-white rounded-xl text-sm font-semibold hover:bg-orange-700 transition-colors">
+                        Reemplazar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://127.0.0.1:8000/api/v1';
+        const token = localStorage.getItem('admin_token');
+        if (!token) location.href = 'acceso_administrador.html';
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+        // ── Paleta de colores para las tarjetas ────────────────────────────────
+        const STYLES = [
+            { bg: 'bg-orange-50',  text: 'text-accent',      tagBg: 'bg-orange-100',  icon: 'foundation',         tag: 'Impacto Social' },
+            { bg: 'bg-emerald-50', text: 'text-emerald-600', tagBg: 'bg-emerald-100', icon: 'forest',             tag: 'Medio Ambiente' },
+            { bg: 'bg-blue-50',    text: 'text-blue-600',    tagBg: 'bg-blue-100',    icon: 'devices',            tag: 'Tecnología' },
+            { bg: 'bg-purple-50',  text: 'text-purple-600',  tagBg: 'bg-purple-100',  icon: 'groups',             tag: 'Comunidad' },
+            { bg: 'bg-rose-50',    text: 'text-rose-600',    tagBg: 'bg-rose-100',    icon: 'volunteer_activism', tag: 'Voluntariado' },
         ];
 
-        function renderProjects(data) {
-            const container = document.getElementById('projects-container');
-            let added = 0;
-            let tempHTML = '';
-            
-            data.forEach((row, index) => {
-                let title = row.title || row.Title || row.TITLE;
-                let isActive = String(row.is_active || "").toUpperCase();
+        const MODALITY_STYLES = {
+            'Presencial': { cls: 'text-emerald-600 bg-emerald-50', icon: 'location_on' },
+            'Remoto':     { cls: 'text-blue-600 bg-blue-50',       icon: 'computer' },
+            'Mixto':      { cls: 'text-purple-600 bg-purple-50',   icon: 'sync_alt' },
+        };
 
-                if(!title || isActive.includes("FALSE")) return; // saltar invalidos
+        // ── Estado ────────────────────────────────────────────────────────────
+        let allProjects = [];   // copia completa para filtrar en cliente
+        let allPeriods  = [];
+        let pendingFile = null;
 
-                const style = styles[index % styles.length];
-                
-                let modClean = String(row.modality || "No definida");
-                if(modClean.includes('Línea')) modClean = 'Remoto';
-                else if(modClean.includes('Presencial')) modClean = 'Presencial';
-                else if(modClean.includes('Mixto')) modClean = 'Mixto';
+        // ── Cargar períodos ────────────────────────────────────────────────────
+        async function loadPeriods() {
+            try {
+                const res = await fetch(`${API}/periods`, { headers });
+                if (!res.ok) return;
+                allPeriods = await res.json();
 
-                let capacity = parseInt(row.capacity) || 0;
-                let statusClass = capacity > 0 ? 'text-primary' : 'text-rose-500';
-                let capacityText = capacity > 0 ? `${Math.floor(capacity/2)} <span class="text-xs text-slate-400 font-medium">/ ${capacity}</span>` : `LLENO <span class="text-xs text-slate-400 font-medium">${capacity}/${capacity}</span>`;
+                // Rellenar selector de upload (header)
+                const uploadSel = document.getElementById('period-select');
+                // Rellenar selector de filtro (toolbar)
+                const filterSel = document.getElementById('filter-period');
 
-                let titleClean = String(title).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-                let titleShort = titleClean.length > 50 ? titleClean.substring(0, 50) + '...' : titleClean;
-                let companyStr = row.company || row.Company || 'Sin Empresa';
-                let descStr = String(row.description || row.Description || '').replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                allPeriods.forEach(p => {
+                    [uploadSel, filterSel].forEach(sel => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.textContent = p.name;
+                        sel.appendChild(opt);
+                    });
+                    if (p.is_active) uploadSel.value = p.id;
+                });
+                updateUploadBtn();
+            } catch (e) { console.error(e); }
+        }
 
-                const cardHTML = `
-                <article class="project-card bg-white rounded-[2rem] border ${style.border} p-6 flex flex-col justify-between h-full relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 ${style.bg} rounded-full blur-2xl z-0"></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="px-3 py-1 ${style.tagBg} ${style.iconText} text-[10px] font-black uppercase tracking-widest rounded-lg">${style.tagTitle}</span>
-                            <div class="w-10 h-10 rounded-xl ${style.bg} flex items-center justify-center ${style.iconText} font-bold">
-                                <span class="material-symbols-outlined text-sm">${style.icon}</span>
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2" title="${titleClean}">${titleShort}</h3>
-                        <p class="text-slate-500 text-xs font-semibold mb-3 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">apartment</span> ${companyStr}</p>
-                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3" title="${descStr}">${descStr}</p>
-                    </div>
-                    
-                    <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Cupos</p>
-                                <p class="text-lg font-black ${statusClass}">${capacityText}</p>
-                            </div>
-                            <div class="w-px h-8 bg-slate-200"></div>
-                            <div class="text-center">
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Modalidad</p>
-                                <p class="text-sm font-bold ${style.iconText} ${style.bg} px-3 py-1 rounded-lg">${modClean}</p>
-                            </div>
-                        </div>
-                        <button class="w-full bg-primary hover:bg-orange-950 text-white font-bold py-3.5 rounded-xl transition-colors">Editar Detalles</button>
-                    </div>
-                </article>
-                `;
-                tempHTML += cardHTML;
-                added++;
-            });
-
-            if(added > 0) {
-                container.innerHTML = tempHTML;
-                alert("¡Éxito! Se cargaron " + added + " proyectos desde el CSV.");
-            } else {
-                alert("Advertencia: Se leyó el archivo pero no se encontraron filas válidas con la columna 'title'. ¿Verifica que sea CSV separado por comas?");
+        // ── Cargar proyectos desde la API ──────────────────────────────────────
+        async function loadProjects() {
+            const loading = document.getElementById('loading-indicator');
+            const countEl = document.getElementById('project-count');
+            loading.classList.remove('hidden');
+            loading.classList.add('flex');
+            try {
+                const res = await fetch(`${API}/admin/opportunities`, { headers });
+                if (res.status === 401) { location.href = 'acceso_administrador.html'; return; }
+                allProjects = await res.json();
+                applyFilters();
+                countEl.textContent = allProjects.length > 0
+                    ? `${allProjects.length} proyecto${allProjects.length !== 1 ? 's' : ''} en la base de datos`
+                    : '';
+            } catch (e) {
+                countEl.textContent = 'Error al cargar proyectos.';
+                console.error(e);
+            } finally {
+                loading.classList.add('hidden');
+                loading.classList.remove('flex');
             }
         }
-        
-        document.getElementById('fileUpload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if(file) {
-                if(typeof Papa === 'undefined') {
-                    alert('Error: La librería de lectura (PapaParse) no se cargó. Revisa tu conexión a internet.');
-                    return;
-                }
-                Papa.parse(file, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function(results) {
-                        renderProjects(results.data);
-                    },
-                    error: function(err) {
-                        alert("Hubo un error al leer el archivo: " + err.message);
-                    }
-                });
+
+        // ── Filtrar y renderizar ───────────────────────────────────────────────
+        function applyFilters() {
+            const q         = document.querySelector('input[type="text"]').value.toLowerCase();
+            const periodId  = document.getElementById('filter-period').value;
+            const modality  = document.getElementById('filter-modality').value;
+
+            const filtered = allProjects.filter(p => {
+                const matchQ  = !q || (p.title + p.company + (p.description || '')).toLowerCase().includes(q);
+                const matchP  = !periodId || p.period_id === periodId;
+                const matchM  = !modality || p.modality === modality;
+                return matchQ && matchP && matchM;
+            });
+
+            renderCards(filtered);
+
+            const countEl = document.getElementById('project-count');
+            if (filtered.length !== allProjects.length) {
+                countEl.textContent = `${filtered.length} de ${allProjects.length} proyectos`;
+            } else {
+                countEl.textContent = `${allProjects.length} proyecto${allProjects.length !== 1 ? 's' : ''} en la base de datos`;
             }
-            // Resetear input para permitir cargar el mismo archivo múltiples veces
-            e.target.value = '';
+        }
+
+        // ── Renderizar tarjetas ────────────────────────────────────────────────
+        function renderCards(projects) {
+            const container = document.getElementById('projects-container');
+            const emptyState = document.getElementById('empty-state');
+            container.querySelectorAll('article').forEach(a => a.remove());
+
+            if (projects.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            projects.forEach((p, i) => {
+                const s = STYLES[i % STYLES.length];
+                const enrolled = p.enrolled_count ?? 0;
+                const capacity = p.capacity ?? 0;
+                const isFull = enrolled >= capacity && capacity > 0;
+                const cuposClass = isFull ? 'text-rose-500' : 'text-primary';
+                const cuposText = isFull
+                    ? `LLENO <span class="text-xs text-slate-400 font-medium">${enrolled}/${capacity}</span>`
+                    : `${enrolled} <span class="text-xs text-slate-400 font-medium">/ ${capacity}</span>`;
+                const activeTag = p.is_active
+                    ? ''
+                    : `<span class="px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-bold uppercase rounded">Inactivo</span>`;
+
+                const modality = p.modality || 'Presencial';
+                const mStyle = MODALITY_STYLES[modality] || MODALITY_STYLES['Presencial'];
+
+                const title   = (p.title || '').replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                const titleShort = title.length > 52 ? title.substring(0, 52) + '…' : title;
+                const desc    = (p.description || '—').replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                const company = p.company || 'Sin empresa';
+                const location = p.location || '';
+
+                container.insertAdjacentHTML('beforeend', `
+                    <article class="project-card bg-white rounded-[2rem] border border-orange-50 p-6 flex flex-col justify-between h-full relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 ${s.bg} rounded-full blur-2xl z-0"></div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center flex-wrap gap-1">
+                                    <span class="px-3 py-1 ${s.tagBg} ${s.text} text-[10px] font-black uppercase tracking-widest rounded-lg">${s.tag}</span>
+                                    ${activeTag}
+                                </div>
+                                <div class="w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center ${s.text} font-bold shrink-0">
+                                    <span class="material-symbols-outlined text-sm">${s.icon}</span>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-black font-headline text-primary leading-tight mb-2" title="${title}">${titleShort}</h3>
+                            <p class="text-slate-500 text-xs font-semibold mb-1 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[14px]">apartment</span> ${company}
+                            </p>
+                            ${location ? `<p class="text-slate-400 text-xs mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-[13px]">location_on</span>${location}</p>` : ''}
+                            <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">${desc}</p>
+                        </div>
+                        <div class="relative z-10 mt-6 pt-5 border-t border-slate-100">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="text-center">
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Inscritos</p>
+                                    <p class="text-lg font-black ${cuposClass}">${cuposText}</p>
+                                </div>
+                                <div class="w-px h-8 bg-slate-200"></div>
+                                <div class="text-center">
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Capacidad</p>
+                                    <p class="text-lg font-black text-primary">${capacity}</p>
+                                </div>
+                                <div class="w-px h-8 bg-slate-200"></div>
+                                <div class="text-center">
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Modalidad</p>
+                                    <p class="text-xs font-bold px-2 py-1 rounded-lg ${mStyle.cls} flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[13px]">${mStyle.icon}</span>${modality}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                class="edit-btn w-full bg-primary hover:bg-orange-950 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm"
+                                data-id="${p.id}">
+                                <span class="material-symbols-outlined text-[18px]">edit</span> Editar proyecto
+                            </button>
+                        </div>
+                    </article>
+                `);
+            });
+        }
+
+        // ── Filtros en tiempo real ─────────────────────────────────────────────
+        document.querySelector('input[type="text"]').addEventListener('input', applyFilters);
+        document.getElementById('filter-period').addEventListener('change', applyFilters);
+        document.getElementById('filter-modality').addEventListener('change', applyFilters);
+        document.getElementById('filter-clear').addEventListener('click', () => {
+            document.querySelector('input[type="text"]').value = '';
+            document.getElementById('filter-period').value = '';
+            document.getElementById('filter-modality').value = '';
+            applyFilters();
         });
+
+        // ── Upload flow ────────────────────────────────────────────────────────
+        function updateUploadBtn() {
+            const sel = document.getElementById('period-select');
+            document.getElementById('upload-btn').disabled = !sel.value;
+        }
+
+        document.getElementById('period-select').addEventListener('change', updateUploadBtn);
+
+        document.getElementById('fileUpload').addEventListener('change', async function (e) {
+            const file = e.target.files[0];
+            e.target.value = '';
+            if (!file) return;
+
+            const periodId = document.getElementById('period-select').value;
+            if (!periodId) { alert('Selecciona un período primero.'); return; }
+
+            try {
+                const res = await fetch(`${API}/admin/opportunities/count/by-period/${periodId}`, { headers });
+                const { count } = await res.json();
+                if (count > 0) {
+                    pendingFile = file;
+                    document.getElementById('modal-count-text').textContent =
+                        `Ya existen ${count} proyecto${count !== 1 ? 's' : ''} para este período.`;
+                    document.getElementById('replace-modal').classList.remove('hidden');
+                } else {
+                    await uploadCSV(file, periodId);
+                }
+            } catch (err) {
+                alert('Error al verificar proyectos existentes.');
+                console.error(err);
+            }
+        });
+
+        document.getElementById('modal-cancel').addEventListener('click', () => {
+            pendingFile = null;
+            document.getElementById('replace-modal').classList.add('hidden');
+        });
+
+        document.getElementById('modal-confirm').addEventListener('click', async () => {
+            document.getElementById('replace-modal').classList.add('hidden');
+            const periodId = document.getElementById('period-select').value;
+            if (!pendingFile || !periodId) return;
+            try {
+                const delRes = await fetch(`${API}/admin/opportunities/by-period/${periodId}`, {
+                    method: 'DELETE', headers,
+                });
+                if (!delRes.ok) { alert('Error al eliminar proyectos anteriores.'); return; }
+            } catch (err) {
+                alert('Error de red al eliminar proyectos anteriores.'); return;
+            }
+            await uploadCSV(pendingFile, periodId);
+            pendingFile = null;
+        });
+
+        async function uploadCSV(file, periodId) {
+            const btn = document.getElementById('upload-btn');
+            btn.disabled = true;
+            btn.innerHTML = `<svg class="animate-spin h-4 w-4 mr-1 inline" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg> Subiendo…`;
+            try {
+                const form = new FormData();
+                form.append('file', file);
+                const res = await fetch(`${API}/admin/socioformadores/upload?period_id=${periodId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: form,
+                });
+                if (res.status === 401) { location.href = 'acceso_administrador.html'; return; }
+                if (res.ok) {
+                    const data = await res.json();
+                    const total = Array.isArray(data) ? data.reduce((s, r) => s + (r.projects_count || 0), 0) : '?';
+                    await loadProjects();
+                    showToast(`Se cargaron ${total} proyectos de ${Array.isArray(data) ? data.length : '?'} empresas.`);
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    alert('Error al subir el CSV: ' + (err.detail || res.statusText));
+                }
+            } catch (err) {
+                alert('Error de red al subir el CSV.');
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span class="material-symbols-outlined text-sm">upload_file</span> Cargar CSV`;
+                updateUploadBtn();
+            }
+        }
+
+        // ── Modal de edición ──────────────────────────────────────────────────
+        // Delegación: click en cualquier botón .edit-btn dentro del grid
+        document.getElementById('projects-container').addEventListener('click', e => {
+            const btn = e.target.closest('.edit-btn');
+            if (!btn) return;
+            const project = allProjects.find(p => p.id === btn.dataset.id);
+            if (project) openEditModal(project);
+        });
+
+        function openEditModal(p) {
+            document.getElementById('edit-id').value          = p.id;
+            document.getElementById('edit-title').value       = p.title || '';
+            document.getElementById('edit-company').value     = p.company || '';
+            document.getElementById('edit-location').value    = p.location || '';
+            document.getElementById('edit-capacity').value    = p.capacity ?? '';
+            document.getElementById('edit-modality').value    = p.modality || 'Presencial';
+            document.getElementById('edit-description').value = p.description || '';
+            document.getElementById('edit-active').checked    = p.is_active ?? true;
+            document.getElementById('edit-modal-company').textContent = p.company || '';
+            document.getElementById('edit-error').classList.add('hidden');
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        document.getElementById('edit-modal-close').addEventListener('click', closeEditModal);
+        document.getElementById('edit-cancel-btn').addEventListener('click', closeEditModal);
+        document.getElementById('edit-modal').addEventListener('click', e => {
+            if (e.target === document.getElementById('edit-modal')) closeEditModal();
+        });
+
+        document.getElementById('edit-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const errorEl = document.getElementById('edit-error');
+            errorEl.classList.add('hidden');
+
+            const payload = {
+                title:       document.getElementById('edit-title').value.trim(),
+                company:     document.getElementById('edit-company').value.trim(),
+                location:    document.getElementById('edit-location').value.trim() || null,
+                capacity:    parseInt(document.getElementById('edit-capacity').value),
+                modality:    document.getElementById('edit-modality').value,
+                description: document.getElementById('edit-description').value.trim() || null,
+                is_active:   document.getElementById('edit-active').checked,
+            };
+
+            const submitBtn = e.target.querySelector('[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg> Guardando…`;
+
+            try {
+                const res = await fetch(`${API}/admin/opportunities/${id}`, {
+                    method: 'PUT',
+                    headers: { ...headers, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (res.ok) {
+                    const updated = await res.json();
+                    // Actualizar en el array local para no recargar todo
+                    const idx = allProjects.findIndex(p => p.id === id);
+                    if (idx !== -1) allProjects[idx] = updated;
+                    applyFilters();
+                    closeEditModal();
+                    showToast('Proyecto actualizado correctamente.');
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    errorEl.textContent = err.detail || 'Error al guardar. Intenta de nuevo.';
+                    errorEl.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorEl.textContent = 'Error de red. Intenta de nuevo.';
+                errorEl.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">save</span> Guardar cambios`;
+            }
+        });
+
+        // ── Toast ──────────────────────────────────────────────────────────────
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'fixed bottom-6 right-6 z-50 bg-primary text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold flex items-center gap-2';
+            t.innerHTML = `<span class="material-symbols-outlined text-emerald-400">check_circle</span> ${msg}`;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 4000);
+        }
+
+        // ── Init ───────────────────────────────────────────────────────────────
+        loadPeriods();
+        loadProjects();
     </script>
 </body>
 </html>
