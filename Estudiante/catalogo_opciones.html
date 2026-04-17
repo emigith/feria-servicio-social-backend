@@ -52,18 +52,31 @@
     .enroll-btn:hover:not(:disabled) { background-color: #1e2a5a; transform: scale(1.02); }
     .enroll-btn:disabled { background-color: #94a3b8; cursor: not-allowed; transform: none; }
 
-    /* Colores por modalidad */
     .badge-presencial { background:#dcfce7; color:#15803d; }
     .badge-remoto     { background:#dbeafe; color:#1d4ed8; }
     .badge-mixto      { background:#f3e8ff; color:#7c3aed; }
 
-    /* Avatar color cycling */
     .avatar-0 { background: #1e40af; }
     .avatar-1 { background: #065f46; }
     .avatar-2 { background: #7c2d12; }
     .avatar-3 { background: #581c87; }
     .avatar-4 { background: #0e7490; }
     .avatar-5 { background: #9d174d; }
+
+    /* Period tabs */
+    .period-tab {
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .period-tab.active {
+      background-color: #0f173d;
+      color: white;
+      box-shadow: 0 4px 12px rgba(15, 23, 61, 0.25);
+    }
+    .period-tab:not(.active):hover {
+      background-color: #e2e8f0;
+    }
   </style>
 </head>
 
@@ -71,7 +84,7 @@
   <main class="glass-shell max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden min-h-[90vh] flex flex-col">
 
     <!-- ── Header ── -->
-    <section class="px-6 md:px-12 pt-10 pb-8 border-b border-slate-200/60">
+    <section class="px-6 md:px-12 pt-10 pb-6 border-b border-slate-200/60">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div class="fade-item">
           <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider mb-4">
@@ -89,8 +102,21 @@
         </button>
       </div>
 
+      <!-- ── Period tabs ── -->
+      <div class="mt-6 fade-item" style="animation-delay:0.05s">
+        <div id="period-tabs-loading" class="flex gap-2">
+          <div class="h-10 w-32 bg-slate-100 rounded-2xl animate-pulse"></div>
+          <div class="h-10 w-36 bg-slate-100 rounded-2xl animate-pulse"></div>
+          <div class="h-10 w-40 bg-slate-100 rounded-2xl animate-pulse"></div>
+          <div class="h-10 w-28 bg-slate-100 rounded-2xl animate-pulse"></div>
+        </div>
+        <div id="period-tabs" class="hidden overflow-x-auto pb-1">
+          <div id="period-tabs-inner" class="flex gap-2 min-w-max"></div>
+        </div>
+      </div>
+
       <!-- ── Búsqueda + filtros ── -->
-      <div class="mt-8 flex flex-col sm:flex-row items-center gap-3 fade-item" style="animation-delay:0.1s">
+      <div class="mt-4 flex flex-col sm:flex-row items-center gap-3 fade-item" style="animation-delay:0.1s">
         <div class="relative flex-1 w-full">
           <span class="absolute inset-y-0 left-0 pl-5 flex items-center text-slate-400">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,14 +167,14 @@
         <p class="text-slate-500 mt-2">Intenta con otros términos o cambia el filtro de modalidad.</p>
       </div>
 
-      <!-- Sin proyectos en la BD -->
+      <!-- Sin proyectos en el período -->
       <div id="empty-db" class="hidden flex-col items-center justify-center py-24 text-center gap-3 text-slate-400 fade-item">
         <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
         </svg>
-        <p class="font-semibold text-lg">No hay proyectos disponibles por el momento.</p>
-        <p class="text-sm">El administrador aún no ha cargado el catálogo de este período.</p>
+        <p class="font-semibold text-lg">No hay proyectos disponibles en este período.</p>
+        <p class="text-sm">El administrador aún no ha cargado el catálogo.</p>
       </div>
 
       <!-- Grid de proyectos -->
@@ -193,89 +219,163 @@
     if (!token) location.href = 'acceso_estudiante.html';
 
     // ── Estado ──────────────────────────────────────────────────────────────
-    let allOpportunities = [];
-    let pendingEnrollId = null;
+    let allPeriods       = [];
+    let activePeriodId   = null;
+    let currentPeriodId  = null;
+    let periodsCache     = {};   // { [period_id]: Opportunity[] }
+    let pendingEnrollId  = null;
 
-    // ── Colores de avatar según índice ──────────────────────────────────────
     const AVATAR_COLORS = ['#1e40af','#065f46','#7c2d12','#581c87','#0e7490','#9d174d'];
 
-    // ── Modalidad → estilos ─────────────────────────────────────────────────
     const MODALITY = {
       'Presencial': { badge: 'badge-presencial', icon: 'location_on',  label: 'Presencial' },
       'Remoto':     { badge: 'badge-remoto',     icon: 'computer',     label: 'Remoto' },
       'Mixto':      { badge: 'badge-mixto',      icon: 'sync_alt',     label: 'Mixto' },
     };
 
-    // ── Cargar proyectos ─────────────────────────────────────────────────────
-    async function cargarDatos() {
+    // ── Cargar períodos y mostrar tabs ─────────────────────────────────────
+    async function initCatalog() {
       try {
-        const res = await fetch(`${API_BASE}/opportunities?period=active`, {
+        const res = await fetch(`${API_BASE}/periods`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-
-        document.getElementById('loading-state').classList.add('hidden');
-
         if (res.status === 401) { location.href = 'acceso_estudiante.html'; return; }
-        if (res.status === 403) {
-          // Estudiante no ha hecho check-in — mostrar pantalla sin_checkin
-          location.href = 'sin_checkin.html'; return;
+        if (!res.ok) throw new Error('No se pudieron cargar los períodos');
+
+        allPeriods = await res.json();
+
+        // Ocultar skeleton, mostrar tabs
+        document.getElementById('period-tabs-loading').classList.add('hidden');
+        document.getElementById('period-tabs').classList.remove('hidden');
+
+        const tabsInner = document.getElementById('period-tabs-inner');
+        tabsInner.innerHTML = '';
+
+        allPeriods.forEach(p => {
+          if (p.is_active) activePeriodId = p.id;
+
+          const btn = document.createElement('button');
+          btn.className = 'period-tab px-5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 bg-slate-100 flex items-center gap-2';
+          btn.dataset.periodId = p.id;
+          btn.innerHTML = `
+            ${p.is_active ? '<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>' : ''}
+            ${p.name}
+          `;
+          btn.addEventListener('click', () => switchPeriod(p.id));
+          tabsInner.appendChild(btn);
+        });
+
+        // Seleccionar período activo por defecto (o el primero)
+        const defaultId = activePeriodId || (allPeriods[0] && allPeriods[0].id);
+        if (defaultId) await switchPeriod(defaultId);
+        else {
+          document.getElementById('loading-state').classList.add('hidden');
+          showEmptyDb();
         }
-
-        if (!res.ok) {
-          document.getElementById('empty-db').classList.remove('hidden');
-          document.getElementById('empty-db').classList.add('flex');
-          return;
-        }
-
-        allOpportunities = await res.json();
-
-        if (allOpportunities.length === 0) {
-          document.getElementById('empty-db').classList.remove('hidden');
-          document.getElementById('empty-db').classList.add('flex');
-          return;
-        }
-
-        document.getElementById('contenedor-oportunidades').classList.remove('hidden');
-        applyFilters();
-
       } catch (err) {
         document.getElementById('loading-state').classList.add('hidden');
-        document.getElementById('empty-db').classList.remove('hidden');
-        document.getElementById('empty-db').classList.add('flex');
-        console.error('Error cargando proyectos:', err);
+        showEmptyDb();
+        console.error(err);
       }
     }
 
-    // ── Filtrar en cliente ───────────────────────────────────────────────────
+    // ── Cambiar de pestaña ─────────────────────────────────────────────────
+    async function switchPeriod(periodId) {
+      currentPeriodId = periodId;
+
+      // Actualizar estilos de tabs
+      document.querySelectorAll('.period-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.periodId === periodId);
+      });
+
+      // Limpiar filtros
+      document.getElementById('search-input').value = '';
+      document.getElementById('filter-modality').value = '';
+
+      if (periodsCache[periodId]) {
+        renderWithFilter(periodsCache[periodId]);
+        return;
+      }
+
+      showLoading();
+      await fetchPeriodOpportunities(periodId);
+    }
+
+    // ── Cargar oportunidades de un período ────────────────────────────────
+    async function fetchPeriodOpportunities(periodId) {
+      try {
+        const res = await fetch(`${API_BASE}/opportunities?period=${periodId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        hideLoading();
+
+        if (res.status === 401) { location.href = 'acceso_estudiante.html'; return; }
+
+        if (!res.ok) {
+          showEmptyDb();
+          return;
+        }
+
+        const opportunities = await res.json();
+        periodsCache[periodId] = opportunities;
+
+        if (opportunities.length === 0) {
+          showEmptyDb();
+          return;
+        }
+
+        renderWithFilter(opportunities);
+      } catch (err) {
+        hideLoading();
+        showEmptyDb();
+        console.error(err);
+      }
+    }
+
+    // ── Aplicar filtros al período actual ─────────────────────────────────
     function applyFilters() {
+      const ops = periodsCache[currentPeriodId];
+      if (!ops) return;
+      renderWithFilter(ops);
+    }
+
+    function renderWithFilter(opportunities) {
       const q        = document.getElementById('search-input').value.toLowerCase();
       const modality = document.getElementById('filter-modality').value;
 
-      const filtered = allOpportunities.filter(op => {
+      const filtered = opportunities.filter(op => {
         const matchQ = !q || `${op.title} ${op.company} ${op.description || ''}`.toLowerCase().includes(q);
         const matchM = !modality || op.modality === modality;
         return matchQ && matchM;
       });
 
-      renderCards(filtered);
-
       document.getElementById('opportunity-count').textContent = filtered.length;
+
       const noRes = document.getElementById('no-results');
-      if (filtered.length === 0 && allOpportunities.length > 0) {
-        noRes.classList.remove('hidden');
-        noRes.classList.add('flex');
-        document.getElementById('contenedor-oportunidades').classList.add('hidden');
+      const container = document.getElementById('contenedor-oportunidades');
+      const emptyDb = document.getElementById('empty-db');
+
+      if (filtered.length === 0 && opportunities.length > 0) {
+        noRes.classList.remove('hidden'); noRes.classList.add('flex');
+        container.classList.add('hidden');
+        emptyDb.classList.add('hidden'); emptyDb.classList.remove('flex');
+      } else if (filtered.length === 0) {
+        showEmptyDb();
       } else {
-        noRes.classList.add('hidden');
-        noRes.classList.remove('flex');
-        document.getElementById('contenedor-oportunidades').classList.remove('hidden');
+        noRes.classList.add('hidden'); noRes.classList.remove('flex');
+        emptyDb.classList.add('hidden'); emptyDb.classList.remove('flex');
+        container.classList.remove('hidden');
+        renderCards(filtered);
       }
     }
 
-    // ── Renderizar tarjetas ──────────────────────────────────────────────────
+    // ── Renderizar tarjetas ───────────────────────────────────────────────
     function renderCards(projects) {
       const container = document.getElementById('contenedor-oportunidades');
       container.innerHTML = '';
+
+      const isActiveTab = currentPeriodId === activePeriodId;
 
       projects.forEach((op, i) => {
         const initials  = (op.company || 'SS').substring(0, 2).toUpperCase();
@@ -286,6 +386,17 @@
         const slotsText = isFull
           ? `<span class="text-rose-600 font-bold">Sin cupos</span>`
           : `<span class="font-bold text-slate-800">${slots} disponibles</span>`;
+
+        const creditHoursHtml = op.credit_hours
+          ? `<div class="bg-slate-50 px-4 py-3 rounded-xl">
+               <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Horas crédito</p>
+               <span class="font-bold text-slate-800">${op.credit_hours} hrs</span>
+             </div>`
+          : '';
+
+        // Solo permitir inscripción en el período activo
+        const enrollDisabled = isFull || !isActiveTab;
+        const enrollLabel    = isFull ? 'Sin cupos' : (!isActiveTab ? 'No disponible' : 'Seleccionar');
 
         container.insertAdjacentHTML('beforeend', `
           <article class="catalog-card bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm fade-item"
@@ -320,8 +431,9 @@
                 <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Capacidad total</p>
                 <p class="font-bold text-slate-800">${op.capacity} lugares</p>
               </div>
+              ${creditHoursHtml}
               ${op.location ? `
-              <div class="col-span-2 bg-slate-50 px-4 py-3 rounded-xl flex items-center gap-2">
+              <div class="${op.credit_hours ? 'col-span-2' : ''} bg-slate-50 px-4 py-3 rounded-xl flex items-center gap-2">
                 <span class="material-symbols-outlined text-slate-400 text-[16px]">location_on</span>
                 <p class="text-sm text-slate-600 font-medium">${op.location}</p>
               </div>` : ''}
@@ -334,9 +446,9 @@
               </button>
               <button
                 class="enroll-btn flex-1 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-lg shadow-slate-900/10"
-                ${isFull ? 'disabled' : ''}
+                ${enrollDisabled ? 'disabled' : ''}
                 onclick="abrirModalInscripcion('${op.id}', \`${op.title.replace(/`/g,"'")}\`, \`${op.company.replace(/`/g,"'")}\`)">
-                ${isFull ? 'Sin cupos' : 'Seleccionar'}
+                ${enrollLabel}
               </button>
             </div>
           </article>
@@ -344,14 +456,40 @@
       });
     }
 
-    // ── Ver detalle (placeholder) ────────────────────────────────────────────
-    function verDetalle(id) {
-      const op = allOpportunities.find(o => o.id === id);
-      if (!op) return;
-      alert(`${op.title}\n\n${op.description || 'Sin descripción.'}\n\nEmpresa: ${op.company}\nModalidad: ${op.modality}\nUbicación: ${op.location || 'No especificada'}`);
+    // ── Helpers de estado ─────────────────────────────────────────────────
+    function showLoading() {
+      document.getElementById('loading-state').classList.remove('hidden');
+      document.getElementById('loading-state').classList.add('flex');
+      document.getElementById('contenedor-oportunidades').classList.add('hidden');
+      document.getElementById('no-results').classList.add('hidden');
+      document.getElementById('empty-db').classList.add('hidden');
+      document.getElementById('opportunity-count').textContent = '0';
     }
 
-    // ── Modal de inscripción ─────────────────────────────────────────────────
+    function hideLoading() {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('loading-state').classList.remove('flex');
+    }
+
+    function showEmptyDb() {
+      hideLoading();
+      document.getElementById('empty-db').classList.remove('hidden');
+      document.getElementById('empty-db').classList.add('flex');
+      document.getElementById('contenedor-oportunidades').classList.add('hidden');
+      document.getElementById('no-results').classList.add('hidden');
+      document.getElementById('opportunity-count').textContent = '0';
+    }
+
+    // ── Ver detalle ───────────────────────────────────────────────────────
+    function verDetalle(id) {
+      const ops = periodsCache[currentPeriodId] || [];
+      const op = ops.find(o => o.id === id);
+      if (!op) return;
+      const creditInfo = op.credit_hours ? `\nHoras crédito: ${op.credit_hours} hrs` : '';
+      alert(`${op.title}\n\n${op.description || 'Sin descripción.'}\n\nEmpresa: ${op.company}\nModalidad: ${op.modality}\nUbicación: ${op.location || 'No especificada'}${creditInfo}`);
+    }
+
+    // ── Modal de inscripción ──────────────────────────────────────────────
     function abrirModalInscripcion(id, title, company) {
       pendingEnrollId = id;
       document.getElementById('modal-project-title').textContent = title;
@@ -390,8 +528,9 @@
 
         if (res.ok) {
           document.getElementById('enroll-modal').classList.add('hidden');
-          // Recargar para reflejar cupos actualizados
-          await cargarDatos();
+          // Invalidar caché del período activo para reflejar cupo ocupado
+          delete periodsCache[currentPeriodId];
+          await fetchPeriodOpportunities(currentPeriodId);
         } else {
           const d = await res.json().catch(() => ({}));
           errorEl.textContent = d.detail || 'Error al inscribirse. Intenta de nuevo.';
@@ -407,12 +546,12 @@
       }
     });
 
-    // ── Filtros en tiempo real ───────────────────────────────────────────────
+    // ── Filtros en tiempo real ────────────────────────────────────────────
     document.getElementById('search-input').addEventListener('input', applyFilters);
     document.getElementById('filter-modality').addEventListener('change', applyFilters);
 
-    // ── Init ────────────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', cargarDatos);
+    // ── Init ─────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', initCatalog);
   </script>
 </body>
 </html>
