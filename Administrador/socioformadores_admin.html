@@ -1,351 +1,395 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Socioformadores | Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { "primary": "#1e293b", "accent": "#6366f1" },
-          fontFamily: { "headline": ["Plus Jakarta Sans"], "body": ["Inter"] },
-        },
-      },
-    }
-  </script>
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .sidebar {
-      background: linear-gradient(-45deg, #3b82f6, #f97316, #a855f7, #ec4899, #eab308);
-      background-size: 400% 400%;
-      animation: lava 15s ease infinite;
-    }
-    @keyframes lava {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .drop-zone { border: 2px dashed #cbd5e1; transition: all 0.2s; }
-    .drop-zone.drag-over { border-color: #6366f1; background-color: #eef2ff; }
-  </style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gestión Socioformadores | Admin FSS</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary":    "#7c2d12",
+                        "accent":     "#ea580c",
+                        "surface":    "#fff7ed",
+                        "on-surface": "#431407",
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body":     ["Inter"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .lava-orange {
+            background: linear-gradient(-45deg, #7c2d12, #9a3412, #c2410c, #ea580c, #f97316);
+            background-size: 400% 400%;
+            animation: lava-animation 14s ease infinite;
+        }
+        @keyframes lava-animation {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .nav-item-glass {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .nav-item-glass:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(5px);
+        }
+        .nav-item-active {
+            background: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        .sf-card {
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .sf-card:hover {
+            box-shadow: 0 16px 40px rgba(234, 88, 12, 0.08);
+            border-color: #fdba74;
+        }
+        .project-row {
+            animation: fadeRow 0.25s ease forwards;
+            opacity: 0;
+        }
+        @keyframes fadeRow {
+            from { opacity: 0; transform: translateY(4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 
-<body class="min-h-screen bg-slate-100 flex">
+<body class="bg-slate-50 min-h-screen flex">
 
-  <!-- Sidebar -->
-  <aside class="sidebar w-16 md:w-56 min-h-screen flex flex-col items-center md:items-start py-8 px-2 md:px-4 gap-6 shrink-0">
-    <div class="text-white font-headline font-bold text-lg hidden md:block px-2 mb-4">Admin Panel</div>
-    <nav class="flex flex-col gap-2 w-full">
-      <a href="dash_admin_uno.html" class="flex items-center gap-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-2.5 transition-all text-sm font-medium">
-        <span class="material-symbols-outlined text-xl">dashboard</span>
-        <span class="hidden md:inline">Dashboard</span>
-      </a>
-      <a href="proyecto_admin.html" class="flex items-center gap-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl px-3 py-2.5 transition-all text-sm font-medium">
-        <span class="material-symbols-outlined text-xl">folder</span>
-        <span class="hidden md:inline">Proyectos</span>
-      </a>
-      <a href="socioformadores_admin.html" class="flex items-center gap-3 text-white bg-white/20 rounded-xl px-3 py-2.5 text-sm font-medium">
-        <span class="material-symbols-outlined text-xl">group</span>
-        <span class="hidden md:inline">Socioformadores</span>
-      </a>
-    </nav>
-  </aside>
-
-  <!-- Main -->
-  <main class="flex-1 p-6 md:p-10 overflow-auto">
-
-    <div class="max-w-5xl mx-auto">
-
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="font-headline text-2xl font-bold text-slate-900">Socioformadores</h1>
-        <p class="text-slate-500 text-sm mt-1">Carga el CSV de proyectos para crear usuarios automáticamente por empresa</p>
-      </div>
-
-      <!-- Sección de carga CSV -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
-        <h2 class="font-headline font-bold text-slate-800 text-base mb-5">Cargar CSV de Proyectos</h2>
-
-        <!-- Selector de período -->
-        <div class="mb-5">
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Período activo</label>
-          <select id="period-select" class="w-full md:w-80 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm focus:ring-2 focus:ring-indigo-400 outline-none">
-            <option value="">Cargando períodos...</option>
-          </select>
+    <!-- ── Sidebar ── -->
+    <aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 lava-orange text-white flex flex-col pt-8 pb-4 shadow-2xl">
+        <div class="px-8 mb-10">
+            <h1 class="text-xl font-extrabold font-headline tracking-tighter leading-tight">
+                Portal Feria <br>Servicio Social <span class="opacity-80 font-medium">- Admin</span>
+            </h1>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold mt-2">Gestión 2026</p>
         </div>
 
-        <!-- Drop zone -->
-        <div id="drop-zone" class="drop-zone rounded-2xl p-10 flex flex-col items-center justify-center gap-3 cursor-pointer mb-5">
-          <span class="material-symbols-outlined text-5xl text-slate-400">upload_file</span>
-          <p class="text-slate-500 font-medium text-sm">Arrastra tu CSV aquí o <span class="text-indigo-600 font-semibold cursor-pointer" onclick="document.getElementById('csv-input').click()">selecciona el archivo</span></p>
-          <p class="text-slate-400 text-xs">Solo archivos .csv — formato de la Feria SS</p>
-          <input id="csv-input" type="file" accept=".csv" class="hidden" />
+        <nav class="flex-grow flex flex-col justify-center px-4 space-y-6 pb-12">
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base text-white" href="dash_admin_uno.html">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard General</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base text-white" href="proyecto_admin.html">
+                <span class="material-symbols-outlined text-[22px]">local_library</span>
+                <span>Catálogo Proyectos</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base text-white" href="estudiantes_admin.html">
+                <span class="material-symbols-outlined text-[22px]">person_search</span>
+                <span>Gestión Estudiantes</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-active rounded-2xl font-semibold text-base text-white" href="socioformadores_admin.html">
+                <span class="material-symbols-outlined text-[22px]">business_center</span>
+                <span>Socioformadores</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto px-4">
+            <div class="border-t border-white/20 pt-4 pb-2">
+                <a class="flex items-center gap-3 px-4 py-2 text-white/70 text-xs hover:text-white transition-colors"
+                    href="../index.html" onclick="localStorage.clear();">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
         </div>
+    </aside>
 
-        <!-- Nombre del archivo seleccionado -->
-        <div id="file-name" class="hidden mb-4 flex items-center gap-2 text-sm text-slate-600 bg-slate-50 rounded-xl px-4 py-3">
-          <span class="material-symbols-outlined text-lg text-indigo-500">description</span>
-          <span id="file-name-text"></span>
-        </div>
+    <!-- ── Main ── -->
+    <main class="ml-72 flex-1 flex flex-col bg-slate-50 min-h-screen border-l border-slate-200">
 
-        <!-- Botón cargar -->
-        <button id="upload-btn" disabled onclick="uploadCSV()"
-          class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all">
-          <span class="material-symbols-outlined text-lg">cloud_upload</span>
-          Cargar y crear usuarios
-        </button>
-      </div>
+        <!-- Top Bar -->
+        <header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-orange-100 flex justify-between items-center px-10 py-5">
+            <div>
+                <h2 class="font-headline font-bold text-accent text-sm uppercase tracking-widest">Módulo de Administración</h2>
+                <h1 class="text-2xl font-black font-headline text-primary mt-1">Gestión de Socioformadores</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <div id="loading-badge" class="hidden items-center gap-2 text-slate-400 text-sm">
+                    <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                    Cargando…
+                </div>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                        <span class="material-symbols-outlined text-[18px]">search</span>
+                    </span>
+                    <input id="search-input" type="text" placeholder="Buscar empresa, usuario o proyecto…"
+                        class="pl-9 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent/30 w-72"/>
+                </div>
+            </div>
+        </header>
 
-      <!-- Resultado de la carga -->
-      <div id="upload-result" class="hidden bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
-        <div class="flex items-center justify-between mb-5">
-          <div>
-            <h2 class="font-headline font-bold text-slate-800 text-base">Resultado de la carga</h2>
-            <p id="result-summary" class="text-slate-500 text-sm mt-0.5"></p>
-          </div>
-          <button onclick="downloadResultCSV()" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-xl text-sm transition-all">
-            <span class="material-symbols-outlined text-lg">download</span>
-            Descargar credenciales
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider">
-              <tr>
-                <th class="px-4 py-3 text-left">Empresa</th>
-                <th class="px-4 py-3 text-center">Usuario</th>
-                <th class="px-4 py-3 text-center">Contraseña</th>
-                <th class="px-4 py-3 text-center">Proyectos</th>
-              </tr>
-            </thead>
-            <tbody id="result-tbody" class="divide-y divide-slate-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </div>
+        <!-- Content -->
+        <section class="flex-1 px-10 py-8">
 
-      <!-- Lista de todos los socioformadores -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
-          <h2 class="font-headline font-bold text-slate-800 text-base">Todos los Socioformadores</h2>
-          <button onclick="loadSocioformadores()" class="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition-colors">
-            <span class="material-symbols-outlined text-lg">refresh</span>
-            Actualizar
-          </button>
-        </div>
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-2xl border border-orange-50 p-5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-2xl">business_center</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Socioformadores</p>
+                        <p id="stat-total" class="text-2xl font-black text-primary">—</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-orange-50 p-5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-amber-500 text-2xl">folder_open</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Proyectos asignados</p>
+                        <p id="stat-projects" class="text-2xl font-black text-primary">—</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-orange-50 p-5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-emerald-500 text-2xl">how_to_reg</span>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total inscritos</p>
+                        <p id="stat-enrolled" class="text-2xl font-black text-primary">—</p>
+                    </div>
+                </div>
+            </div>
 
-        <div id="sf-loading" class="flex items-center justify-center py-16 gap-3">
-          <div class="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <span class="text-slate-500 text-sm">Cargando...</span>
-        </div>
+            <!-- Estado vacío -->
+            <div id="empty-state" class="hidden flex-col items-center justify-center py-24 gap-3 text-slate-300">
+                <span class="material-symbols-outlined text-7xl">business_center</span>
+                <p class="text-base font-medium">No hay socioformadores registrados.</p>
+                <p class="text-sm">Carga un CSV de proyectos para generarlos automáticamente.</p>
+            </div>
 
-        <div id="sf-empty" class="hidden flex-col items-center justify-center py-16 gap-3">
-          <span class="material-symbols-outlined text-5xl text-slate-300">group_off</span>
-          <p class="text-slate-500 text-sm">No hay socioformadores registrados aún.</p>
-        </div>
+            <!-- Lista de socioformadores -->
+            <div id="sf-container" class="space-y-4"></div>
+        </section>
+    </main>
 
-        <div id="sf-table-wrapper" class="hidden overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider">
-              <tr>
-                <th class="px-6 py-3 text-left">Empresa / Username</th>
-                <th class="px-6 py-3 text-center">Contraseña</th>
-                <th class="px-6 py-3 text-center">Proyectos</th>
-                <th class="px-6 py-3 text-center">Registrado</th>
-              </tr>
-            </thead>
-            <tbody id="sf-tbody" class="divide-y divide-slate-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </div>
+    <script>
+        const API    = 'http://127.0.0.1:8000/api/v1';
+        const token  = localStorage.getItem('admin_token');
+        if (!token) location.href = 'acceso_administrador.html';
+        const headers = { 'Authorization': `Bearer ${token}` };
 
-    </div>
-  </main>
+        let allSF = [];
 
-  <script>
-    const API = "http://localhost:8000/api/v1";
-    const token = localStorage.getItem("admin_token") || localStorage.getItem("sf_token");
-    let selectedFile = null;
-    let lastUploadResult = [];
+        const MODALITY_STYLES = {
+            'Presencial': { cls: 'text-emerald-600 bg-emerald-50', icon: 'location_on' },
+            'Remoto':     { cls: 'text-blue-600 bg-blue-50',       icon: 'computer'   },
+            'Mixto':      { cls: 'text-purple-600 bg-purple-50',   icon: 'sync_alt'   },
+        };
 
-    if (!token) window.location.href = "acceso_administrador.html";
-
-    // ── Drag & drop ──────────────────────────────────────────────
-    const dropZone = document.getElementById("drop-zone");
-    const csvInput = document.getElementById("csv-input");
-
-    dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("drag-over"); });
-    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
-    dropZone.addEventListener("drop", e => {
-      e.preventDefault();
-      dropZone.classList.remove("drag-over");
-      if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
-    });
-    dropZone.addEventListener("click", () => csvInput.click());
-    csvInput.addEventListener("change", () => { if (csvInput.files[0]) setFile(csvInput.files[0]); });
-
-    function setFile(file) {
-      selectedFile = file;
-      document.getElementById("file-name-text").innerText = file.name;
-      document.getElementById("file-name").classList.remove("hidden");
-      document.getElementById("file-name").classList.add("flex");
-      updateUploadBtn();
-    }
-
-    function updateUploadBtn() {
-      const periodId = document.getElementById("period-select").value;
-      document.getElementById("upload-btn").disabled = !(selectedFile && periodId);
-    }
-
-    // ── Cargar períodos ──────────────────────────────────────────
-    async function loadPeriods() {
-      try {
-        const res = await fetch(`${API}/periods`, { headers: { Authorization: `Bearer ${token}` } });
-        if (!res.ok) return;
-        const periods = await res.json();
-        const select = document.getElementById("period-select");
-        select.innerHTML = `<option value="">-- Selecciona un período --</option>`;
-        periods.forEach(p => {
-          select.innerHTML += `<option value="${p.id}">${p.name}${p.is_active ? " ✓ activo" : ""}</option>`;
-          if (p.is_active) select.value = p.id;
-        });
-        select.addEventListener("change", updateUploadBtn);
-        updateUploadBtn();
-      } catch {
-        document.getElementById("period-select").innerHTML = `<option value="">Error al cargar períodos</option>`;
-      }
-    }
-
-    // ── Upload CSV ───────────────────────────────────────────────
-    async function uploadCSV() {
-      const periodId = document.getElementById("period-select").value;
-      if (!selectedFile || !periodId) return;
-
-      const btn = document.getElementById("upload-btn");
-      btn.disabled = true;
-      btn.innerHTML = `<span class="material-symbols-outlined text-lg animate-spin">progress_activity</span> Procesando...`;
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      try {
-        const res = await fetch(`${API}/admin/socioformadores/upload?period_id=${periodId}`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-
-        if (!res.ok) {
-          const err = await res.json();
-          alert(`Error: ${err.detail || "No se pudo procesar el archivo."}`);
-          return;
+        // ── Cargar datos ──────────────────────────────────────────────────
+        async function loadSF() {
+            document.getElementById('loading-badge').classList.remove('hidden');
+            document.getElementById('loading-badge').classList.add('flex');
+            try {
+                const res = await fetch(`${API}/admin/socioformadores`, { headers });
+                if (res.status === 401) { location.href = 'acceso_administrador.html'; return; }
+                allSF = await res.json();
+                updateStats(allSF);
+                renderCards(allSF);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                document.getElementById('loading-badge').classList.add('hidden');
+                document.getElementById('loading-badge').classList.remove('flex');
+            }
         }
 
-        const data = await res.json();
-        lastUploadResult = data.credentials;
-        renderUploadResult(data);
-        loadSocioformadores();
-
-      } catch {
-        alert("Error de conexión con el servidor.");
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<span class="material-symbols-outlined text-lg">cloud_upload</span> Cargar y crear usuarios`;
-        updateUploadBtn();
-      }
-    }
-
-    function renderUploadResult(data) {
-      document.getElementById("result-summary").innerText =
-        `${data.total_companies} empresa(s) registradas, ${data.credentials.reduce((s, c) => s + c.projects_count, 0)} proyecto(s) cargados.`;
-
-      const tbody = document.getElementById("result-tbody");
-      tbody.innerHTML = "";
-      data.credentials.forEach(c => {
-        tbody.innerHTML += `
-          <tr class="hover:bg-slate-50">
-            <td class="px-4 py-3 font-medium text-slate-900">${c.company}</td>
-            <td class="px-4 py-3 text-center font-mono text-indigo-700 font-semibold">${c.username}</td>
-            <td class="px-4 py-3 text-center font-mono text-green-700 font-semibold">${c.plain_password}</td>
-            <td class="px-4 py-3 text-center">${c.projects_count}</td>
-          </tr>`;
-      });
-
-      document.getElementById("upload-result").classList.remove("hidden");
-    }
-
-    function downloadResultCSV() {
-      if (!lastUploadResult.length) return;
-      const header = "Empresa,Usuario,Contraseña,Proyectos\n";
-      const rows = lastUploadResult.map(c =>
-        `"${c.company}","${c.username}","${c.plain_password}",${c.projects_count}`
-      ).join("\n");
-      const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "credenciales_socioformadores.csv";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // ── Lista de socioformadores ─────────────────────────────────
-    async function loadSocioformadores() {
-      document.getElementById("sf-loading").classList.remove("hidden");
-      document.getElementById("sf-loading").classList.add("flex");
-      document.getElementById("sf-empty").classList.add("hidden");
-      document.getElementById("sf-table-wrapper").classList.add("hidden");
-
-      try {
-        const res = await fetch(`${API}/admin/socioformadores`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error();
-        const users = await res.json();
-
-        document.getElementById("sf-loading").classList.add("hidden");
-        document.getElementById("sf-loading").classList.remove("flex");
-
-        if (users.length === 0) {
-          const el = document.getElementById("sf-empty");
-          el.classList.remove("hidden");
-          el.classList.add("flex");
-          return;
+        function updateStats(list) {
+            const totalProjects = list.reduce((s, sf) => s + sf.projects_count, 0);
+            const totalEnrolled = list.reduce((s, sf) =>
+                s + sf.projects.reduce((ps, p) => ps + (p.enrolled_count || 0), 0), 0);
+            document.getElementById('stat-total').textContent    = list.length;
+            document.getElementById('stat-projects').textContent = totalProjects;
+            document.getElementById('stat-enrolled').textContent = totalEnrolled;
         }
 
-        const tbody = document.getElementById("sf-tbody");
-        tbody.innerHTML = "";
-        users.forEach(u => {
-          const date = new Date(u.created_at).toLocaleDateString("es-MX");
-          tbody.innerHTML += `
-            <tr class="hover:bg-slate-50">
-              <td class="px-6 py-4">
-                <p class="font-medium text-slate-900">${u.username}</p>
-              </td>
-              <td class="px-6 py-4 text-center font-mono text-green-700 font-semibold">${u.plain_password || "—"}</td>
-              <td class="px-6 py-4 text-center">${u.projects_count}</td>
-              <td class="px-6 py-4 text-center text-slate-500 text-xs">${date}</td>
-            </tr>`;
+        // ── Renderizar lista ──────────────────────────────────────────────
+        function renderCards(list) {
+            const container = document.getElementById('sf-container');
+            const empty     = document.getElementById('empty-state');
+            container.innerHTML = '';
+
+            if (list.length === 0) {
+                empty.classList.remove('hidden');
+                empty.classList.add('flex');
+                return;
+            }
+            empty.classList.add('hidden');
+            empty.classList.remove('flex');
+
+            list.forEach(sf => {
+                const totalEnrolled = sf.projects.reduce((s, p) => s + (p.enrolled_count || 0), 0);
+                const totalCapacity = sf.projects.reduce((s, p) => s + (p.capacity || 0), 0);
+                const rate = totalCapacity > 0 ? Math.round((totalEnrolled / totalCapacity) * 100) : 0;
+
+                const card = document.createElement('div');
+                card.className = 'sf-card bg-white rounded-2xl border border-slate-200 overflow-hidden';
+                card.innerHTML = `
+                    <!-- Header clicable -->
+                    <div class="px-7 py-5 flex items-center justify-between gap-6 cursor-pointer select-none"
+                         onclick="toggleProjects('${sf.id}')">
+
+                        <!-- Empresa -->
+                        <div class="flex items-center gap-4 flex-1 min-w-0">
+                            <div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-accent text-xl">business</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h3 class="font-headline font-black text-primary text-lg leading-tight truncate">${sf.company}</h3>
+                                <p class="text-slate-400 text-xs mt-0.5">${sf.projects_count} proyecto${sf.projects_count !== 1 ? 's' : ''} asignados</p>
+                            </div>
+                        </div>
+
+                        <!-- Credenciales -->
+                        <div class="flex items-center gap-5 shrink-0 flex-wrap justify-end">
+
+                            <!-- Usuario -->
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 text-right">Usuario</p>
+                                <p class="font-mono font-bold text-slate-700 text-sm bg-slate-50 px-3 py-1.5 rounded-lg">${sf.username}</p>
+                            </div>
+
+                            <!-- Contraseña -->
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 text-right">Contraseña</p>
+                                <div class="flex items-center gap-1.5">
+                                    <p class="font-mono font-bold text-slate-700 text-sm bg-slate-50 px-3 py-1.5 rounded-lg"
+                                       id="pwd-${sf.id}">••••••••</p>
+                                    <button onclick="togglePwd('${sf.id}','${sf.plain_password}',event)"
+                                        class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors">
+                                        <span class="material-symbols-outlined text-slate-400 text-[16px]"
+                                              id="eye-${sf.id}">visibility</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Inscritos / capacidad -->
+                            <div class="text-right">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Inscritos</p>
+                                <p class="font-black text-primary text-lg leading-none">
+                                    ${totalEnrolled}<span class="text-xs text-slate-400 font-normal"> / ${totalCapacity}</span>
+                                </p>
+                            </div>
+
+                            <!-- Progreso circular -->
+                            <div class="relative w-11 h-11 shrink-0">
+                                <svg class="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
+                                    <circle cx="18" cy="18" r="14" fill="none" stroke="#f1f5f9" stroke-width="4"/>
+                                    <circle cx="18" cy="18" r="14" fill="none" stroke="#ea580c" stroke-width="4"
+                                        stroke-dasharray="${(rate * 0.879).toFixed(1)} 87.9"
+                                        stroke-linecap="round"/>
+                                </svg>
+                                <span class="absolute inset-0 flex items-center justify-center text-[9px] font-black text-primary">${rate}%</span>
+                            </div>
+
+                            <!-- Chevron -->
+                            <span class="material-symbols-outlined text-slate-300 text-2xl" id="chevron-${sf.id}">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- Proyectos colapsables -->
+                    <div id="projects-${sf.id}" class="hidden border-t border-slate-100 bg-slate-50/50">
+                        <div class="px-7 py-5">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Proyectos asignados</p>
+                            ${sf.projects.length === 0
+                                ? `<p class="text-slate-300 text-sm italic">Sin proyectos asignados.</p>`
+                                : `<div class="space-y-2">
+                                    ${sf.projects.map((p, pi) => {
+                                        const mStyle = MODALITY_STYLES[p.modality] || MODALITY_STYLES['Presencial'];
+                                        const isFull = p.enrolled_count >= p.capacity && p.capacity > 0;
+                                        return `
+                                        <div class="project-row flex items-center gap-3 bg-white rounded-xl px-4 py-3 border border-slate-100"
+                                             style="animation-delay:${pi * 0.03}s">
+                                            ${p.project_code
+                                                ? `<span class="font-mono text-[10px] font-black text-slate-400 tracking-widest shrink-0 w-14">#${p.project_code}</span>`
+                                                : `<span class="w-14 shrink-0"></span>`}
+                                            <p class="font-semibold text-slate-800 text-sm flex-1 min-w-0 truncate">${p.title}</p>
+                                            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold shrink-0 flex items-center gap-1 ${mStyle.cls}">
+                                                <span class="material-symbols-outlined text-[11px]">${mStyle.icon}</span>
+                                                ${p.modality}
+                                            </span>
+                                            ${p.credit_hours
+                                                ? `<span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg shrink-0">${p.credit_hours} hrs</span>`
+                                                : ''}
+                                            <div class="text-right shrink-0 min-w-[64px]">
+                                                <p class="text-sm font-black ${isFull ? 'text-rose-500' : 'text-primary'}">
+                                                    ${p.enrolled_count}<span class="text-xs text-slate-400 font-normal"> / ${p.capacity}</span>
+                                                </p>
+                                                <p class="text-[10px] text-slate-400">${isFull ? 'Lleno' : p.available_slots + ' disp.'}</p>
+                                            </div>
+                                            <span class="w-2 h-2 rounded-full shrink-0 ${p.is_active ? 'bg-emerald-400' : 'bg-slate-200'}"
+                                                  title="${p.is_active ? 'Activo' : 'Inactivo'}"></span>
+                                        </div>`;
+                                    }).join('')}
+                                   </div>`
+                            }
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ── Toggle proyectos ──────────────────────────────────────────────
+        function toggleProjects(sfId) {
+            const panel   = document.getElementById(`projects-${sfId}`);
+            const chevron = document.getElementById(`chevron-${sfId}`);
+            const isHidden = panel.classList.contains('hidden');
+            panel.classList.toggle('hidden', !isHidden);
+            chevron.textContent = isHidden ? 'expand_less' : 'expand_more';
+        }
+
+        // ── Toggle contraseña ─────────────────────────────────────────────
+        function togglePwd(sfId, plain, event) {
+            event.stopPropagation();
+            const el  = document.getElementById(`pwd-${sfId}`);
+            const eye = document.getElementById(`eye-${sfId}`);
+            if (el.textContent === '••••••••') {
+                el.textContent  = plain;
+                eye.textContent = 'visibility_off';
+            } else {
+                el.textContent  = '••••••••';
+                eye.textContent = 'visibility';
+            }
+        }
+
+        // ── Búsqueda ──────────────────────────────────────────────────────
+        document.getElementById('search-input').addEventListener('input', function () {
+            const q = this.value.toLowerCase().trim();
+            const filtered = !q ? allSF : allSF.filter(sf =>
+                sf.company.toLowerCase().includes(q) ||
+                sf.username.toLowerCase().includes(q) ||
+                sf.projects.some(p => p.title.toLowerCase().includes(q) || (p.project_code || '').toLowerCase().includes(q))
+            );
+            updateStats(filtered);
+            renderCards(filtered);
         });
 
-        document.getElementById("sf-table-wrapper").classList.remove("hidden");
-
-      } catch {
-        document.getElementById("sf-loading").classList.add("hidden");
-        document.getElementById("sf-loading").classList.remove("flex");
-        const el = document.getElementById("sf-empty");
-        el.classList.remove("hidden");
-        el.classList.add("flex");
-      }
-    }
-
-    loadPeriods();
-    loadSocioformadores();
-  </script>
-
+        loadSF();
+    </script>
 </body>
 </html>

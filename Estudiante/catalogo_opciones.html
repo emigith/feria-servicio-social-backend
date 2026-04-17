@@ -93,13 +93,20 @@
           <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Catálogo de Opciones</h1>
           <p class="text-slate-500 text-lg mt-3">Encuentra el proyecto ideal para tu Servicio Social.</p>
         </div>
-        <button onclick="window.location.href='estudiante_inicio.html'"
-          class="px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 w-fit">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Volver al Inicio
-        </button>
+        <div class="flex gap-3 flex-wrap">
+          <button onclick="window.location.href='mis_inscripciones.html'"
+            class="px-6 py-3 rounded-2xl bg-[#0f173d] text-white font-bold hover:bg-[#1e2a5a] transition-all shadow-sm flex items-center gap-2 w-fit">
+            <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+            Mis Inscripciones
+          </button>
+          <button onclick="window.location.href='estudiante_inicio.html'"
+            class="px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2 w-fit">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Volver al Inicio
+          </button>
+        </div>
       </div>
 
       <!-- ── Period tabs ── -->
@@ -182,6 +189,71 @@
     </section>
   </main>
 
+  <!-- ── Modal de detalle del proyecto ── -->
+  <div id="detail-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto">
+
+      <!-- Header del modal -->
+      <div class="flex items-start justify-between px-8 pt-7 pb-4 border-b border-slate-100">
+        <div class="flex-1 pr-4">
+          <div id="detail-code-badge" class="hidden mb-2">
+            <span class="text-[11px] font-black text-slate-400 font-mono tracking-widest"></span>
+          </div>
+          <h2 id="detail-title" class="text-2xl font-extrabold text-slate-900 leading-tight"></h2>
+          <p id="detail-company" class="text-blue-600 font-bold text-base mt-1"></p>
+        </div>
+        <button id="detail-close"
+          class="w-9 h-9 rounded-xl hover:bg-slate-100 flex items-center justify-center transition-colors shrink-0">
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="px-8 py-6 space-y-6">
+
+        <!-- Descripción -->
+        <div>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Descripción del proyecto</p>
+          <p id="detail-description" class="text-slate-700 text-sm leading-relaxed"></p>
+        </div>
+
+        <!-- Chips de info -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-50 rounded-2xl px-4 py-3">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Modalidad</p>
+            <p id="detail-modality" class="text-sm font-bold text-slate-800 flex items-center gap-1.5"></p>
+          </div>
+          <div class="bg-slate-50 rounded-2xl px-4 py-3">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cupos disponibles</p>
+            <p id="detail-slots" class="text-sm font-bold"></p>
+          </div>
+          <div class="bg-slate-50 rounded-2xl px-4 py-3">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Capacidad total</p>
+            <p id="detail-capacity" class="text-sm font-bold text-slate-800"></p>
+          </div>
+          <div id="detail-credit-wrap" class="hidden bg-amber-50 rounded-2xl px-4 py-3">
+            <p class="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-1">Horas crédito</p>
+            <p id="detail-credit" class="text-sm font-bold text-amber-700"></p>
+          </div>
+          <div id="detail-location-wrap" class="hidden col-span-2 bg-slate-50 rounded-2xl px-4 py-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-slate-400 text-[16px]">location_on</span>
+            <p id="detail-location" class="text-sm text-slate-700 font-medium"></p>
+          </div>
+        </div>
+
+        <!-- Botón inscribirse -->
+        <button id="detail-enroll-btn"
+          class="w-full py-4 rounded-2xl font-bold text-sm uppercase tracking-wide transition-all shadow-lg shadow-slate-900/10"
+          style="background:#0f173d; color:white;">
+          Inscribirme en este proyecto
+        </button>
+        <p id="detail-enroll-disabled-msg" class="hidden text-center text-xs text-slate-400 font-semibold -mt-4"></p>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Modal de confirmación de inscripción ── -->
   <div id="enroll-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm">
@@ -192,10 +264,21 @@
               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
         </div>
-        <div>
-          <h3 class="font-extrabold text-xl text-slate-900">¿Inscribirse en este proyecto?</h3>
+        <div class="w-full">
+          <h3 class="font-extrabold text-xl text-slate-900">Confirmar inscripción</h3>
           <p id="modal-project-title" class="text-blue-600 font-semibold mt-1 text-sm"></p>
           <p id="modal-project-company" class="text-slate-500 text-sm"></p>
+
+          <!-- Ingreso del código -->
+          <div class="mt-4 text-left">
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              Ingresa el ID del proyecto para confirmar
+            </label>
+            <input id="modal-code-input" type="text" autocomplete="off"
+              placeholder="Ej. WA001"
+              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-400/40 tracking-widest uppercase"/>
+            <p class="text-slate-400 text-[11px] mt-1.5">El código lo encontrarás en el estante del proyecto en la feria.</p>
+          </div>
           <p class="text-slate-400 text-xs mt-3">Solo puedes inscribirte en un proyecto por período.</p>
         </div>
         <div class="flex gap-3 w-full mt-1">
@@ -205,7 +288,7 @@
           </button>
           <button id="modal-confirm"
             class="flex-1 py-3 bg-[#0f173d] hover:bg-[#1e2a5a] text-white rounded-xl font-bold transition-colors text-sm">
-            Confirmar
+            Inscribirme
           </button>
         </div>
         <p id="modal-error" class="hidden text-xs text-red-500 font-semibold bg-red-50 px-3 py-2 rounded-lg w-full"></p>
@@ -219,11 +302,12 @@
     if (!token) location.href = 'acceso_estudiante.html';
 
     // ── Estado ──────────────────────────────────────────────────────────────
-    let allPeriods       = [];
-    let activePeriodId   = null;
-    let currentPeriodId  = null;
-    let periodsCache     = {};   // { [period_id]: Opportunity[] }
-    let pendingEnrollId  = null;
+    let allPeriods        = [];
+    let activePeriodId    = null;
+    let currentPeriodId   = null;
+    let periodsCache      = {};   // { [period_id]: Opportunity[] }
+    let pendingEnrollId   = null;
+    let pendingEnrollCode = null; // project_code esperado
 
     const AVATAR_COLORS = ['#1e40af','#065f46','#7c2d12','#581c87','#0e7490','#9d174d'];
 
@@ -394,6 +478,10 @@
              </div>`
           : '';
 
+        const codeTag = op.project_code
+          ? `<span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-lg font-mono">#${op.project_code}</span>`
+          : '';
+
         // Solo permitir inscripción en el período activo
         const enrollDisabled = isFull || !isActiveTab;
         const enrollLabel    = isFull ? 'Sin cupos' : (!isActiveTab ? 'No disponible' : 'Seleccionar');
@@ -408,7 +496,8 @@
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white shadow-lg shrink-0"
                   style="background:${avatarBg}">${initials}</div>
                 <div>
-                  <h4 class="text-lg font-extrabold text-slate-900 leading-tight line-clamp-2">${op.title}</h4>
+                  ${codeTag}
+                  <h4 class="text-lg font-extrabold text-slate-900 leading-tight line-clamp-2 mt-0.5">${op.title}</h4>
                   <p class="text-blue-600 font-semibold text-sm mt-0.5">${op.company}</p>
                 </div>
               </div>
@@ -447,7 +536,7 @@
               <button
                 class="enroll-btn flex-1 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-lg shadow-slate-900/10"
                 ${enrollDisabled ? 'disabled' : ''}
-                onclick="abrirModalInscripcion('${op.id}', \`${op.title.replace(/`/g,"'")}\`, \`${op.company.replace(/`/g,"'")}\`)">
+                onclick="abrirModalInscripcion('${op.id}', \`${op.title.replace(/`/g,"'")}\`, \`${op.company.replace(/`/g,"'")}\`, '${op.project_code || ''}')">
                 ${enrollLabel}
               </button>
             </div>
@@ -483,42 +572,148 @@
     // ── Ver detalle ───────────────────────────────────────────────────────
     function verDetalle(id) {
       const ops = periodsCache[currentPeriodId] || [];
-      const op = ops.find(o => o.id === id);
+      const op  = ops.find(o => o.id === id);
       if (!op) return;
-      const creditInfo = op.credit_hours ? `\nHoras crédito: ${op.credit_hours} hrs` : '';
-      alert(`${op.title}\n\n${op.description || 'Sin descripción.'}\n\nEmpresa: ${op.company}\nModalidad: ${op.modality}\nUbicación: ${op.location || 'No especificada'}${creditInfo}`);
+
+      const isActiveTab   = currentPeriodId === activePeriodId;
+      const slots         = op.available_slots ?? op.capacity;
+      const isFull        = slots <= 0;
+      const enrollDisabled = isFull || !isActiveTab;
+
+      // Código
+      const codeBadgeWrap = document.getElementById('detail-code-badge');
+      if (op.project_code) {
+        codeBadgeWrap.classList.remove('hidden');
+        codeBadgeWrap.querySelector('span').textContent = `#${op.project_code}`;
+      } else {
+        codeBadgeWrap.classList.add('hidden');
+      }
+
+      // Textos básicos
+      document.getElementById('detail-title').textContent       = op.title;
+      document.getElementById('detail-company').textContent     = op.company;
+      document.getElementById('detail-description').textContent = op.description || 'Este proyecto no tiene descripción disponible.';
+      document.getElementById('detail-capacity').textContent    = `${op.capacity} lugares`;
+
+      // Modalidad con icono
+      const modStyle = MODALITY[op.modality] || MODALITY['Presencial'];
+      document.getElementById('detail-modality').innerHTML =
+        `<span class="material-symbols-outlined text-[15px]">${modStyle.icon}</span>${modStyle.label}`;
+
+      // Cupos
+      const slotsEl = document.getElementById('detail-slots');
+      slotsEl.innerHTML = isFull
+        ? `<span class="text-rose-600">Sin cupos</span>`
+        : `<span class="text-slate-800">${slots} disponibles</span>`;
+
+      // Horas crédito
+      const creditWrap = document.getElementById('detail-credit-wrap');
+      if (op.credit_hours) {
+        creditWrap.classList.remove('hidden');
+        document.getElementById('detail-credit').textContent = `${op.credit_hours} hrs`;
+      } else {
+        creditWrap.classList.add('hidden');
+      }
+
+      // Ubicación
+      const locWrap = document.getElementById('detail-location-wrap');
+      if (op.location) {
+        locWrap.classList.remove('hidden');
+        locWrap.classList.add('flex');
+        document.getElementById('detail-location').textContent = op.location;
+      } else {
+        locWrap.classList.add('hidden');
+        locWrap.classList.remove('flex');
+      }
+
+      // Botón inscripción
+      const enrollBtn = document.getElementById('detail-enroll-btn');
+      const disabledMsg = document.getElementById('detail-enroll-disabled-msg');
+      if (enrollDisabled) {
+        enrollBtn.disabled = true;
+        enrollBtn.style.background = '#94a3b8';
+        enrollBtn.style.cursor     = 'not-allowed';
+        enrollBtn.style.boxShadow  = 'none';
+        disabledMsg.classList.remove('hidden');
+        disabledMsg.textContent = isFull
+          ? 'Este proyecto ya no tiene cupos disponibles.'
+          : 'Las inscripciones para este período no están abiertas.';
+      } else {
+        enrollBtn.disabled = false;
+        enrollBtn.style.background = '#0f173d';
+        enrollBtn.style.cursor     = 'pointer';
+        enrollBtn.style.boxShadow  = '';
+        disabledMsg.classList.add('hidden');
+        enrollBtn.onclick = () => {
+          document.getElementById('detail-modal').classList.add('hidden');
+          abrirModalInscripcion(op.id, op.title, op.company, op.project_code || '');
+        };
+      }
+
+      document.getElementById('detail-modal').classList.remove('hidden');
     }
 
-    // ── Modal de inscripción ──────────────────────────────────────────────
-    function abrirModalInscripcion(id, title, company) {
-      pendingEnrollId = id;
-      document.getElementById('modal-project-title').textContent = title;
-      document.getElementById('modal-project-company').textContent = company;
-      document.getElementById('modal-error').classList.add('hidden');
-      document.getElementById('modal-confirm').disabled = false;
-      document.getElementById('modal-confirm').textContent = 'Confirmar';
-      document.getElementById('enroll-modal').classList.remove('hidden');
-    }
-
-    document.getElementById('modal-cancel').addEventListener('click', () => {
-      document.getElementById('enroll-modal').classList.add('hidden');
-      pendingEnrollId = null;
+    document.getElementById('detail-close').addEventListener('click', () => {
+      document.getElementById('detail-modal').classList.add('hidden');
+    });
+    document.getElementById('detail-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('detail-modal'))
+        document.getElementById('detail-modal').classList.add('hidden');
     });
 
+    // ── Modal de inscripción ──────────────────────────────────────────────
+    function abrirModalInscripcion(id, title, company, code) {
+      pendingEnrollId   = id;
+      pendingEnrollCode = code ? code.toUpperCase() : null;
+      document.getElementById('modal-project-title').textContent = title;
+      document.getElementById('modal-project-company').textContent = company;
+      document.getElementById('modal-code-input').value = '';
+      document.getElementById('modal-error').classList.add('hidden');
+      document.getElementById('modal-confirm').disabled = false;
+      document.getElementById('modal-confirm').textContent = 'Inscribirme';
+      document.getElementById('enroll-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('modal-code-input').focus(), 100);
+    }
+
+    function cerrarModal() {
+      document.getElementById('enroll-modal').classList.add('hidden');
+      pendingEnrollId   = null;
+      pendingEnrollCode = null;
+    }
+
+    document.getElementById('modal-cancel').addEventListener('click', cerrarModal);
     document.getElementById('enroll-modal').addEventListener('click', e => {
-      if (e.target === document.getElementById('enroll-modal')) {
-        document.getElementById('enroll-modal').classList.add('hidden');
-        pendingEnrollId = null;
-      }
+      if (e.target === document.getElementById('enroll-modal')) cerrarModal();
+    });
+
+    // Permitir Enter en el input para confirmar
+    document.getElementById('modal-code-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('modal-confirm').click();
     });
 
     document.getElementById('modal-confirm').addEventListener('click', async () => {
       if (!pendingEnrollId) return;
       const btn = document.getElementById('modal-confirm');
       const errorEl = document.getElementById('modal-error');
+      errorEl.classList.add('hidden');
+
+      // Validar código si el proyecto lo tiene
+      if (pendingEnrollCode) {
+        const typed = document.getElementById('modal-code-input').value.trim().toUpperCase();
+        if (!typed) {
+          errorEl.textContent = 'Ingresa el ID del proyecto para confirmar.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+        if (typed !== pendingEnrollCode) {
+          errorEl.textContent = `El ID "${typed}" no coincide. Verifica la tarjeta del proyecto.`;
+          errorEl.classList.remove('hidden');
+          return;
+        }
+      }
+
       btn.disabled = true;
       btn.textContent = 'Inscribiendo…';
-      errorEl.classList.add('hidden');
 
       try {
         const res = await fetch(`${API_BASE}/opportunities/${pendingEnrollId}/enroll`, {
@@ -527,22 +722,27 @@
         });
 
         if (res.ok) {
-          document.getElementById('enroll-modal').classList.add('hidden');
-          // Invalidar caché del período activo para reflejar cupo ocupado
+          cerrarModal();
+          // Invalidar caché del período para reflejar cupo ocupado
           delete periodsCache[currentPeriodId];
           await fetchPeriodOpportunities(currentPeriodId);
         } else {
           const d = await res.json().catch(() => ({}));
-          errorEl.textContent = d.detail || 'Error al inscribirse. Intenta de nuevo.';
+          const msg = d.detail === 'ALREADY_ENROLLED_THIS_PERIOD'
+            ? 'Ya tienes una inscripción en este período.'
+            : d.detail === 'OPPORTUNITY_FULL'
+            ? 'El proyecto ya no tiene cupos disponibles.'
+            : d.detail || 'Error al inscribirse. Intenta de nuevo.';
+          errorEl.textContent = msg;
           errorEl.classList.remove('hidden');
           btn.disabled = false;
-          btn.textContent = 'Confirmar';
+          btn.textContent = 'Inscribirme';
         }
       } catch (err) {
         errorEl.textContent = 'Error de conexión. Intenta de nuevo.';
         errorEl.classList.remove('hidden');
         btn.disabled = false;
-        btn.textContent = 'Confirmar';
+        btn.textContent = 'Inscribirme';
       }
     });
 
