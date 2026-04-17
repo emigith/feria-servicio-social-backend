@@ -10,7 +10,14 @@ class PeriodRepo:
         return db.query(Period).order_by(Period.starts_at).all()
 
     def get_active(self, db: Session) -> Period | None:
-        return db.query(Period).filter(Period.is_active == True).first()
+        # Ordenar por starts_at DESC para devolver el período activo más reciente
+        # en caso de que haya más de uno marcado como activo
+        return (
+            db.query(Period)
+            .filter(Period.is_active == True)
+            .order_by(Period.starts_at.desc())
+            .first()
+        )
 
     def get_by_name(self, db: Session, name: str) -> Period | None:
         return db.query(Period).filter(Period.name == name).first()

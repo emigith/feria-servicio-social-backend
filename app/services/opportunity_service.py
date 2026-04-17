@@ -21,6 +21,20 @@ def get_opportunities_for_active_period(db: Session):
     return opportunity_repo.get_active_by_period(db, active_period.id)
 
 
+def get_opportunities_by_period_id(db: Session, period_id: UUID):
+    period_repo = PeriodRepo()
+    opportunity_repo = OpportunityRepo()
+
+    period = period_repo.get_by_id(db, period_id)
+    if not period:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Period not found",
+        )
+
+    return opportunity_repo.get_active_by_period(db, period_id)
+
+
 def get_opportunity_by_id(opportunity_id: UUID, db: Session):
     repo = OpportunityRepo()
     opportunity = repo.get_by_id(db, opportunity_id)

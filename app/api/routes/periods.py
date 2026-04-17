@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.api.deps import require_roles
+from app.api.deps import require_roles, require_any_auth
 from app.core.db import get_db
 from app.schemas.period import PeriodCreateRequest, PeriodResponse
 from app.services.period_service import create_period, get_active_period
@@ -15,7 +15,7 @@ _period_repo = PeriodRepo()
 @router.get("", response_model=list[PeriodResponse])
 def list_periods(
     db: Session = Depends(get_db),
-    current_user=Depends(require_roles(["admin", "ADMIN", "intern", "INTERN"])),
+    _=Depends(require_any_auth),
 ):
     return _period_repo.get_all(db)
 

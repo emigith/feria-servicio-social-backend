@@ -14,6 +14,7 @@ class OpportunityResponse(BaseModel):
     company: str
     location: str | None
     modality: str
+    credit_hours: int | None
     capacity: int
     available_slots: int
     enrolled_count: int
@@ -31,6 +32,7 @@ class OpportunityDetailResponse(BaseModel):
     company: str
     location: str | None
     modality: str
+    credit_hours: int | None
     capacity: int
     available_slots: int
     enrolled_count: int
@@ -63,6 +65,7 @@ class OpportunityAdminUpdate(BaseModel):
     description: str | None = None
     location: str | None = Field(None, max_length=150)
     modality: str | None = Field(None, max_length=20)
+    credit_hours: int | None = Field(None, ge=0)
     is_active: bool | None = None
 
 
@@ -75,6 +78,7 @@ class OpportunityAdminResponse(BaseModel):
     company: str
     location: str | None
     modality: str
+    credit_hours: int | None
     capacity: int
     is_active: bool
     created_at: datetime

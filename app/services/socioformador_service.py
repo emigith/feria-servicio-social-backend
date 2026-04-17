@@ -112,6 +112,11 @@ def load_csv_socioformadores(
             except ValueError:
                 capacity = 10
 
+            try:
+                credit_hours = int(proj.get("credit_hours") or 0) or None
+            except ValueError:
+                credit_hours = None
+
             is_active_raw = proj.get("is_active", "TRUE").strip().upper()
             is_active = is_active_raw in ("TRUE", "1", "YES", "SI")
 
@@ -124,6 +129,7 @@ def load_csv_socioformadores(
                 location=(proj.get("location") or "").strip()[:150] or None,
                 modality=_parse_modality(proj.get("modality") or ""),
                 capacity=capacity,
+                credit_hours=credit_hours,
                 is_active=is_active,
             )
             db.add(opp)

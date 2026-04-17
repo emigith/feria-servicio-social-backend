@@ -82,6 +82,7 @@ def update_opportunity(
         description=payload.description,
         location=payload.location,
         modality=payload.modality,
+        credit_hours=payload.credit_hours,
         is_active=payload.is_active,
         partner_user_id=payload.partner_user_id,
     )

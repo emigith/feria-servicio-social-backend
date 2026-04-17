@@ -97,6 +97,11 @@ def get_current_user(
     return user
 
 
+def require_any_auth(payload: dict = Depends(get_token_payload)):
+    """Acepta cualquier JWT válido (estudiante o usuario), sin importar rol."""
+    return payload
+
+
 def require_roles(allowed_roles: list[str]):
     def checker(current_user=Depends(get_current_user)):
         print("ROLE RAW:", current_user.role)

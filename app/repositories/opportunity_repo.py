@@ -45,6 +45,7 @@ class OpportunityRepo:
         location: str | None = None,
         is_active: bool = True,
         partner_user_id: UUID | None = None,
+        credit_hours: int | None = None,
     ) -> Opportunity:
         opportunity = Opportunity(
             period_id=period_id,
@@ -55,6 +56,7 @@ class OpportunityRepo:
             description=description,
             location=location,
             is_active=is_active,
+            credit_hours=credit_hours,
         )
         db.add(opportunity)
         db.commit()
@@ -73,6 +75,7 @@ class OpportunityRepo:
         modality: str | None = None,
         is_active: bool | None = None,
         partner_user_id: UUID | None = None,
+        credit_hours: int | None = None,
     ) -> Opportunity:
         if title is not None:
             opportunity.title = title
@@ -90,6 +93,8 @@ class OpportunityRepo:
             opportunity.is_active = is_active
         if partner_user_id is not None:
             opportunity.partner_user_id = partner_user_id
+        if credit_hours is not None:
+            opportunity.credit_hours = credit_hours
 
         db.commit()
         db.refresh(opportunity)
