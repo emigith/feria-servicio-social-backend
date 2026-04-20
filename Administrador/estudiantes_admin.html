@@ -134,6 +134,11 @@
                 <h1 class="text-2xl font-black font-headline text-primary mt-1">Gestión de Estudiantes</h1>
             </div>
             <div class="flex items-center gap-3">
+                <button id="export-csv-btn"
+                    class="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-emerald-500/20">
+                    <span class="material-symbols-outlined text-[18px]">download</span>
+                    Descargar CSV
+                </button>
                 <div class="text-right">
                     <p class="text-xs font-bold text-primary">Admin General</p>
                     <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
@@ -544,6 +549,53 @@
             input.value = '';
             input.dispatchEvent(new Event('input'));
             input.focus();
+        });
+
+        // ── Exportar CSV ──────────────────────────────────────────────────────
+        document.getElementById('export-csv-btn').addEventListener('click', async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = `<svg class="animate-spin h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg> Generando…`;
+
+            try {
+                const res = await fetch(`${API}/admin/opportunities/enrollments/export`, { headers });
+                if (!res.ok) { alert('Error al obtener los datos.'); return; }
+                const rows = await res.json();
+
+                if (rows.length === 0) { alert('No hay inscripciones para exportar.'); return; }
+
+                const header = ['Matrícula', 'Nombre Completo', 'Proyecto', 'Empresa', 'Período', 'Horas de Servicio', 'Estado'];
+                const csvRows = [header.join(',')];
+
+                rows.forEach(r => {
+                    csvRows.push([
+                        `"${r.matricula}"`,
+                        `"${r.nombre}"`,
+                        `"${r.proyecto.replace(/"/g, '""')}"`,
+                        `"${r.empresa.replace(/"/g, '""')}"`,
+                        `"${r.periodo}"`,
+                        r.horas_servicio,
+                        `"${r.status}"`,
+                    ].join(','));
+                });
+
+                const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `inscripciones_${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch (err) {
+                alert('Error de red al exportar.');
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">download</span> Descargar CSV`;
+            }
         });
 
         // ── Init ───────────────────────────────────────────────────────────────

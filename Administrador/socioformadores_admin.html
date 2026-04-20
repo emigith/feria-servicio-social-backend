@@ -130,6 +130,11 @@
                     </svg>
                     Cargando…
                 </div>
+                <button id="export-sf-csv-btn"
+                    class="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-colors shadow-md shadow-emerald-500/20">
+                    <span class="material-symbols-outlined text-[18px]">download</span>
+                    Descargar CSV
+                </button>
             </div>
         </header>
 
@@ -271,21 +276,31 @@
                         <div class="flex items-center gap-5 shrink-0 flex-wrap justify-end">
 
                             <!-- Usuario -->
-                            <div>
+                            <div onclick="event.stopPropagation()">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 text-right">Usuario</p>
-                                <p class="font-mono font-bold text-slate-700 text-sm bg-slate-50 px-3 py-1.5 rounded-lg">${sf.username}</p>
+                                <div class="flex items-center gap-1.5">
+                                    <p class="font-mono font-bold text-slate-700 text-sm bg-slate-50 px-3 py-1.5 rounded-lg select-text cursor-text">${sf.username}</p>
+                                    <button onclick="copyText('${sf.username}', this, event)"
+                                        class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors" title="Copiar usuario">
+                                        <span class="material-symbols-outlined text-slate-400 text-[16px]">content_copy</span>
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Contraseña -->
-                            <div>
+                            <div onclick="event.stopPropagation()">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 text-right">Contraseña</p>
                                 <div class="flex items-center gap-1.5">
-                                    <p class="font-mono font-bold text-slate-700 text-sm bg-slate-50 px-3 py-1.5 rounded-lg"
+                                    <p class="font-mono font-bold text-slate-700 text-sm bg-slate-50 px-3 py-1.5 rounded-lg select-text cursor-text"
                                        id="pwd-${sf.id}">••••••••</p>
                                     <button onclick="togglePwd('${sf.id}','${sf.plain_password}',event)"
-                                        class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors">
+                                        class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors" title="Mostrar contraseña">
                                         <span class="material-symbols-outlined text-slate-400 text-[16px]"
                                               id="eye-${sf.id}">visibility</span>
+                                    </button>
+                                    <button onclick="copyText('${sf.plain_password}', this, event)"
+                                        class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors" title="Copiar contraseña">
+                                        <span class="material-symbols-outlined text-slate-400 text-[16px]">content_copy</span>
                                     </button>
                                 </div>
                             </div>
@@ -379,6 +394,45 @@
                 eye.textContent = 'visibility';
             }
         }
+
+        // ── Copiar al portapapeles ─────────────────────────────────────────
+        function copyText(text, btn, event) {
+            event.stopPropagation();
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = btn.querySelector('.material-symbols-outlined');
+                icon.textContent = 'check';
+                icon.style.color = '#16a34a';
+                setTimeout(() => {
+                    icon.textContent = 'content_copy';
+                    icon.style.color = '';
+                }, 1500);
+            });
+        }
+
+        // ── Exportar CSV ──────────────────────────────────────────────────
+        document.getElementById('export-sf-csv-btn').addEventListener('click', function () {
+            if (allSF.length === 0) { alert('No hay socioformadores para exportar.'); return; }
+
+            const header = ['Empresa', 'Usuario', 'Contraseña', 'Proyectos asignados'];
+            const rows = [header.join(',')];
+
+            allSF.forEach(sf => {
+                rows.push([
+                    `"${sf.company.replace(/"/g, '""')}"`,
+                    `"${sf.username}"`,
+                    `"${sf.plain_password}"`,
+                    sf.projects_count,
+                ].join(','));
+            });
+
+            const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href     = url;
+            a.download = `socioformadores_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
 
         // ── Búsqueda ──────────────────────────────────────────────────────
         document.getElementById('search-input').addEventListener('input', function () {
