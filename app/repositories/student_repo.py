@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from app.models.student import Student
 
 class StudentRepo:
@@ -10,6 +11,23 @@ class StudentRepo:
 
     def get_by_id(self, db: Session, student_id) -> Student | None:
         return db.query(Student).filter(Student.id == student_id).first()
+
+    def search(self, db: Session, q: str, limit: int = 50) -> list[Student]:
+        """Busca estudiantes por nombre, apellido o matrícula (case-insensitive)."""
+        pattern = f"%{q}%"
+        return (
+            db.query(Student)
+            .filter(
+                or_(
+                    Student.nombre.ilike(pattern),
+                    Student.apellido.ilike(pattern),
+                    Student.matricula.ilike(pattern),
+                )
+            )
+            .limit(limit)
+            .all()
+        )
+
 
     def create(
         self,

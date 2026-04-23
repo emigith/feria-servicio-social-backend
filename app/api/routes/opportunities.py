@@ -46,14 +46,27 @@ def get_opportunity_endpoint(
     return get_opportunity_by_id(opportunity_id, db)
 
 
+from app.services.email_service import send_enrollment_confirmation
+
 @router.post("/{opportunity_id}/enroll", response_model=EnrollmentResponse, status_code=201)
 def enroll_in_opportunity(
     opportunity_id: UUID,
     db: Session = Depends(get_db),
     current_student=Depends(get_current_student),
 ):
-    return enroll_student_in_opportunity(
+    enrollment = enroll_student_in_opportunity(
         opportunity_id=opportunity_id,
         student_id=current_student.id,
         db=db,
     )
+    
+    opportunity = get_opportunity_by_id(opportunity_id, db)
+    
+    send_enrollment_confirmation(
+        to_email=current_student.email,
+        student_name=current_student.nombre,
+        opportunity_title=opportunity.title,
+        company_name=opportunity.company
+    )
+    
+    return enrollment

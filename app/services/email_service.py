@@ -250,4 +250,48 @@ def send_qr_code_email(to_email: str, student_name: str, qr_base64: str) -> None
             server.login(settings.MAIL_USERNAME, settings.MAIL_PASSWORD)
             server.sendmail(settings.MAIL_FROM, to_email, msg.as_string())
     except Exception as e:
-        print(f"[MAIL ERROR SENDING QR] {e}")
+        print(f"[MAIL ERROR SENDING QR] {e}")
+
+
+def send_enrollment_confirmation(to_email: str, student_name: str, opportunity_title: str, company_name: str) -> None:
+    if not settings.MAIL_ENABLED:
+        print(f"[MAIL DISABLED] Envío de confirmación de inscripción a {to_email} para {opportunity_title}")
+        return
+
+    if not all([settings.MAIL_FROM, settings.MAIL_HOST, settings.MAIL_PORT, settings.MAIL_USERNAME, settings.MAIL_PASSWORD]):
+        print("[MAIL ERROR] Configuración incompleta")
+        return
+
+    subject = "Confirmación de Inscripción - Feria de Servicio Social"
+
+    html_body = f"""
+    <html>
+      <body style="font-family: sans-serif; color: #333; padding: 20px;">
+        <h2 style="color: #0f173d;">¡Inscripción Exitosa!</h2>
+        <p>Hola <b>{student_name}</b>,</p>
+        <p>Te confirmamos que has quedado debidamente inscrito(a) en la siguiente oportunidad de Servicio Social:</p>
+        <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 30px 0; border: 1px solid #e5e7eb;">
+            <p style="margin: 5px 0;"><strong>Proyecto:</strong> {opportunity_title}</p>
+            <p style="margin: 5px 0;"><strong>Socio Formador:</strong> {company_name}</p>
+        </div>
+        <p>Asegúrate de ponerte en contacto con la organización para los siguientes pasos.</p>
+        <p style="color: #4b5563; font-size: 14px;">¡Mucho éxito en tu Servicio Social!</p>
+      </body>
+    </html>
+    """
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = subject
+    msg["From"] = settings.MAIL_FROM
+    msg["To"] = to_email
+    msg.attach(MIMEText(html_body, "html", "utf-8"))
+
+    try:
+        with smtplib.SMTP(settings.MAIL_HOST, settings.MAIL_PORT) as server:
+            if settings.MAIL_STARTTLS:
+                server.starttls()
+            server.login(settings.MAIL_USERNAME, settings.MAIL_PASSWORD)
+            server.sendmail(settings.MAIL_FROM, to_email, msg.as_string())
+    except Exception as e:
+        print(f"[MAIL ERROR SENDING ENROLLMENT CONFIRMATION] {e}")
+
