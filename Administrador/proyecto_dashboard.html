@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dashboard de Proyecto | Admin FSS</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary":    "#7c2d12",
+                        "accent":     "#ea580c",
+                        "surface":    "#fff7ed",
+                        "on-surface": "#431407",
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body":     ["Inter"],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .lava-orange {
+            background: linear-gradient(-45deg, #7c2d12, #9a3412, #c2410c, #ea580c, #f97316);
+            background-size: 400% 400%;
+            animation: lava 14s ease infinite;
+        }
+        @keyframes lava {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav-item-glass {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .nav-item-glass:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(5px);
+        }
+        .nav-item-active {
+            background: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        /* Barra de progreso de ocupación */
+        .progress-bar-track {
+            background: #f1f5f9;
+            border-radius: 999px;
+            overflow: hidden;
+            height: 10px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 1s ease;
+        }
+
+        /* Fade-in secciones */
+        .fade-in { animation: fadeUp 0.5s ease-out both; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Skeleton loader */
+        .skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 0.75rem;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Tabla de estudiantes */
+        .student-row { transition: background 0.15s ease; }
+        .student-row:hover { background: #fff7ed; }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body flex min-h-screen">
+
+    <!-- ══════════════════════════════════════════
+         SIDEBAR
+    ══════════════════════════════════════════ -->
+    <aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 lava-orange text-white flex flex-col pt-8 pb-4 shadow-2xl">
+        <div class="px-8 mb-10">
+            <h1 class="text-xl font-extrabold font-headline tracking-tighter leading-tight">
+                Portal Feria <br>Servicio Social <span class="opacity-80 font-medium">- Admin</span>
+            </h1>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold mt-2">Gestión 2026</p>
+        </div>
+
+        <nav class="flex-grow flex flex-col justify-center px-4 space-y-6 pb-12">
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base"
+                href="dash_admin_uno.html">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard General</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-active rounded-2xl font-semibold text-base"
+                href="proyecto_admin.html">
+                <span class="material-symbols-outlined text-[22px]">local_library</span>
+                <span>Catálogo Proyectos</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base"
+                href="estudiantes_admin.html">
+                <span class="material-symbols-outlined text-[22px]">person_search</span>
+                <span>Gestión Estudiantes</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base"
+                href="socioformadores_admin.html">
+                <span class="material-symbols-outlined text-[22px]">business_center</span>
+                <span>Socioformadores</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto px-4">
+            <div class="border-t border-white/20 pt-4 pb-2">
+                <a class="flex items-center gap-3 px-4 py-2 text-white/70 text-xs hover:text-white transition-colors"
+                    href="../index.html" onclick="localStorage.clear();">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══════════════════════════════════════════
+         CONTENIDO PRINCIPAL
+    ══════════════════════════════════════════ -->
+    <main class="ml-72 flex-1 flex flex-col bg-slate-50 min-h-screen border-l border-slate-200">
+
+        <!-- Header sticky -->
+        <header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-orange-100
+                        flex justify-between items-center px-10 py-5">
+            <div class="flex items-center gap-4">
+                <a href="proyecto_admin.html"
+                    class="flex items-center gap-2 text-slate-400 hover:text-accent transition-colors text-sm font-semibold group">
+                    <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform">
+                        arrow_back
+                    </span>
+                    Catálogo
+                </a>
+                <span class="text-slate-200">|</span>
+                <div>
+                    <h2 class="font-headline font-bold text-accent text-sm uppercase tracking-widest">
+                        Analíticas de Proyecto
+                    </h2>
+                    <h1 id="header-title"
+                        class="text-xl font-black font-headline text-primary mt-0.5 max-w-lg truncate">
+                        Cargando…
+                    </h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Botón editar (abre modal de edición al volver al catálogo) -->
+                <button id="edit-btn"
+                    class="hidden bg-accent hover:bg-orange-700 text-white px-4 py-2 rounded-xl text-sm font-bold
+                           flex items-center gap-2 shadow-md shadow-orange-500/30 transition-all hover:-translate-y-0.5">
+                    <span class="material-symbols-outlined text-[17px]">edit</span> Editar proyecto
+                </button>
+
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="text-right">
+                        <p class="text-xs font-bold text-primary">Admin General</p>
+                        <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white
+                                ring-2 ring-accent ring-offset-2 shadow-sm">
+                        AD
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ── Cuerpo ── -->
+        <section class="p-10 flex-1">
+
+            <!-- Estado: cargando -->
+            <div id="loading-view" class="space-y-8">
+                <div class="grid grid-cols-2 xl:grid-cols-4 gap-6">
+                    <div class="skeleton h-28"></div>
+                    <div class="skeleton h-28"></div>
+                    <div class="skeleton h-28"></div>
+                    <div class="skeleton h-28"></div>
+                </div>
+                <div class="skeleton h-64"></div>
+                <div class="skeleton h-48"></div>
+            </div>
+
+            <!-- Estado: error -->
+            <div id="error-view" class="hidden flex flex-col items-center justify-center py-32 gap-4 text-slate-400">
+                <span class="material-symbols-outlined text-6xl text-red-300">error</span>
+                <p class="text-lg font-semibold text-slate-600">No se pudo cargar el proyecto</p>
+                <p id="error-msg" class="text-sm text-slate-400"></p>
+                <a href="proyecto_admin.html"
+                    class="mt-2 px-6 py-3 bg-accent text-white rounded-xl font-bold text-sm hover:bg-orange-700 transition-colors">
+                    Volver al catálogo
+                </a>
+            </div>
+
+            <!-- Estado: contenido cargado -->
+            <div id="content-view" class="hidden space-y-8">
+
+                <!-- ── Cabecera del proyecto ── -->
+                <div class="bg-white rounded-3xl border border-orange-100 p-8 flex flex-col md:flex-row gap-6 fade-in">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span id="proj-modality-badge"
+                                class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest"></span>
+                            <span id="proj-status-badge"
+                                class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest"></span>
+                        </div>
+                        <h2 id="proj-title"
+                            class="text-2xl font-black font-headline text-primary leading-tight mb-2"></h2>
+                        <p class="text-slate-500 text-sm font-semibold flex items-center gap-1.5 mb-1">
+                            <span class="material-symbols-outlined text-[15px]">apartment</span>
+                            <span id="proj-company"></span>
+                        </p>
+                        <p id="proj-location-row"
+                            class="hidden text-slate-400 text-xs flex items-center gap-1.5 mb-3">
+                            <span class="material-symbols-outlined text-[14px]">location_on</span>
+                            <span id="proj-location"></span>
+                        </p>
+                        <p id="proj-description"
+                            class="text-slate-600 text-sm leading-relaxed mt-3 max-w-2xl"></p>
+                    </div>
+
+                    <!-- Mini stats -->
+                    <div class="flex flex-col gap-3 shrink-0 md:w-52">
+                        <div id="proj-credit-wrap"
+                            class="hidden bg-amber-50 border border-amber-100 rounded-2xl px-5 py-4 flex items-center gap-3">
+                            <span class="material-symbols-outlined text-amber-500"
+                                style="font-variation-settings:'FILL' 1">schedule</span>
+                            <div>
+                                <p class="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Horas crédito</p>
+                                <p id="proj-credit" class="font-black text-amber-700 text-lg"></p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 flex items-center gap-3">
+                            <span class="material-symbols-outlined text-slate-400"
+                                style="font-variation-settings:'FILL' 1">calendar_today</span>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Período</p>
+                                <p id="proj-period" class="font-bold text-slate-700 text-sm mt-0.5">—</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── KPI Cards ── -->
+                <div class="grid grid-cols-2 xl:grid-cols-4 gap-6 fade-in" style="animation-delay:0.06s">
+
+                    <div class="bg-white rounded-3xl border border-orange-100 p-6 flex flex-col gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-accent text-[20px]"
+                                style="font-variation-settings:'FILL' 1">group</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Inscritos</p>
+                            <p id="kpi-enrolled" class="text-3xl font-black text-primary mt-1">—</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl border border-orange-100 p-6 flex flex-col gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-slate-500 text-[20px]"
+                                style="font-variation-settings:'FILL' 1">chair</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Capacidad</p>
+                            <p id="kpi-capacity" class="text-3xl font-black text-slate-700 mt-1">—</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl border border-orange-100 p-6 flex flex-col gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-emerald-600 text-[20px]"
+                                style="font-variation-settings:'FILL' 1">event_available</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Cupos libres</p>
+                            <p id="kpi-available" class="text-3xl font-black text-emerald-600 mt-1">—</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl border border-orange-100 p-6 flex flex-col gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-600 text-[20px]"
+                                style="font-variation-settings:'FILL' 1">percent</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ocupación</p>
+                            <p id="kpi-pct" class="text-3xl font-black text-blue-600 mt-1">—</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Barra de ocupación ── -->
+                <div class="bg-white rounded-3xl border border-orange-100 p-8 fade-in" style="animation-delay:0.1s">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="font-headline font-bold text-primary">Ocupación del proyecto</h3>
+                            <p class="text-slate-400 text-xs mt-0.5">Estudiantes inscritos vs capacidad total</p>
+                        </div>
+                        <span id="fill-label"
+                            class="px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider"></span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div id="progress-fill" class="progress-bar-fill bg-accent" style="width:0%"></div>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <span class="text-[10px] text-slate-400 font-semibold">0</span>
+                        <span id="progress-label-mid" class="text-[10px] text-slate-400 font-semibold"></span>
+                        <span id="progress-label-max" class="text-[10px] text-slate-400 font-semibold"></span>
+                    </div>
+                </div>
+
+                <!-- ── Tabla de estudiantes inscritos ── -->
+                <div class="bg-white rounded-3xl border border-orange-100 overflow-hidden fade-in"
+                    style="animation-delay:0.14s">
+                    <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-headline font-bold text-primary">Estudiantes inscritos</h3>
+                            <p class="text-slate-400 text-xs mt-0.5">
+                                Alumnos con inscripción confirmada o check-in en este proyecto
+                            </p>
+                        </div>
+                        <span id="enrollment-count-badge"
+                            class="bg-orange-100 text-accent text-xs font-black px-3 py-1.5 rounded-xl uppercase tracking-wider">
+                            —
+                        </span>
+                    </div>
+
+                    <!-- Loading students -->
+                    <div id="students-loading" class="p-8 flex items-center gap-3 text-slate-400 text-sm">
+                        <svg class="animate-spin h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                        </svg>
+                        Cargando estudiantes…
+                    </div>
+
+                    <!-- Empty students -->
+                    <div id="students-empty" class="hidden p-12 flex flex-col items-center gap-3 text-slate-300">
+                        <span class="material-symbols-outlined text-5xl">person_off</span>
+                        <p class="text-sm font-medium text-slate-400">No hay estudiantes inscritos aún.</p>
+                    </div>
+
+                    <!-- Table -->
+                    <div id="students-table-wrap" class="hidden overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-100 text-left">
+                                    <th class="px-8 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">#</th>
+                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Nombre</th>
+                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Matrícula</th>
+                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Correo</th>
+                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div><!-- /content-view -->
+        </section>
+    </main>
+
+    <script>
+        const API = 'http://127.0.0.1:8000/api/v1';
+        const token = localStorage.getItem('admin_token');
+        if (!token) location.href = 'acceso_administrador.html';
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+        // ── Leer ID del proyecto desde query string ──────────────────────────
+        const params    = new URLSearchParams(window.location.search);
+        const projectId = params.get('id');
+
+        if (!projectId) {
+            location.href = 'proyecto_admin.html';
+        }
+
+        // ── Helpers de vista ─────────────────────────────────────────────────
+        function showError(msg) {
+            document.getElementById('loading-view').classList.add('hidden');
+            document.getElementById('content-view').classList.add('hidden');
+            document.getElementById('error-view').classList.remove('hidden');
+            document.getElementById('error-view').classList.add('flex');
+            document.getElementById('error-msg').textContent = msg;
+        }
+
+        function showContent() {
+            document.getElementById('loading-view').classList.add('hidden');
+            document.getElementById('error-view').classList.add('hidden');
+            document.getElementById('error-view').classList.remove('flex');
+            document.getElementById('content-view').classList.remove('hidden');
+        }
+
+        const MODALITY_STYLES = {
+            'Presencial': { cls: 'text-emerald-700 bg-emerald-100', icon: 'location_on' },
+            'Remoto':     { cls: 'text-blue-700   bg-blue-100',     icon: 'computer'   },
+            'Mixto':      { cls: 'text-purple-700 bg-purple-100',   icon: 'sync_alt'   },
+        };
+
+        // ── Cargar proyecto ──────────────────────────────────────────────────
+        // No existe GET /admin/opportunities/{id}.
+        // Se obtiene la lista completa y se filtra por id en el cliente.
+        async function loadProject() {
+            try {
+                console.log('[Dashboard] projectId:', projectId);
+                const url = `${API}/admin/opportunities`;
+                console.log('[Dashboard] GET', url);
+
+                const res = await fetch(url, { headers });
+                console.log('[Dashboard] status:', res.status);
+
+                if (res.status === 401) { location.href = 'acceso_administrador.html'; return; }
+                if (!res.ok) { showError(`Error del servidor (${res.status}).`); return; }
+
+                const projects = await res.json();
+                const p = projects.find(proj => String(proj.id) === String(projectId));
+                console.log('[Dashboard] project found:', p);
+
+                if (!p) { showError('El proyecto no existe o fue eliminado.'); return; }
+
+                // Cargar período para mostrar el nombre
+                await enrichPeriodName(p);
+
+                populateProject(p);
+                showContent();
+
+                // Botón Editar → vuelve al catálogo y abre el modal de edición
+                const editBtn = document.getElementById('edit-btn');
+                editBtn.classList.remove('hidden');
+                editBtn.addEventListener('click', () => {
+                    location.href = `proyecto_admin.html?edit=${p.id}`;
+                });
+
+                loadEnrollments(p);
+            } catch (err) {
+                showError('No se pudo conectar al servidor.');
+                console.error(err);
+            }
+        }
+
+        // Enriquece el objeto con period_name leyendo la lista de períodos
+        async function enrichPeriodName(p) {
+            try {
+                const res = await fetch(`${API}/periods`, { headers });
+                if (!res.ok) return;
+                const periods = await res.json();
+                const period = periods.find(per => String(per.id) === String(p.period_id));
+                if (period) p.period_name = period.name;
+            } catch (_) { /* no crítico */ }
+        }
+
+        // ── Poblar UI con datos del proyecto ─────────────────────────────────
+        function populateProject(p) {
+            const enrolled  = p.enrolled_count  ?? 0;
+            const capacity  = p.capacity        ?? 0;
+            const available = p.available_slots ?? Math.max(0, capacity - enrolled);
+            const pct       = capacity > 0 ? Math.round((enrolled / capacity) * 100) : 0;
+            const isFull    = available <= 0 && capacity > 0;
+
+            // Header
+            document.getElementById('header-title').textContent = p.title || '—';
+
+            // Cabecera proyecto
+            document.getElementById('proj-title').textContent       = p.title || '—';
+            document.getElementById('proj-company').textContent     = p.company || '—';
+            document.getElementById('proj-description').textContent =
+                p.description || 'Sin descripción disponible.';
+
+            if (p.location) {
+                document.getElementById('proj-location').textContent = p.location;
+                document.getElementById('proj-location-row').classList.remove('hidden');
+                document.getElementById('proj-location-row').classList.add('flex');
+            }
+
+            // Modalidad badge
+            const mStyle = MODALITY_STYLES[p.modality] || MODALITY_STYLES['Presencial'];
+            document.getElementById('proj-modality-badge').className =
+                `px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${mStyle.cls}`;
+            document.getElementById('proj-modality-badge').textContent = p.modality || 'Presencial';
+
+            // Estado badge
+            const statusBadge = document.getElementById('proj-status-badge');
+            if (p.is_active) {
+                statusBadge.className = 'px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest text-emerald-700 bg-emerald-100';
+                statusBadge.textContent = 'Activo';
+            } else {
+                statusBadge.className = 'px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-100';
+                statusBadge.textContent = 'Inactivo';
+            }
+
+            // Horas crédito
+            if (p.credit_hours) {
+                document.getElementById('proj-credit').textContent = `${p.credit_hours} hrs`;
+                document.getElementById('proj-credit-wrap').classList.remove('hidden');
+                document.getElementById('proj-credit-wrap').classList.add('flex');
+            }
+
+            // KPIs
+            document.getElementById('kpi-enrolled').textContent  = enrolled;
+            document.getElementById('kpi-capacity').textContent  = capacity;
+            document.getElementById('kpi-available').textContent = available;
+            document.getElementById('kpi-pct').textContent       = `${pct}%`;
+
+            // Si está lleno, colorear "cupos libres" en rojo
+            if (isFull) {
+                document.getElementById('kpi-available').className = 'text-3xl font-black text-rose-600 mt-1';
+            }
+
+            // Barra de ocupación
+            setTimeout(() => {
+                document.getElementById('progress-fill').style.width = `${pct}%`;
+            }, 100);
+
+            // Color de barra según ocupación
+            const fillEl = document.getElementById('progress-fill');
+            if (pct >= 100)      fillEl.className = 'progress-bar-fill bg-rose-500';
+            else if (pct >= 75)  fillEl.className = 'progress-bar-fill bg-amber-500';
+            else                 fillEl.className = 'progress-bar-fill bg-accent';
+
+            // Etiqueta de llenado
+            const fillLabel = document.getElementById('fill-label');
+            if (isFull) {
+                fillLabel.className = 'px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider text-rose-700 bg-rose-100';
+                fillLabel.textContent = 'Proyecto lleno';
+            } else if (pct >= 75) {
+                fillLabel.className = 'px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider text-amber-700 bg-amber-100';
+                fillLabel.textContent = 'Casi lleno';
+            } else {
+                fillLabel.className = 'px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-100';
+                fillLabel.textContent = 'Con disponibilidad';
+            }
+
+            document.getElementById('progress-label-mid').textContent = `${Math.round(capacity / 2)}`;
+            document.getElementById('progress-label-max').textContent = `${capacity}`;
+
+            // Período (si el objeto lo incluye)
+            if (p.period_name) {
+                document.getElementById('proj-period').textContent = p.period_name;
+            }
+        }
+
+        // ── Cargar estudiantes inscritos ─────────────────────────────────────
+        async function loadEnrollments(project) {
+            try {
+                const res = await fetch(
+                    `${API}/admin/opportunities/${projectId}/enrollments`, { headers }
+                );
+
+                if (!res.ok) {
+                    // El endpoint puede no existir aún — mostrar estado vacío sin error
+                    document.getElementById('students-loading').classList.add('hidden');
+                    renderEnrollmentFallback(project);
+                    return;
+                }
+
+                const data = await res.json();
+                const students = Array.isArray(data) ? data : (data.enrollments ?? data.students ?? []);
+                document.getElementById('students-loading').classList.add('hidden');
+                renderStudentsTable(students);
+            } catch (err) {
+                document.getElementById('students-loading').classList.add('hidden');
+                renderEnrollmentFallback(project);
+                console.warn('Endpoint de inscripciones no disponible:', err);
+            }
+        }
+
+        function renderEnrollmentFallback(project) {
+            // Si el endpoint aún no existe, mostrar los datos que ya tenemos del proyecto
+            const enrolled = project.enrolled_count ?? 0;
+            document.getElementById('enrollment-count-badge').textContent =
+                `${enrolled} inscrito${enrolled !== 1 ? 's' : ''}`;
+
+            if (enrolled === 0) {
+                document.getElementById('students-empty').classList.remove('hidden');
+                document.getElementById('students-empty').classList.add('flex');
+            } else {
+                // Mostrar mensaje de que el detalle no está disponible
+                const wrap = document.getElementById('students-table-wrap');
+                wrap.classList.remove('hidden');
+                wrap.innerHTML = `
+                    <div class="p-8 flex items-center gap-3 text-slate-400 text-sm bg-slate-50 border-t border-slate-100">
+                        <span class="material-symbols-outlined text-[18px]">info</span>
+                        Hay <strong class="text-slate-600">${enrolled} estudiante${enrolled !== 1 ? 's' : ''} inscritos</strong>.
+                        El listado detallado estará disponible cuando el endpoint de inscripciones esté activo.
+                    </div>`;
+            }
+        }
+
+        function renderStudentsTable(students) {
+            const badge = document.getElementById('enrollment-count-badge');
+            badge.textContent = `${students.length} inscrito${students.length !== 1 ? 's' : ''}`;
+
+            if (students.length === 0) {
+                document.getElementById('students-empty').classList.remove('hidden');
+                document.getElementById('students-empty').classList.add('flex');
+                return;
+            }
+
+            const tbody = document.getElementById('students-tbody');
+            const wrap  = document.getElementById('students-table-wrap');
+            wrap.classList.remove('hidden');
+
+            const STATUS_STYLES = {
+                'ENROLLED':   { cls: 'text-blue-700 bg-blue-100',     label: 'Inscrito' },
+                'CHECKED_IN': { cls: 'text-emerald-700 bg-emerald-100', label: 'Check-in' },
+            };
+
+            students.forEach((s, i) => {
+                const statusKey = (s.status || 'ENROLLED').toUpperCase();
+                const st  = STATUS_STYLES[statusKey] || STATUS_STYLES['ENROLLED'];
+                // Campos reales del endpoint GET /admin/opportunities/{id}/enrollments
+                const name = [s.nombre, s.apellido].filter(Boolean).join(' ') || '—';
+                const mat  = s.matricula || '—';
+                const mail = s.email     || '—';
+
+                const tr = document.createElement('tr');
+                tr.className = 'student-row border-b border-slate-50';
+                tr.innerHTML = `
+                    <td class="px-8 py-4 text-xs font-bold text-slate-300">${i + 1}</td>
+                    <td class="px-4 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center
+                                        text-xs font-black text-accent shrink-0">
+                                ${name.charAt(0).toUpperCase()}
+                            </div>
+                            <span class="font-semibold text-slate-700 text-sm">${name}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 text-xs font-mono text-slate-500">${mat}</td>
+                    <td class="px-4 py-4 text-xs text-slate-500">${mail}</td>
+                    <td class="px-4 py-4">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${st.cls}">
+                            ${st.label}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ── Soporte para abrir el modal de edición directamente desde el catálogo ──
+        // Si proyecto_admin.html redirige con ?edit=id, esta lógica allá lo detectaría.
+        // Aquí simplemente navegamos de vuelta al catálogo.
+
+        // ── Init ─────────────────────────────────────────────────────────────
+        loadProject();
+    </script>
+</body>
+</html>

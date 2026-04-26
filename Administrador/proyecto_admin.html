@@ -590,11 +590,20 @@
                                 <span class="material-symbols-outlined text-amber-500 text-[16px]">schedule</span>
                                 <span class="text-xs font-bold text-amber-700">${p.credit_hours} horas crédito</span>
                             </div>` : ''}
-                            <button
-                                class="edit-btn w-full bg-primary hover:bg-orange-950 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm"
-                                data-id="${p.id}">
-                                <span class="material-symbols-outlined text-[18px]">edit</span> Editar proyecto
-                            </button>
+                            <div class="flex gap-2">
+                                <a href="proyecto_dashboard.html?id=${p.id}"
+                                    class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-3 rounded-xl
+                                           transition-colors flex items-center justify-center gap-1.5 text-sm
+                                           border border-slate-200 hover:border-slate-300">
+                                    <span class="material-symbols-outlined text-[17px]">bar_chart</span> Analíticas
+                                </a>
+                                <button
+                                    class="edit-btn flex-1 bg-primary hover:bg-orange-950 text-white font-bold py-3 rounded-xl
+                                           transition-colors flex items-center justify-center gap-1.5 text-sm"
+                                    data-id="${p.id}">
+                                    <span class="material-symbols-outlined text-[17px]">edit</span> Editar
+                                </button>
+                            </div>
                         </div>
                     </article>
                 `);
@@ -854,7 +863,16 @@
 
         // ── Init ───────────────────────────────────────────────────────────────
         loadPeriods();
-        loadProjects();
+        loadProjects().then(() => {
+            // Si se regresa desde proyecto_dashboard.html con ?edit=<id>, abrir el modal
+            const editId = new URLSearchParams(window.location.search).get('edit');
+            if (editId) {
+                const project = allProjects.find(p => p.id === editId);
+                if (project) openEditModal(project);
+                // Limpiar el param de la URL sin recargar
+                history.replaceState(null, '', 'proyecto_admin.html');
+            }
+        });
     </script>
 </body>
 </html>
