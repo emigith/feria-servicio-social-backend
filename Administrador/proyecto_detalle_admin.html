@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Detalle de Proyecto | Admin FSS</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7c2d12",
+                        "accent": "#ea580c",
+                        "surface": "#fff7ed",
+                        "on-surface": "#431407",
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .lava-orange {
+            background: linear-gradient(-45deg, #7c2d12, #9a3412, #c2410c, #ea580c, #f97316);
+            background-size: 400% 400%;
+            animation: lava-animation 14s ease infinite;
+        }
+        @keyframes lava-animation {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .nav-item-glass {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .nav-item-glass:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(5px);
+        }
+        .fade-in { animation: fadeIn 0.35s ease both; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 lava-orange text-white flex flex-col pt-8 pb-4 shadow-2xl">
+        <div class="px-8 mb-10">
+            <h1 class="text-xl font-extrabold font-headline tracking-tighter leading-tight">
+                Portal Feria <br>Servicio Social <span class="opacity-80 font-medium">- Admin</span>
+            </h1>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold mt-2">Gestión 2026</p>
+        </div>
+        <nav class="flex-grow flex flex-col justify-center px-4 space-y-6 pb-12">
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="dash_admin_uno.html">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span>Dashboard General</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="proyecto_admin.html">
+                <span class="material-symbols-outlined text-[22px]">local_library</span>
+                <span>Catálogo Proyectos</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="estudiantes_admin.html">
+                <span class="material-symbols-outlined text-[22px]">person_search</span>
+                <span>Gestión Estudiantes</span>
+            </a>
+            <a class="flex items-center gap-4 px-5 py-4 nav-item-glass rounded-2xl font-semibold text-base" href="socioformadores_admin.html">
+                <span class="material-symbols-outlined text-[22px]">business_center</span>
+                <span>Socioformadores</span>
+            </a>
+        </nav>
+        <div class="mt-auto px-4">
+            <div class="border-t border-white/20 pt-4 pb-2">
+                <a class="flex items-center gap-3 px-4 py-2 text-white/70 text-xs hover:text-white transition-colors"
+                   href="../index.html" onclick="localStorage.clear();">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="ml-72 flex-1 flex flex-col bg-slate-50 min-h-screen border-l border-slate-200">
+
+        <!-- Header -->
+        <header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-orange-100 flex items-center justify-between px-10 py-5">
+            <div class="flex items-center gap-4">
+                <a href="proyecto_admin.html"
+                   class="flex items-center gap-2 px-3 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-accent text-sm font-semibold transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Volver al catálogo
+                </a>
+                <div>
+                    <h2 class="font-headline font-bold text-accent text-xs uppercase tracking-widest">Módulo de Administración</h2>
+                    <h1 class="text-xl font-black font-headline text-primary mt-0.5">Dashboard del Proyecto</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-primary">Admin General</p>
+                    <p class="text-[10px] text-accent font-bold uppercase">Sesión Activa</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-bold text-white ring-2 ring-accent ring-offset-2 shadow-sm">AD</div>
+            </div>
+        </header>
+
+        <!-- Loading -->
+        <div id="loading" class="flex flex-col items-center justify-center flex-1 gap-4">
+            <div class="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-slate-400 text-sm">Cargando datos del proyecto…</p>
+        </div>
+
+        <!-- Error -->
+        <div id="error-section" class="hidden flex-col items-center justify-center flex-1 gap-4">
+            <span class="material-symbols-outlined text-red-400 text-6xl">error</span>
+            <p class="text-slate-500">No se encontró el proyecto o no tienes acceso.</p>
+            <a href="proyecto_admin.html" class="px-5 py-2.5 bg-accent text-white font-semibold rounded-xl text-sm">Volver</a>
+        </div>
+
+        <!-- Contenido -->
+        <div id="content" class="hidden p-10 space-y-8">
+
+            <!-- Info del proyecto -->
+            <div class="fade-in bg-white rounded-3xl border border-orange-50 p-8 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div class="flex-1 min-w-0">
+                        <p id="proj-company" class="text-xs font-black text-accent uppercase tracking-widest mb-1"></p>
+                        <h2 id="proj-title" class="text-2xl font-black font-headline text-primary leading-tight"></h2>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span id="proj-modality" class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600"></span>
+                            <span id="proj-code" class="hidden px-3 py-1 rounded-lg text-xs font-black bg-orange-50 text-accent border border-orange-200"></span>
+                            <span id="proj-hours" class="hidden px-3 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700"></span>
+                            <span id="proj-active" class="px-3 py-1 rounded-lg text-xs font-bold"></span>
+                        </div>
+                        <p id="proj-desc" class="text-slate-500 text-sm mt-4 leading-relaxed max-w-2xl"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-5">
+                <div class="fade-in bg-white rounded-2xl border border-orange-50 p-5 shadow-sm text-center" style="animation-delay:.05s">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Inscritos</p>
+                    <p id="kpi-enrolled" class="text-4xl font-black text-accent">—</p>
+                </div>
+                <div class="fade-in bg-white rounded-2xl border border-orange-50 p-5 shadow-sm text-center" style="animation-delay:.1s">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Capacidad</p>
+                    <p id="kpi-capacity" class="text-4xl font-black text-primary">—</p>
+                </div>
+                <div class="fade-in bg-white rounded-2xl border border-orange-50 p-5 shadow-sm text-center" style="animation-delay:.15s">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Disponibles</p>
+                    <p id="kpi-available" class="text-4xl font-black text-emerald-600">—</p>
+                </div>
+                <div class="fade-in bg-white rounded-2xl border border-orange-50 p-5 shadow-sm text-center" style="animation-delay:.2s">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Ocupación</p>
+                    <p id="kpi-rate" class="text-4xl font-black text-primary">—</p>
+                    <div class="mt-3 bg-slate-100 rounded-full h-2">
+                        <div id="kpi-bar" class="h-2 rounded-full transition-all duration-700 bg-accent" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficas -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="fade-in bg-white rounded-2xl border border-orange-50 p-6 shadow-sm" style="animation-delay:.1s">
+                    <h3 class="font-headline font-bold text-base text-primary mb-1">Ocupación del proyecto</h3>
+                    <p class="text-slate-400 text-xs mb-5">Inscritos vs lugares disponibles</p>
+                    <div class="flex items-center justify-center" style="height:220px">
+                        <canvas id="chart-donut"></canvas>
+                    </div>
+                </div>
+                <div class="fade-in bg-white rounded-2xl border border-orange-50 p-6 shadow-sm" style="animation-delay:.15s">
+                    <h3 class="font-headline font-bold text-base text-primary mb-1">Estado de inscripciones</h3>
+                    <p class="text-slate-400 text-xs mb-5">Inscrito vs Check-in realizado</p>
+                    <div style="height:220px">
+                        <canvas id="chart-status"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de alumnos -->
+            <div class="fade-in bg-white rounded-2xl border border-orange-50 shadow-sm overflow-hidden" style="animation-delay:.2s">
+                <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h3 class="font-headline font-bold text-lg text-primary">Alumnos inscritos</h3>
+                        <p id="table-subtitle" class="text-slate-400 text-xs mt-0.5"></p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 w-full sm:w-72">
+                        <span class="material-symbols-outlined text-slate-400 text-[18px]">person_search</span>
+                        <input id="student-search" type="text" placeholder="Buscar alumno…"
+                            class="bg-transparent text-sm text-slate-700 flex-1 outline-none placeholder:text-slate-400"/>
+                        <button id="search-clear" class="hidden text-slate-400 hover:text-slate-600">
+                            <span class="material-symbols-outlined text-[16px]">close</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sin alumnos -->
+                <div id="no-students" class="hidden flex-col items-center justify-center py-16 gap-3 text-slate-300">
+                    <span class="material-symbols-outlined text-7xl">person_off</span>
+                    <p class="text-sm font-medium">No hay alumnos inscritos aún.</p>
+                </div>
+
+                <!-- Tabla -->
+                <div id="table-wrapper" class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-orange-50 border-b border-orange-100 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-6 py-3 text-left">Nombre</th>
+                                <th class="px-6 py-3 text-left">Matrícula</th>
+                                <th class="px-6 py-3 text-left">Correo</th>
+                                <th class="px-6 py-3 text-center">Estado</th>
+                                <th class="px-6 py-3 text-left">Inscrito el</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-tbody" class="divide-y divide-slate-50 text-slate-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const API   = 'http://127.0.0.1:8000/api/v1';
+        const token = localStorage.getItem('admin_token');
+        if (!token) location.href = 'acceso_administrador.html';
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+        const oppId = new URLSearchParams(window.location.search).get('id');
+        if (!oppId) location.href = 'proyecto_admin.html';
+
+        let allStudents = [];
+        let chartDonut  = null;
+        let chartStatus = null;
+
+        async function loadDetail() {
+            try {
+                const [oppRes, enrollRes] = await Promise.all([
+                    fetch(`${API}/admin/opportunities`, { headers }),
+                    fetch(`${API}/admin/opportunities/${oppId}/enrollments`, { headers }),
+                ]);
+
+                if (oppRes.status === 401 || enrollRes.status === 401) {
+                    location.href = 'acceso_administrador.html';
+                    return;
+                }
+                if (!oppRes.ok || !enrollRes.ok) throw new Error('API error');
+
+                const allOpps   = await oppRes.json();
+                const enrollments = await enrollRes.json();
+                const opp = allOpps.find(o => o.id === oppId);
+
+                if (!opp) throw new Error('Opportunity not found');
+
+                allStudents = enrollments;
+                renderPage(opp, enrollments);
+
+            } catch (err) {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('loading').classList.remove('flex');
+                const errSec = document.getElementById('error-section');
+                errSec.classList.remove('hidden');
+                errSec.classList.add('flex');
+                console.error(err);
+            }
+        }
+
+        function renderPage(opp, enrollments) {
+            // Info del proyecto
+            document.getElementById('proj-title').textContent   = opp.title || '—';
+            document.getElementById('proj-company').textContent = opp.company || '';
+            document.getElementById('proj-desc').textContent    = opp.description || '';
+
+            const modEl = document.getElementById('proj-modality');
+            modEl.textContent = opp.modality || 'Presencial';
+
+            if (opp.project_code) {
+                const codeEl = document.getElementById('proj-code');
+                codeEl.textContent = `#${opp.project_code}`;
+                codeEl.classList.remove('hidden');
+            }
+            if (opp.credit_hours) {
+                const hoursEl = document.getElementById('proj-hours');
+                hoursEl.textContent = `${opp.credit_hours} hrs crédito`;
+                hoursEl.classList.remove('hidden');
+            }
+
+            const activeEl = document.getElementById('proj-active');
+            if (opp.is_active) {
+                activeEl.textContent = 'Activo';
+                activeEl.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700';
+            } else {
+                activeEl.textContent = 'Inactivo';
+                activeEl.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-400';
+            }
+
+            // KPIs
+            const enrolled  = opp.enrolled_count ?? 0;
+            const capacity  = opp.capacity ?? 0;
+            const available = Math.max(capacity - enrolled, 0);
+            const rate      = capacity > 0 ? Math.round((enrolled / capacity) * 100) : 0;
+
+            document.getElementById('kpi-enrolled').textContent  = enrolled;
+            document.getElementById('kpi-capacity').textContent  = capacity;
+            document.getElementById('kpi-available').textContent = available;
+            document.getElementById('kpi-rate').textContent      = `${rate}%`;
+
+            const bar = document.getElementById('kpi-bar');
+            bar.style.width = `${Math.min(rate, 100)}%`;
+            bar.className   = `h-2 rounded-full transition-all duration-700 ${rate >= 90 ? 'bg-red-500' : rate >= 60 ? 'bg-amber-500' : 'bg-emerald-500'}`;
+
+            // Tabla subtitle
+            document.getElementById('table-subtitle').textContent =
+                `${enrollments.length} alumno${enrollments.length !== 1 ? 's' : ''} registrado${enrollments.length !== 1 ? 's' : ''}`;
+
+            // Gráfica: Dona
+            if (chartDonut) chartDonut.destroy();
+            chartDonut = new Chart(document.getElementById('chart-donut'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Inscritos', 'Disponibles'],
+                    datasets: [{
+                        data: [enrolled, Math.max(available, 0)],
+                        backgroundColor: ['#ea580c', '#e2e8f0'],
+                        borderWidth: 0,
+                        hoverOffset: 6,
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 12 }, padding: 14, color: '#475569' } },
+                    },
+                    maintainAspectRatio: false,
+                }
+            });
+
+            // Gráfica: Estado
+            const nEnrolled  = enrollments.filter(e => e.status === 'ENROLLED').length;
+            const nCheckedIn = enrollments.filter(e => e.status === 'CHECKED_IN').length;
+
+            if (chartStatus) chartStatus.destroy();
+            chartStatus = new Chart(document.getElementById('chart-status'), {
+                type: 'bar',
+                data: {
+                    labels: ['Inscrito', 'Check-in realizado'],
+                    datasets: [{
+                        label: 'Alumnos',
+                        data: [nEnrolled, nCheckedIn],
+                        backgroundColor: ['#ea580c', '#16a34a'],
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#94a3b8' } },
+                        y: { grid: { color: '#f8fafc' }, ticks: { font: { size: 12 }, color: '#94a3b8' }, beginAtZero: true, precision: 0 }
+                    }
+                }
+            });
+
+            renderTable(enrollments);
+
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('loading').classList.remove('flex');
+            document.getElementById('content').classList.remove('hidden');
+        }
+
+        function renderTable(students) {
+            const tbody   = document.getElementById('students-tbody');
+            const wrapper = document.getElementById('table-wrapper');
+            const noStu   = document.getElementById('no-students');
+
+            tbody.innerHTML = '';
+
+            if (students.length === 0) {
+                wrapper.classList.add('hidden');
+                noStu.classList.remove('hidden');
+                noStu.classList.add('flex');
+                return;
+            }
+            wrapper.classList.remove('hidden');
+            noStu.classList.add('hidden');
+            noStu.classList.remove('flex');
+
+            students.forEach(s => {
+                const nombre = [s.nombre, s.apellido].filter(Boolean).join(' ') || '—';
+                const statusBadge = s.status === 'CHECKED_IN'
+                    ? `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 flex items-center gap-1 justify-center">
+                           <span class="material-symbols-outlined text-[13px]">check_circle</span> Check-in
+                       </span>`
+                    : `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-accent">Inscrito</span>`;
+
+                const date = s.created_at
+                    ? new Date(s.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '—';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-orange-50/30 transition-colors';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-semibold text-slate-800">${nombre}</td>
+                    <td class="px-6 py-4 font-mono text-slate-600 text-xs">${s.matricula || '—'}</td>
+                    <td class="px-6 py-4 text-slate-500">${s.email || '—'}</td>
+                    <td class="px-6 py-4 text-center">${statusBadge}</td>
+                    <td class="px-6 py-4 text-slate-400 text-xs">${date}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Buscador
+        document.getElementById('student-search').addEventListener('input', function () {
+            const q = this.value.toLowerCase().trim();
+            document.getElementById('search-clear').classList.toggle('hidden', !q);
+            const filtered = !q ? allStudents : allStudents.filter(s =>
+                (s.nombre    || '').toLowerCase().includes(q) ||
+                (s.apellido  || '').toLowerCase().includes(q) ||
+                (s.matricula || '').toLowerCase().includes(q) ||
+                (s.email     || '').toLowerCase().includes(q)
+            );
+            renderTable(filtered);
+        });
+
+        document.getElementById('search-clear').addEventListener('click', () => {
+            const input = document.getElementById('student-search');
+            input.value = '';
+            input.dispatchEvent(new Event('input'));
+            input.focus();
+        });
+
+        loadDetail();
+    </script>
+</body>
+</html>
