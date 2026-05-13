@@ -12,6 +12,8 @@ from app.schemas.opportunity import (
 )
 from app.repositories.enrollment_repo import EnrollmentRepo
 from app.repositories.user_repo import UserRepo
+from app.models.student import Student
+from app.models.period import Period
 
 router = APIRouter(prefix="/admin/opportunities", tags=["admin-opportunities"])
 
@@ -153,9 +155,12 @@ def delete_opportunities_by_period(
     db: Session = Depends(get_db),
     current_user=Depends(require_roles(["admin"])),
 ):
-    """Elimina TODAS las oportunidades de un período (y sus inscripciones en cascada)."""
+    """Elimina TODAS las oportunidades de un período (y sus inscripciones en cascada).
+    También elimina los socioformadores que quedarían sin proyectos asignados."""
     deleted = repo.delete_all_by_period(db, period_id)
-    return {"deleted": deleted}
+    user_repo = UserRepo(db)
+    deleted_sf = user_repo.delete_orphaned_socioformadores()
+    return {"deleted": deleted, "deleted_socioformadores": deleted_sf}
 
 
 @router.get("/count/by-period/{period_id}")

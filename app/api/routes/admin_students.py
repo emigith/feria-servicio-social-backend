@@ -42,6 +42,7 @@ def search_students(
         )
         result.append({
             "student_id": str(s.id),
+            "enrollment_id": str(active.id) if active else None,
             "matricula": s.matricula,
             "nombre": s.nombre,
             "apellido": s.apellido,
@@ -52,3 +53,35 @@ def search_students(
         })
 
     return result
+
+
+@router.get("/export")
+def export_enrollments(
+    db: Session = Depends(get_db),
+    current_user=Depends(require_roles(["admin"])),
+):
+    """Exporta todas las inscripciones activas con datos de alumno, proyecto y período."""
+    rows = (
+        db.query(Enrollment)
+        .options(
+            joinedload(Enrollment.student),
+            joinedload(Enrollment.opportunity),
+            joinedload(Enrollment.period),
+        )
+        .filter(Enrollment.status.in_(["ENROLLED", "CHECKED_IN"]))
+        .order_by(Enrollment.created_at.asc())
+        .all()
+    )
+
+    return [
+        {
+            "matricula":      e.student.matricula if e.student else "",
+            "nombre":         f"{e.student.nombre or ''} {e.student.apellido or ''}".strip() if e.student else "",
+            "proyecto":       e.opportunity.title if e.opportunity else "",
+            "empresa":        e.opportunity.company if e.opportunity else "",
+            "periodo":        e.period.name if e.period else "",
+            "horas_servicio": e.opportunity.credit_hours if e.opportunity else 0,
+            "status":         e.status,
+        }
+        for e in rows
+    ]

@@ -59,3 +59,13 @@ class UserRepo:
         )
         self.db.commit()
         return deleted
+
+    def delete_orphaned_socioformadores(self) -> int:
+        """Elimina socioformadores que no tienen ninguna oportunidad vinculada."""
+        all_sf = self.get_all_socioformadores()
+        orphaned = [u for u in all_sf if not list(u.partner_opportunities)]
+        for u in orphaned:
+            self.db.delete(u)
+        if orphaned:
+            self.db.commit()
+        return len(orphaned)

@@ -75,6 +75,7 @@ class OpportunityAdminResponse(BaseModel):
     """Response completo para el panel admin — incluye conteo de inscritos."""
     id: UUID
     period_id: UUID
+    partner_user_id: UUID | None = None
     project_code: str | None
     title: str
     description: str | None
