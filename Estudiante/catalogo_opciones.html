@@ -731,8 +731,13 @@
         const tabsInner = document.getElementById('period-tabs-inner');
         tabsInner.innerHTML = '';
 
-        allPeriods.forEach(p => {
-          if (p.is_active) activePeriodId = p.id;
+        // Períodos visibles (se excluyen los de nombre técnico/interno)
+        const HIDDEN_PERIODS = ['2026_S1'];
+        const visiblePeriods = allPeriods.filter(p => !HIDDEN_PERIODS.includes(p.name));
+
+        allPeriods.forEach(p => { if (p.is_active) activePeriodId = p.id; });
+
+        visiblePeriods.forEach(p => {
           const btn = document.createElement('button');
           btn.className = 'period-tab px-5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 bg-slate-100 flex items-center gap-2';
           btn.dataset.periodId = p.id;
@@ -744,7 +749,8 @@
           tabsInner.appendChild(btn);
         });
 
-        const defaultId = activePeriodId || (allPeriods[0] && allPeriods[0].id);
+        const visibleActiveId = visiblePeriods.find(p => p.is_active)?.id;
+        const defaultId = visibleActiveId || (visiblePeriods[0] && visiblePeriods[0].id) || activePeriodId;
         if (defaultId) await switchPeriod(defaultId);
         else { document.getElementById('loading-state').classList.add('hidden'); showEmptyDb(); }
       } catch (err) {

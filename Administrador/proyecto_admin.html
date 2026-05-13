@@ -490,6 +490,16 @@
                 countEl.textContent = allProjects.length > 0
                     ? `${allProjects.length} proyecto${allProjects.length !== 1 ? 's' : ''} en la base de datos`
                     : '';
+                // Diagnóstico: detectar proyectos sin socioformador vinculado
+                const huerfanos = allProjects.filter(p => !p.partner_user_id);
+                if (huerfanos.length > 0) {
+                    console.warn(
+                        `[FeriaSocial] ⚠️ ${huerfanos.length} proyecto(s) sin socioformador asignado (partner_user_id = null):`,
+                        huerfanos.map(p => ({ id: p.id, titulo: p.title, empresa: p.company }))
+                    );
+                } else if (allProjects.length > 0) {
+                    console.info('[FeriaSocial] ✅ Todos los proyectos tienen socioformador vinculado.');
+                }
             } catch (e) {
                 countEl.textContent = 'Error al cargar proyectos.';
                 console.error(e);

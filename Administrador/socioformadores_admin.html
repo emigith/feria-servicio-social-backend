@@ -218,6 +218,18 @@
                 allSF = await res.json();
                 updateStats(allSF);
                 renderCards(allSF);
+                // Diagnóstico: advertir si no hay socioformadores registrados
+                if (allSF.length === 0) {
+                    console.warn('[FeriaSocial] ⚠️ No hay socioformadores registrados en la base de datos. Si existen proyectos en el catálogo, pueden estar huérfanos (sin partner_user_id). Revisa el Catálogo de Proyectos para confirmar.');
+                } else {
+                    const sinProyectos = allSF.filter(sf => sf.projects_count === 0);
+                    if (sinProyectos.length > 0) {
+                        console.warn(
+                            `[FeriaSocial] ⚠️ ${sinProyectos.length} socioformador(es) sin proyectos asignados (posibles huérfanos):`,
+                            sinProyectos.map(sf => ({ id: sf.id, empresa: sf.company, usuario: sf.username }))
+                        );
+                    }
+                }
             } catch (e) {
                 console.error(e);
             } finally {

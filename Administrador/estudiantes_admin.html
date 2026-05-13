@@ -198,6 +198,7 @@
                                     <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Matrícula</th>
                                     <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Proyecto inscrito</th>
                                     <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estado</th>
+                                    <th class="px-5 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="global-results-tbody" class="divide-y divide-slate-50"></tbody>
@@ -612,7 +613,7 @@
             </svg> Generando…`;
 
             try {
-                const res = await fetch(`${API}/admin/opportunities/enrollments/export`, { headers });
+                const res = await fetch(`${API}/admin/students/export`, { headers });
                 if (!res.ok) { alert('Error al obtener los datos.'); return; }
                 const rows = await res.json();
 
@@ -702,6 +703,7 @@
 
                 data.forEach(s => {
                     const tr = document.createElement('tr');
+                    tr.id = s.enrollment_id ? `grow-${s.enrollment_id}` : '';
                     tr.className = 'hover:bg-slate-50 transition-colors';
 
                     const statusBadge = !s.status
@@ -709,6 +711,15 @@
                         : s.status === 'CHECKED_IN'
                             ? `<span class="badge-checkedin px-2.5 py-1 rounded-full text-xs font-semibold">Check-in ✓</span>`
                             : `<span class="badge-enrolled px-2.5 py-1 rounded-full text-xs font-semibold">Inscrito</span>`;
+
+                    const removeBtn = s.enrollment_id
+                        ? `<button class="global-remove-btn px-3 py-1.5 text-xs font-semibold text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-1 ml-auto"
+                                data-id="${s.enrollment_id}"
+                                data-name="${(s.nombre || '') + ' ' + (s.apellido || '')}">
+                                <span class="material-symbols-outlined text-[15px]">person_remove</span>
+                                Quitar
+                           </button>`
+                        : `<span class="text-slate-200 text-xs">—</span>`;
 
                     tr.innerHTML = `
                         <td class="px-5 py-3.5 font-medium text-slate-800">${s.nombre || '—'} ${s.apellido || ''}</td>
@@ -720,7 +731,15 @@
                             }
                         </td>
                         <td class="px-5 py-3.5">${statusBadge}</td>
+                        <td class="px-5 py-3.5 text-right">${removeBtn}</td>
                     `;
+
+                    // Bind remove button for this row
+                    const btn = tr.querySelector('.global-remove-btn');
+                    if (btn) {
+                        btn.addEventListener('click', () => openModal(btn.dataset.id, btn.dataset.name, tr));
+                    }
+
                     tbody.appendChild(tr);
                 });
 
