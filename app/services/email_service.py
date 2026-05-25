@@ -98,7 +98,7 @@ def send_registration_confirmation(to_email: str, student_name: str, matricula: 
         
         <p style="font-size: 16px;">Si tu información es correcta, confirma tu pre-registro inmediatamente haciendo clic aquí:</p>
         <p>
-            <a href="http://127.0.0.1:8000/api/v1/students/verify-email-link?token={verify_token}" 
+            <a href="http://127.0.0.1:8001/api/v1/students/verify-email-link?token={verify_token}"
                style="background-color: #10b981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold; font-size: 16px;">
                ¡Mi información es correcta, enviar mi QR!
             </a>
@@ -108,13 +108,13 @@ def send_registration_confirmation(to_email: str, student_name: str, matricula: 
            ¿Cometiste un error en tus datos (como tu nombre o correo)? Puedes editarlos ingresando con tu matrícula y contraseña aquí:
         </p>
         <p>
-            <a href="http://127.0.0.1:5500/Estudiante/editar_preregistro.html" 
+            <a href="http://127.0.0.1:8000/Estudiante/editar_preregistro.html"
                style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; display: inline-block;">
                Editar información incorrecta
             </a>
         </p>
         <p style="margin-top: 15px;">
-            <a href="http://127.0.0.1:5500/index.html" 
+            <a href="http://127.0.0.1:8000/index.html"
                style="background-color: #6b7280; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; display: inline-block;">
                Ir a la página principal
             </a>
@@ -168,7 +168,7 @@ def send_updated_registration_confirmation(to_email: str, student_name: str, mat
         
         <p style="font-size: 16px;">Para recibir tu QR con esta nueva información, confirma tus datos haciendo clic aquí:</p>
         <p>
-            <a href="http://127.0.0.1:8000/api/v1/students/verify-email-link?token={verify_token}" 
+            <a href="http://127.0.0.1:8001/api/v1/students/verify-email-link?token={verify_token}"
                style="background-color: #10b981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold; font-size: 16px;">
                ¡Mi información es correcta, enviar mi QR!
             </a>
@@ -178,13 +178,13 @@ def send_updated_registration_confirmation(to_email: str, student_name: str, mat
            ¿Aún tienes un error en tus datos? Puedes editarlos nuevamente ingresando con tu matrícula y contraseña aquí:
         </p>
         <p>
-            <a href="http://127.0.0.1:5500/Estudiante/editar_preregistro.html" 
+            <a href="http://127.0.0.1:8000/Estudiante/editar_preregistro.html"
                style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; display: inline-block;">
                Editar información incorrecta
             </a>
         </p>
         <p style="margin-top: 15px;">
-            <a href="http://127.0.0.1:5500/index.html" 
+            <a href="http://127.0.0.1:8000/index.html"
                style="background-color: #6b7280; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; display: inline-block;">
                Ir a la página principal
             </a>
